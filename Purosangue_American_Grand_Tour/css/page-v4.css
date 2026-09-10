@@ -1,0 +1,552 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   v2 — the gallery grid replaced by side-by-side pairs.
+
+   Loaded only by the *_v2.html pages, after page.css, so the v1 pages on the
+   server are untouched by anything in here.
+
+   The one change: where v1 laid every supplied frame into an even four-across
+   rack of 328 x 220 cover-crops, v2 sets each composition as Ferrari does on
+   the Tier 1 page — a large exterior and a small interior beside it, tops
+   aligned, the interior finishing well short of the exterior's bottom edge.
+   That shortfall is the composition, not a gap to be closed: it is what makes
+   the pair read as one dominant frame with a subordinate beside it rather than
+   as two equal tiles.
+
+   Measured from ferrari.com at 1440: exterior 695, gap 32, interior 489, on a
+   1216 content width, tops aligned. 695 / 489 is 57 / 40, which is what the
+   grid below sets. Both halves are 16:9 here, so the height relationship falls
+   out of the widths: 1.42 against Ferrari's 1.38.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pairs {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 5rem);
+}
+
+.pair {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 57fr 40fr;
+  /* v3, on the client's note of 3 Sep: the two frames read as too far apart.
+     Measured on the page they sent as the example — ferrariofcentralnj.com —
+     the gap there is 20px, tops aligned, on a 1216 content column. Ours already
+     fills its own column edge to edge (602 + 32 + 422 = 1056), so the distance
+     they are seeing is the gap itself and nothing else. 32 → 20 matches theirs.
+
+     What is NOT changed here: their content column is 1216 against our 1056,
+     which is why their frames are ~16% larger. That is a decision about the
+     page's whole measure, not about this pair, so it stays out of a note that
+     asked only for the two photos to sit closer. */
+  gap: 20px;
+  align-items: start;   /* tops aligned — the interior is short by design */
+}
+
+.pair img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Every pair set the same way is a column of identical L-shapes, and by the
+   third one the eye stops reading compositions and starts reading a template.
+   So the pairs alternate: odd rows put the exterior left, even rows put it
+   right. The DOM order never changes — exterior first, interior second, which
+   is the order the deck names them and the order a screen reader gets — only
+   the columns swap, so the alternation is presentational and costs nothing in
+   reading order.
+
+   The 57 / 40 relationship is not mirrored along with the position: the
+   exterior stays the dominant frame on both sides. What alternates is which
+   edge the weight sits against, and that is the whole point — the page gains a
+   rhythm instead of a repetition. */
+.pair:nth-child(even),
+.entry:nth-child(even) .pair {          /* inside an entry the pair is an only child, so the count lives on the entry */
+  grid-template-columns: 40fr 57fr;
+}
+.pair:nth-child(even) .pair__int,
+.entry:nth-child(even) .pair .pair__int { grid-column: 1; grid-row: 1; }
+.pair:nth-child(even) .pair__ext,
+.entry:nth-child(even) .pair .pair__ext { grid-column: 2; grid-row: 1; }
+
+/* Below the two-column threshold the pair stacks and the size relationship has
+   to be re-established, because stacked full-width frames are equal frames.
+   The interior keeps its subordinate rank by inset rather than by scale, on the
+   side the exterior's own composition leaves quietest. */
+@media (max-width: 60rem) {
+  .pair,
+  .pair:nth-child(even),
+  .entry:nth-child(even) .pair {   /* matches the alternation's own specificity */
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  /* The alternation places both frames on one row explicitly, so the stack has
+     to hand the placement back — otherwise the even pair keeps an implicit
+     second column and never stacks at all. */
+  .pair:nth-child(even) .pair__ext,
+  .pair:nth-child(even) .pair__int,
+  .entry:nth-child(even) .pair .pair__ext,
+  .entry:nth-child(even) .pair .pair__int {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .pair img.pair__int {   /* the selector carries the img to outrank `.pair img` above */
+    width: 72%;
+    margin-inline-start: auto;
+  }
+  /* the stagger survives the stack: the interior hangs off the opposite edge */
+  .pair:nth-child(even) img.pair__int,
+  .entry:nth-child(even) .pair img.pair__int {
+    margin-inline: 0 auto;
+  }
+}
+
+/* ── the hole under the last plate ────────────────────────────────────────
+   `.composition` carries `--pad-bottom` (12rem at its cap) below the sticky
+   stack. Under a normal section that is breathing room; under this one it is
+   192px of empty ground below a plate that already ends on a designed edge,
+   and it reads as a gap rather than as air. The stack's last panel is the
+   section's bottom edge, so the section stops there and the next band's own
+   top padding does the separating. */
+.composition { padding-block-end: 0; }
+
+/* ── motion tokens ────────────────────────────────────────────────────────
+   page.css documents --dur (.2s, opacity) and --dur-move (.3s, transform) for
+   state changes. An arrival is a longer event than a state change and needs
+   its own entry rather than a number typed at the call site. */
+:root {
+  /* Ferrari's own, measured on the reference page: a headline block travels
+     50px and lands in about 350ms on a decelerating curve. Ours was 550, which
+     against theirs reads slow. */
+  --dur-arrive:  .35s;
+  --ease-arrive: cubic-bezier(.22, 1, .36, 1);   /* decelerates into place */
+}
+
+/* ── the navigation band pins, as it does on cauleyferrari.com ────────────
+   The contact bar rides away with the page; the band stays. `.header` is
+   absolute, so lifting the band out of its flow costs no reflow below it. */
+body.nav-pinned .header__navigation-section {
+  position: fixed; inset-inline: 0; inset-block-start: 0; z-index: 10;
+}
+@media (max-width: 64rem) {
+  /* no contact bar to lose down here, so the whole header pins at once */
+  body.nav-pinned .header { position: fixed; }
+  body.nav-pinned .header__navigation-section { position: relative; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v4 — the client's note of 8 Sep.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1 · the hero title clears the vehicle ────────────────────────────────
+   The block was already hard against the left edge; what crossed the car was
+   its measure. 46rem let the second line run to x≈744 while the car begins at
+   x≈470, so the type sat on the front wing. 34rem breaks the title one word
+   earlier and the column ends short of the vehicle in all three films.
+   Measured, not guessed: the narrowest of the three cars starts at 32% of the
+   viewport, and 34rem is 30% at 1440. */
+.hero__type { max-width: 34rem; }
+
+/* ── 2 · the loop seam ────────────────────────────────────────────────────
+   Answered by the asset instead of by CSS: the client cut a seamless loop, so
+   the last frame meets the first and the dip that used to cover the join is
+   gone from both files. Nothing here fades.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── 3 · Heritage, on the page's own ground ───────────────────────────────
+   The photograph is gone at the client's request. What must not replace it is
+   a full-screen field of nothing: the section was 100svh because it held an
+   image, and an empty screen of that height is a hole rather than a silence.
+   So the chapter stops being a field and becomes a band — height set by the
+   type, the same shell and rhythm as the manifesto above it, and the interval
+   below it doing the separating. */
+.chapter--plain {
+  min-height: 0;
+  display: block;
+  /* The band has a ground of its own now, so it needs both its own edges: with
+     no bottom padding the last line sat on the boundary. The doubled-interval
+     problem this once solved went away with the flat ground — two bands of the
+     same colour needed one interval between them, two different colours need
+     each band to hold its own air. */
+  padding-block: var(--pad-top) var(--pad-top);
+  background: var(--bg);
+}
+.chapter--plain .marker { margin-block-end: clamp(2.5rem, 5vw, 4rem); }
+/* Heritage sits on the page's one left edge, like every other chapter — Alex,
+   10 Sep 2026. The marker hangs `--marker-out` outside the column exactly as
+   2 · The Collection's does (the base `.marker` rule, no override here), and
+   the heading and paragraph start on the column the pairs, the entry names and
+   the Inquire heading all start on: 192 at 1440.
+
+   It was centred before — one centred voice on its own ground, the whole band
+   paragraph included. That left the manifesto and Heritage both centred and the
+   chapter marker floating mid-page, detached from the column it numbers. To
+   restore it: `margin-inline: auto; text-align: center` on `.chapter__type`
+   and on its `.copy`, and `justify-content: center; margin-inline-start: 0` on
+   `.chapter--plain .marker`.
+
+   The reading measure stays at the base stylesheet's 46ch, which holds the
+   line at about 59 characters — left-set, the ragged right edge is the one the
+   eye never returns to, so the measure is what keeps it readable. */
+.chapter--plain .chapter__type {
+  max-width: 46rem;
+  color: var(--ink);
+}
+.chapter--plain .chapter__type .copy {
+  max-width: 46ch;          /* the base stylesheet's own reading measure, which
+                               `max-width: none` had thrown away — at 736px the
+                               line ran to 85 characters */
+}
+.chapter--plain .chapter__type .h2 { margin-block-end: var(--space-5); }
+
+/* ── 5 · the composition becomes the pair, captioned beneath ──────────────
+   This is the unit the client sent: a large exterior and a small interior
+   beside it, tops aligned, with the name and the description below rather
+   than in a column of their own. The pair keeps the geometry already measured
+   from ferrari.com — 57 / 40 with a 20px gap — and keeps alternating, so two
+   or three entries read as a rhythm instead of a repeated L.
+
+   The caption does NOT alternate with the images. Name left, copy right on
+   every entry: the pictures carry the variation and the text keeps one spine
+   down the page, which is what makes the alternation legible rather than
+   restless. */
+.composition { padding-block: var(--pad-top) var(--pad-bottom); }
+.composition__head { margin-block-end: clamp(2.5rem, 5vw, 4rem); }
+
+.entries { display: grid; gap: clamp(4rem, 9vw, 8rem); }
+.entry { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+
+.entry__type {
+  display: grid;
+  grid-template-columns: 24% minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+}
+.entry__name {
+  margin: 0;
+  font-size: var(--text-h3); line-height: 1.15; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .02em;
+}
+.entry__copy { margin: 0; max-width: 68ch; }
+
+@media (max-width: 60rem) {
+  .entry__type { grid-template-columns: 1fr; gap: var(--space-3); }
+}
+
+/* ── the hero closes on a hard edge again ────────────────────────────────
+   The bottom gradient that carried the film into the page ground is removed
+   at Alex's instruction. The hero now ends where its frame ends; the band
+   below stands on its own ground and the seam is a cut, which is the whole
+   point of taking it out.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── the display token, one step down ────────────────────────────────────
+   `--text-display` is the page's largest type role and `.display` is worn by
+   exactly one element — the hero h1 — so the size is changed at the token and
+   not at the call site.
+
+   The step is the scale's own. In the type family as written, the display cap
+   stands to the h2 cap at 2.4375 / 1.75 = 1.393. Reducing the display while
+   keeping that same relationship against the h2 this page actually renders
+   (23.84px at 1440) gives 33px, which is 2.0625rem. So the ratio the scale was
+   built on is preserved and only the absolute size falls: 39 → 33 at 1440,
+   24 → 22 at 390.
+
+   Rank is unaffected. The h1 and the h2 never share a screen, and the hero
+   title is additionally ranked by case, ground, isolation and position. */
+:root {
+  --text-display: clamp(1.375rem, 1.8vw + .45rem, 2.0625rem);
+}
+
+/* ── the wash across the picture goes; the one under the type stays ──────
+   The hero carried two darkening layers. The second — a left-to-right wash at
+   50% black dying out by 60% of the width — was there to lean the frame the
+   way the type does, and it is what greys the picture: measured at t=3.8s it
+   costs the left slope and the tunnel more than half their brightness, and the
+   top of the frame a seventh. It is removed.
+
+   The first — bottom-up, dying out by 62% of the height — is not decoration.
+   It is the ground the white type stands on, and the numbers say so. Measured
+   on the composited render at three points across the clip, with the type
+   hidden:
+
+                          both layers   bottom only   no scrim
+       title (33px)                        7.99:1      3.74:1   (AA large 3.0)
+       Explore (14px)                     14.49:1      4.35:1   (AA body 4.5)
+
+   So removing everything would put the secondary control below AA at every
+   frame of the film. What comes off is the layer that was dimming the
+   landscape; what stays is the layer holding the words up.
+
+   Brightness returned to the picture, same frame: left slope +127%, top of
+   frame +14%, right-hand lake and mountains unchanged — the left wash never
+   reached them. */
+.hero__scrim {
+  background: linear-gradient(to top,
+    rgb(8 9 11 / .88) 0%,
+    rgb(8 9 11 / .35) 34%,
+    rgb(8 9 11 / 0)   62%);
+}
+
+/* ── the hero's base line: title left, controls right ────────────────────
+   `.hero__inner` was already written as a row — flex, align-items flex-end,
+   justify-content space-between. It was never behaving as one because the two
+   masses could not fit: at 1440 the shell gives 1056, the controls take 569
+   (208 + 16 + 345) and the gap 48, which leaves 439 for the title while it was
+   asking for 544. Over budget by 105, so it wrapped and the two stacked into
+   one corner.
+
+   27rem is 432 — inside the 439 the row can actually give it. The title keeps
+   three lines and the pair separates into the two bottom corners.
+
+   What this buys beyond the client's note: the frame gets a base. Two anchored
+   masses at the lower corners with the vehicle held in the air between and
+   above them, instead of one heavy corner and three empty ones. It also takes
+   the type further off the car — the measure ends at 624 where the car begins
+   at 470, so only the longest line reaches it at all.
+
+   Below 60rem the row is already a column by the base stylesheet, and it stays
+   one: at 390 there is no width to separate anything into, and a spread that
+   has to be re-established by other means is not a spread. */
+@media (min-width: 60rem) {
+  /* A fixed measure that happens to fit is a measure that stops fitting the
+     next time a button's label changes — the first attempt at 27rem missed the
+     row by 8px. So the row is told not to wrap, the controls keep their
+     intrinsic width, and the title takes whatever is left up to its own cap.
+     It cannot push the controls off the edge and it cannot drop below them. */
+  .hero__inner { flex-wrap: nowrap; }
+  .hero__type { max-width: 27rem; min-width: 0; flex: 0 1 auto; }
+}
+
+/* ── the hero stands in the header's column, not the page's ──────────────
+   The page's bands are a reading measure: `--band-pad` is min(13.34vw, 256px),
+   so at 1900 the content starts at x≈253. The header is not a reading measure
+   — it is the full-width chrome, `max-width: 120rem` with 64 left and 32
+   right, so its shield sits at x=64. Two different left edges, stacked, and
+   the step between them is what reads as the hero not being full screen.
+
+   The hero is chrome's neighbour, not a paragraph: it takes the header's
+   column exactly. Everything below keeps the reading measure, which is what a
+   column of text is for.
+
+   Only at the width where the header itself is laid out this way — below 64rem
+   the header centres its own container and the hero returns to the band. */
+@media (min-width: 64.0625rem) {
+  .hero__inner {
+    max-width: 120rem;
+    margin-inline: auto;
+    padding-inline: 64px 32px;
+  }
+  .hero__type { max-width: 34rem; }
+}
+
+/* ── three lines, authored rather than chased ────────────────────────────
+   The rag is set in the markup, not by tuning a measure until the greedy
+   wrap happens to agree. Word widths at 33px, measured on the page:
+
+       PUROSANGUE 302   AMERICAN 228   GRAND TOUR 284
+       ATELIER    178   COLLECTION 274
+
+   Left to itself the wrap produces PUROSANGUE AMERICAN / GRAND TOUR ATELIER /
+   COLLECTION, which orphans the last word and splits "Atelier Collection"
+   across two lines. The break below reads model / campaign / product instead:
+
+       PUROSANGUE            302
+       AMERICAN GRAND TOUR   522
+       ATELIER COLLECTION    461
+
+   and it holds whatever the measure does, so no window of a few pixels has to
+   keep being true. Below 60rem the breaks are dropped: at 22px the middle line
+   wants 348 against 343 of usable width, so a forced rag would break the line
+   it was meant to fix, and natural wrapping is the honest answer there. */
+.hero__br { display: none; }
+@media (min-width: 60rem) {
+  .hero__br { display: inline; }
+}
+
+/* ── one left edge for the content column ────────────────────────────────
+   `.composition__head` carries `padding-inline: var(--band-pad)` from the base
+   stylesheet, written when the section was not itself a band. It is one now,
+   so the padding applied twice and the chapter marker sat at 457 while the
+   band it belongs to starts at 253.
+
+   The 49px the markers hang to the left of the column is not that bug — it is
+   `--marker-out`, the page's own device for setting chapter numbers outside
+   the text. That stays. What is corrected is only the doubling. */
+.composition__head { padding-inline: 0; }
+
+/* ── lifting the band off the page ground ────────────────────────────────
+   Asked for as "a Ferrari gradient". There isn't one to borrow: I walked
+   ferrari.com/en-US end to end and it carries **zero** gradients — the whole
+   site is one ground, rgb(0,0,0), and its sections are separated by imagery
+   and interval alone.
+
+   What Ferrari does do, on the one band that is type and nothing else — the
+   newsletter block at the foot of the Purosangue page — is raise the ground a
+   step and centre the type on it. Measured off their own render:
+
+       body / footer   #181818   luminance 0.0091
+       the type band   #303030   luminance 0.0296     × 3.24
+
+   So the borrow is the relationship, not the colour: our ground is #0d0e11,
+   and the same × 3.2 step lands on #1e2027. Derived from the page's own base
+   rather than picked, and it is a flat ground with a hard edge, exactly as
+   theirs is — a gradient here would be decoration standing in for a decision,
+   which is the one thing their site never does.
+
+   White on it measures 16.2:1. */
+:root { --bg-raised: #1e2027; }
+.chapter--plain { background: var(--bg-raised); }
+
+/* ── the alternation comes out of the captioned entries ──────────────────
+   Measured on the page, and it is a defect rather than a preference:
+
+     entry 1   exterior 253–1052 left    name 253–584   under the exterior
+     entry 2   exterior 833–1632 right   name 253–584   under the INTERIOR
+
+   The name of the composition was sitting under a photograph of the seats,
+   while the car it names had 800px of empty ground beneath it. The 134px void
+   under the short frame changes sides with the flip, so in the even entry the
+   caption drops into the hole instead of standing under its subject.
+
+   The chequerboard was mine, and it was right where it was invented — a
+   gallery of loose frames with no captions, where alternating stopped three
+   identical L-shapes reading as a template. A captioned composition has a
+   front: the caption anchors it, and once there is a caption the flip breaks
+   the one relationship the unit exists to make.
+
+   So every entry now sets the same way, which is also what the reference does
+   — ferrari.com runs five composition units in a row, all identical. The
+   variation is carried by the cars, not by the frame around them. */
+.entry:nth-child(even) .pair {
+  grid-template-columns: 57fr 40fr;
+}
+.entry:nth-child(even) .pair .pair__ext { grid-column: 1; grid-row: 1; }
+.entry:nth-child(even) .pair .pair__int { grid-column: 2; grid-row: 1; }
+
+@media (max-width: 60rem) {
+  .entry:nth-child(even) .pair { grid-template-columns: 1fr; }
+  .entry:nth-child(even) .pair .pair__ext,
+  .entry:nth-child(even) .pair .pair__int { grid-column: auto; grid-row: auto; }
+  .entry:nth-child(even) .pair img.pair__int { margin-inline: auto 0; }
+}
+
+/* ── a composition assembles in the order it is read ─────────────────────
+   Four beats, one idea. The exterior is the subject, so it arrives first and
+   travels least — less travel reads as more weight. The interior follows as
+   its consequence. Then the name, which binds the two pictures, and last the
+   copy, which explains them.
+
+   The travel on the words is half that on the pictures: text is a reading
+   surface and a paragraph that flies is a paragraph you wait for.
+
+   The chain is 300ms end to end and the last part lands at 850ms — inside the
+   1.2s the house allows a single entrance, and short enough that a fast
+   scroller finds the words already there.
+
+   Bound to roles, not to instances: `.entry`, `.pair__ext`, `.entry__name`.
+   Greenwich's three compositions inherit this untouched. */
+:root {
+  --beat:        90ms;    /* the interval between the four parts */
+  --rise-plate:  28px;    /* the pictures */
+  --rise-word:   14px;    /* the words travel half as far */
+}
+
+.entry.is-waiting .pair__ext,
+.entry.is-waiting .pair__int,
+.entry.is-waiting .entry__name,
+.entry.is-waiting .entry__copy {
+  opacity: 0;
+  transition:
+    opacity   var(--dur-arrive) var(--ease-arrive),
+    transform var(--dur-arrive) var(--ease-arrive);
+}
+.entry.is-waiting .pair__ext,
+.entry.is-waiting .pair__int  { transform: translateY(var(--rise-plate)); }
+.entry.is-waiting .entry__name,
+.entry.is-waiting .entry__copy { transform: translateY(var(--rise-word)); }
+
+.entry.is-waiting .pair__int   { transition-delay: var(--beat); }
+.entry.is-waiting .entry__name { transition-delay: calc(var(--beat) * 2); }
+.entry.is-waiting .entry__copy { transition-delay: calc(var(--beat) * 3); }
+
+.entry.is-waiting.is-in .pair__ext,
+.entry.is-waiting.is-in .pair__int,
+.entry.is-waiting.is-in .entry__name,
+.entry.is-waiting.is-in .entry__copy {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stacked, the four parts sit in one column and the spatial relationship the
+   sequence describes is already gone, so the sequence is shortened rather than
+   inherited: less travel, tighter beats, the same order. */
+@media (max-width: 60rem) {
+  :root { --beat: 70ms; --rise-plate: 20px; --rise-word: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry.is-waiting .pair__ext,
+  .entry.is-waiting .pair__int,
+  .entry.is-waiting .entry__name,
+  .entry.is-waiting .entry__copy { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── Heritage arrives the way Ferrari's own text blocks arrive ───────────
+   Measured on the reference page, on `Headline__paragraph` — the class that
+   carries exactly this content, a heading with its paragraph:
+
+       opacity 0 → 1 and translateY(50px) → 0, about 350ms, decelerating
+       op  .23  .44  .61  .75  .86  .94  .99   at 50ms steps
+       y    38   28   20   13    7    3    0
+
+   Two things borrowed and one deliberately not. Borrowed: the curve and the
+   duration, now the page's own `--dur-arrive` and `--ease-arrive`. Also
+   borrowed: it moves as ONE block. Ferrari puts the transform on the whole
+   headline div rather than staggering its parts, because the band is a single
+   statement — which is the difference from the compositions below, where the
+   four parts have a reading order and the stagger says what it is.
+
+   Not borrowed: their 50px. It was refused while the band was centred — 50px
+   under a centred block read as a jump rather than a settle — and it stays
+   refused now the band is left-set, because the rise is the page's own
+   `--rise-plate` and one grammar covers both sections.
+
+   Applied by script only — with the file gone or motion reduced the band is
+   simply in place, as it is now. */
+.chapter--plain.is-waiting .chapter__type,
+.chapter--plain.is-waiting .marker {
+  opacity: 0;
+  transform: translateY(var(--rise-plate));
+  transition:
+    opacity   var(--dur-arrive) var(--ease-arrive),
+    transform var(--dur-arrive) var(--ease-arrive);
+}
+.chapter--plain.is-waiting .chapter__type { transition-delay: var(--beat); }
+
+.chapter--plain.is-waiting.is-in .chapter__type,
+.chapter--plain.is-waiting.is-in .marker {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter--plain.is-waiting .chapter__type,
+  .chapter--plain.is-waiting .marker { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── the loop join, for clips that still have one ────────────────────────
+   Cauley plays a seamless cut, so nothing covers its join and nothing should.
+   The Sands is a straight conform: its last frame does not meet its first, and
+   `loop` puts a hard cut there every nine seconds.
+
+   So the cover is bound to the clip, not to the page — a video that declares
+   `data-seam="hard"` dips to nothing across its own loop point and returns.
+   Give Greenwich a seamless Sands and the attribute comes off; nothing else
+   changes. */
+:root { --dur-seam: .7s; }
+.hero__video[data-seam="hard"] { transition: opacity var(--dur-seam) linear; }
+.hero__video[data-seam="hard"].is-seam { opacity: 0; }
+
+/* Heritage arrives in two beats again: the marker, then the statement. */
+.chapter--plain.is-waiting .marker        { transition-delay: 0s; }
+.chapter--plain.is-waiting .chapter__type { transition-delay: var(--beat); }

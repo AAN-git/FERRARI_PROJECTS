@@ -129,6 +129,8 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .shot__type .reg, .shot__type .facts { color: rgb(255 255 255 / .78); }
 .shot--hero .shot__title { max-width: 9ch; }
 .shot__type > * { max-width: min(24ch, 29vw); }
+/* a control is sized by its label, never by the reading measure */
+.shot__type > p:has(.btn), .shot__type .btn { max-width: none; width: max-content; }
 .shot__sub, .shot__type .read { max-width: min(30ch, 29vw); }
 .shot__type .facts { max-width: min(34ch, 29vw); }
 .shot__sub {
@@ -215,6 +217,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .route:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .btn {
   display: inline-flex; align-items: center; min-height: 56px;
+  white-space: nowrap;
   margin-block-start: var(--s-9);
   padding-inline: var(--s-8);
   background: var(--accent); color: var(--accent-ink);

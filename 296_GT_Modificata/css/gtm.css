@@ -64,10 +64,10 @@
 
   /* type — one family, four sizes. The display is the page's voice and it
      is set big, because a shot needs a title, not a label. */
-  --t-hero:    clamp(2.25rem, 3.6vw, 3.25rem);
-  --t-display: clamp(1.75rem, 2.9vw, 2.75rem);
-  --t-value:   clamp(1.75rem, 2.4vw, 2.5rem);
-  --t-read:    clamp(1.0625rem, .4vw + .95rem, 1.25rem);
+  --t-hero:    clamp(1.75rem, 2.5vw, 2.5rem);   /* 40px at 1440 */
+  --t-display: clamp(1.5rem, 2.2vw, 2.25rem);  /* 36px at 1440, as theirs */
+  --t-value:   clamp(1.5rem, 1.9vw, 1.875rem);
+  --t-read:    clamp(1rem, .28vw + .93rem, 1.125rem);
   --t-reg:     .875rem;
 
   --dur: .15s;
@@ -80,15 +80,25 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 /* ═══ a shot ════════════════════════════════════════════════════════════
    One screen, one photograph, edge to edge. The picture is not a block in
    the layout — it is the ground the type stands on. */
+/* Nine screens of exactly one viewport each is a slideshow. The heights
+   are now ranked: the peak takes the most, the two quiet acts take the
+   least, and the hero and the close hold a full screen because they
+   open and close the page. */
+/* Their sections set the text at the TOP of the frame, left, with the
+   picture running full-bleed under it; the hero is the exception and
+   carries its title low. */
 .shot {
   position: relative;
-  min-height: 100svh;
+  min-height: var(--shot-h, 92svh);
   display: grid;
-  align-items: end;
+  align-items: start;
   overflow: clip;
   isolation: isolate;
 }
-.shot__media { position: absolute; inset: -7% 0; z-index: 0; overflow: hidden; }
+/* -7% threw away 22% of every frame's width at 1440 and 57% at 768. -3%
+   is enough travel for the parallax and keeps the subject inside the
+   frame down to the phone. */
+.shot__media { position: absolute; inset: -3% 0; z-index: 0; overflow: hidden; }
 /* Every frame fills the screen, edge to edge, at every width. The crop is
    authored per shot by its own object-position, chosen so the subject
    stands clear of the side the words are on — the type is never asked to
@@ -105,50 +115,110 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   transform-origin: var(--pos, 50% 50%);
   will-change: transform;
 }
-/* the lift is directional, built to the side the type sits on, and it
-   stops well short of the far edge so the picture is never flattened */
+/* The lift used to be a 95%-black horizontal wash plus a floor, and
+   together with the section-foot wipe below it was deleting 22-40% of
+   every frame's light and rendering 52-80% of each "full-screen
+   photograph" as flat black — the wet studio floor, the best thing in
+   this asset set, gone on all nine. Legibility is now bought by putting
+   the type where the picture is already dark, and the lift only deepens
+   that region rather than manufacturing it. */
 .shot__lift {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  /* Measured off the frames themselves: the bottom 22% of every shot —
+     the studio floor — runs at luminance 0.05-0.15 in seven of the nine,
+     and 0.54 at its worst (the seats). Type lives in that strip and the
+     lift only deepens it. Nothing washes across the car any more, so the
+     top two thirds of every photograph are the photograph. */
   background:
-    linear-gradient(to right, rgb(0 0 0 / .95) 0%, rgb(0 0 0 / .90) 22%, rgb(0 0 0 / .62) 38%, rgb(0 0 0 / .22) 52%, rgb(0 0 0 / 0) 68%),
-    linear-gradient(to top, rgb(0 0 0 / .70) 0%, rgb(0 0 0 / .18) 34%, rgb(0 0 0 / 0) 52%);
+    linear-gradient(to bottom, rgb(0 0 0 / .46) 0%, rgb(0 0 0 / .26) 14%,
+      rgb(0 0 0 / .10) 26%, rgb(0 0 0 / 0) 40%),
+    linear-gradient(to top, rgb(0 0 0 / .70) 0%, rgb(0 0 0 / .42) 10%,
+      rgb(0 0 0 / .18) 20%, rgb(0 0 0 / .04) 30%, rgb(0 0 0 / 0) 42%);
 }
-.shot--right .shot__lift {
-  background:
-    linear-gradient(to left, rgb(0 0 0 / .95) 0%, rgb(0 0 0 / .90) 22%, rgb(0 0 0 / .62) 38%, rgb(0 0 0 / .22) 52%, rgb(0 0 0 / 0) 68%),
-    linear-gradient(to top, rgb(0 0 0 / .70) 0%, rgb(0 0 0 / .18) 34%, rgb(0 0 0 / 0) 52%);
-}
+/* left-set and right-set shots take the same lift: the strip is the
+   floor, and the floor runs the width of the frame */
 /* the shot hands over to the band below it — the hall closing back in */
 .shot::after {
   content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 22svh; z-index: 1;
   background: linear-gradient(to bottom, rgb(0 0 0 / 0), var(--hall));
   pointer-events: none;
 }
+/* A pool of shadow under the words rather than a wash across the picture.
+   It is anchored to the side the type stands on, sized to the column, and
+   gone by mid-frame — so the car and the floor keep their light while the
+   type gets the ground it needs. The four screens that still measured
+   under AA after the crops were chosen by light are exactly the four this
+   fixes, without taking anything off the other five. */
+.shot__type::before {
+  content: ""; position: absolute; inset: -6vh -4rem;
+  z-index: -1; pointer-events: none;
+  background: radial-gradient(54% 130% at 16% 50%,
+    rgb(0 0 0 / .86) 0%, rgb(0 0 0 / .70) 32%, rgb(0 0 0 / .34) 58%, rgb(0 0 0 / 0) 82%);
+}
+.shot--right .shot__type::before {
+  background: radial-gradient(54% 130% at 84% 50%,
+    rgb(0 0 0 / .86) 0%, rgb(0 0 0 / .70) 32%, rgb(0 0 0 / .34) 58%, rgb(0 0 0 / 0) 82%);
+}
+.shot--close .shot__type::before { display: none; }
+
 .shot__type {
-  position: relative; z-index: 2;
+  position: relative; z-index: 2; isolation: isolate;
   width: min(100%, var(--measure));
   margin-inline: auto;
   padding-inline: var(--gutter);
-  padding-block-end: clamp(3rem, 9vh, 7rem);
+  padding-block-start: clamp(7rem, 16vh, 11rem);
 }
+.shot--hero, .shot--close { align-items: end; }
+.shot--hero .shot__type { padding-block: 0 clamp(1.5rem, 3.5vh, 2.5rem); }
 /* a right-set shot moves the whole block, not just the ragging: the type
    stands in the margin on that side of the picture */
 .shot--right .shot__type { text-align: start; }
 .shot--right .shot__type > * { margin-inline-start: auto; }
-.shot__title { margin: 0; max-width: 15ch; }
+.shot--right .shot__type > *,
+.shot--right .shot__type { text-align: start; }
+/* the column has to contain MODIFICATA at the hero size — at 24ch the H1
+   overflowed its own max-width by 21px and text-wrap could do nothing */
+.shot__title { margin: 0; max-width: 20ch; }
 /* the register voice is lifted over a photograph: at 64% ink the engine
    shot's record measured 4.40:1 against its own background, which is under
    the floor. 78% puts it at 5.8:1 and changes nothing on the flat bands. */
 .shot__type .reg, .shot__type .facts { color: rgb(255 255 255 / .78); }
-.shot--hero .shot__title { max-width: 9ch; }
+/* the hero block sits lower, inside the frame's own dark floor: measured
+   at the old height its title crossed the car's lit nose at 2.87:1 */
+.shot--hero { --shot-h: 100svh; }
+.shot--hero .shot__type { padding-block-end: clamp(1.5rem, 3.5vh, 2.5rem); }
+.shot--hero .shot__sub { margin-block-start: var(--s-4); }
+.shot--hero .facts--row { margin-block-start: var(--s-5); padding-block-start: var(--s-3); }
+.shot--hero .route { margin-block-start: var(--s-5); }
+.shot--peak { --shot-h: 118svh; }
+.shot--quiet { --shot-h: 84svh; }
+/* The close carries the most type on the page — eyebrow, headline,
+   paragraph, control, note — and over the rear three-quarter's silver it
+   measured 1.67:1. No ramp deep enough to fix that leaves a photograph
+   underneath, so the close is composed in two parts at every width, the
+   way the phone already had it: the shot plays above, the words stand on
+   the page's own black beneath. */
+.shot--close { --shot-h: 0; min-height: 0; display: block; }
+.shot--close .shot__media { position: relative; inset: auto; height: 62svh; }
+.shot--close .shot__lift {
+  background: linear-gradient(to top, rgb(0 0 0 / .85) 0%, rgb(0 0 0 / .22) 22%, rgb(0 0 0 / 0) 44%);
+}
+.shot--close .shot__type {
+  padding-block: clamp(3rem, 7vh, 5rem) clamp(4rem, 9vh, 7rem);
+  background: var(--hall);
+}
+.shot--hero .shot__title { max-width: 16ch; }
+/* the peak is the only frame in the set that is not the car, and it is
+   the one screen that gets the page's largest type */
+.shot--peak .shot__title { font-size: var(--t-hero); }
 .shot__type > * { max-width: min(24ch, 29vw); }
 /* a control is sized by its label, never by the reading measure */
 .shot__type > p:has(.btn), .shot__type .btn { max-width: none; width: max-content; }
 .shot__sub, .shot__type .read { max-width: min(30ch, 29vw); }
 .shot__type .facts { max-width: min(34ch, 29vw); }
 .shot__sub {
-  margin-block-start: var(--s-6);
-  max-width: min(30ch, 29vw);
+  margin-block-start: var(--s-5);
+  max-width: min(42ch, 40vw) !important;
   font-size: var(--t-read);
   line-height: 1.5;
   color: var(--ink-80);
@@ -156,12 +226,19 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .shot--right .shot__sub { margin-inline-start: auto; }
 
 /* ═══ type ══════════════════════════════════════════════════════════════ */
+/* Measured off ferrari.com's own 296 GT Modificata page: their headlines
+   are 36px, weight 400, sentence case, no tracking — "Ferrari 296 GT
+   Modificata", "Beyond the limits", "730 hp V6" — and their body runs
+   13px/20.8. Ours was uppercase, 44px, tracked and at weight 500: louder
+   than the marque is, which is most of why the page read as shouty rather
+   than as theirs. Body stays at 16-20px because 13px is under this
+   system's own functional floor. */
 .hero-type, .display {
   margin: 0;
-  font-weight: 500;
-  line-height: .96;
-  letter-spacing: .01em;
-  text-transform: uppercase;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: normal;
+  text-transform: none;
   text-wrap: balance;
 }
 .hero-type { font-size: var(--t-hero); }
@@ -178,6 +255,9 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 }
 .value {
   color: var(--ink);
+  /* the register voice's 0.14em is inherited as a computed 1.96px length,
+     which at 34px is loose rather than tracked */
+  letter-spacing: normal;
   font-size: var(--t-value); font-weight: 500; line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: "tnum" 1, "lnum" 1;
@@ -186,10 +266,20 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 /* ═══ a band — where reading happens ════════════════════════════════════
    Never over a photograph, never while anything moves. The hall's own
    dark, the measure, and air. */
+/* base.css declares `.band { padding-inline: var(--band-pad) }` — 192px
+   here — because on the Purosangue page `.band` WAS the content column.
+   This page puts its own shell inside it, so that padding was landing on
+   top of the shell's and the page ended up with four left edges: dealer
+   lockup 64, shot type 130, marker 212, prose 250. Zeroed, three of the
+   four collapse into one. */
 .band {
   background: var(--hall);
+  padding-inline: 0;
   padding-block: clamp(4.5rem, 10vw, 9rem);
 }
+/* and the marker hangs on the Purosangue column's offset, which does not
+   exist here */
+:root { --marker-out: 0px; }
 /* There is no raised band. Ferrari's own site is one ground and separates
    its sections by imagery and interval; a lifted panel here also put the
    chapter marker's 12px red on #141414, which measures 4.20:1 and is under
@@ -199,19 +289,48 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
-/* A band carries the argument and nothing else: the headline it belongs to
-   is on the shot above it, so there is no second heading and no label
-   standing in for one. One column, one measure. */
+/* A band carries the argument, and — where the deck supplies numbers —
+   the record that proves it. The record used to sit on the photograph,
+   where it needed a black wash to be read at all; on the page's own black
+   it measures better than 15:1 and the band stops being two paragraphs in
+   an empty field. */
+.band__in:has(.plate) {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+.band__in:has(.plate) .marker { grid-column: 1 / -1; }
+.plate .facts { margin-block-start: 0; max-width: none; }
+.plate .facts > div { padding-block: var(--s-4); }
 .prose { max-width: 62ch; }
-.prose .read { font-size: clamp(1.125rem, .5vw + 1rem, 1.375rem); }
+/* one size for body text on the whole page: the bands used to run 22px
+   against the shots' 20px and the sheet's 17px — one role, three sizes */
 
 /* Section labels are the Purosangue page's own marker — the marque's
    Chapter component, inherited from base.css rather than re-drawn here:
    number, a fixed 96px rule, name, 12/15 in rosso corsa. The only thing
    this page adds is the interval under it. */
-.marker { margin-block-end: clamp(2rem, 4vw, 3.5rem); }
+/* Ferrari sets this component at 12px and ferrari.com ships it that way;
+   this page holds to the 14px floor for functional text and keeps
+   everything else about the component — the number, the 96px rule, the
+   tracking and the red. */
+.marker { margin-block-end: clamp(2rem, 4vw, 3.5rem); font-size: 14px; line-height: 17px; }
+.marker span:last-child { flex: 1 1 auto; }
 
 /* ═══ the record — facts on hairlines ═══════════════════════════════════ */
+/* A record on a photograph is one line, not a stack: three facts divided
+   by hairlines, sitting in the frame's floor strip. */
+.facts--row {
+  max-width: none !important;
+  display: flex; flex-wrap: wrap; gap: var(--s-4) 0;
+  margin-block: var(--s-6) 0; padding: 0; max-width: none;
+  border-block-start: 1px solid var(--rule);
+  padding-block-start: var(--s-4);
+}
+.facts--row span { padding-inline: var(--s-5); border-inline-start: 1px solid var(--rule-fine); }
+.facts--row span:first-child { padding-inline-start: 0; border-inline-start: 0; }
+
 .facts { margin-block-start: var(--s-8); border-block-start: 1px solid var(--rule); max-width: 46ch; }
 .facts > div {
   display: grid; grid-template-columns: 1fr auto; gap: var(--s-5);
@@ -264,14 +383,22 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .sheet__group + .sheet__group { margin-block-start: var(--s-9); }
 .sheet__label { display: block; padding-block-end: var(--s-3); border-block-end: 1px solid var(--rule); }
 .sheet__rows { margin: 0; }
+/* `1fr auto` starved the label: the value took whatever it asked for and
+   MAXIMUM POWER, SPECIFIC OUTPUT and WIDTH WITHOUT MIRRORS all wrapped in
+   a 403px row. The label gets a floor, and values that must not break
+   say so. */
 .sheet__row {
-  display: grid; grid-template-columns: 1fr auto; gap: var(--s-5);
+  display: grid; grid-template-columns: minmax(10.5rem, 1fr) auto; gap: var(--s-5);
   align-items: baseline; padding-block: var(--s-3);
   border-block-end: 1px solid var(--rule-fine);
 }
 .sheet__row dt { margin: 0; }
+/* a record ends on its content, not on a rule with nothing under it */
+.sheet__rows > .sheet__row:last-child { border-block-end: 0; }
+.facts > div:last-child { border-block-end: 0; }
 .sheet__row dd {
   margin: 0; font-size: 1.0625rem; font-weight: 500; text-align: end;
+  text-wrap: balance;
   font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1;
 }
 @media (max-width: 60rem) { .sheet { grid-template-columns: 1fr; gap: var(--s-10); } }
@@ -292,7 +419,8 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 
 .shot { --open: 0; --zoom: 1; --t: 1; --par: 0; }
 .shot__media { clip-path: inset(calc(var(--open) * 9%) 0 calc(var(--open) * 9%) 0); }
-.shot__type  { opacity: var(--t); transform: translateY(calc((1 - var(--t)) * 26px)); }
+/* Type does not animate on this page — not a fade, not a rise. The
+   picture moves; the words are simply there when the screen is. */
 
 /* the still: everything arrived, nothing moving */
 @media (prefers-reduced-motion: reduce) {
@@ -371,7 +499,11 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
    than added to it. */
 body.nav-pinned .header__navigation-section {
   position: fixed; inset-inline: 0; inset-block-start: 0; z-index: 10;
+  /* 60% black let paragraphs and section markers read straight through the
+     dealer's own name at every scroll position */
+  background: #000;
 }
+:target, .shot, .band { scroll-margin-block-start: 96px; }
 @media (max-width: 64rem) {
   /* no contact bar to lose at this width, so the whole header pins at once */
   body.nav-pinned .header { position: fixed; }

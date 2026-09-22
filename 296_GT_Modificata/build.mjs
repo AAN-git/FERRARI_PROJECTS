@@ -11,7 +11,7 @@
    The acts are identical for every retailer: the dealer header and footer
    are the only per-retailer difference, so nothing about the argument or
    the imagery changes between them. */
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 
 const DEALERS = [
   { id: 'cauley', name: 'Cauley Ferrari', out: 'index.html' },
@@ -20,6 +20,16 @@ const DEALERS = [
 ];
 
 const read = f => readFileSync(f, 'utf8');
+
+/* Stamp the stylesheet and the scripts with their own modified time, so a
+   browser that has seen an older build never shows it. Losing an hour to a
+   cached stylesheet is a tax nobody should pay twice. */
+const stamp = f => {
+  try { return Math.floor(statSync(f).mtimeMs).toString(36); } catch { return '0'; }
+};
+const bust = html => html
+  .replace(/(href|src)="(css\/[^"?]+\.css|js\/[^"?]+\.js)"/g,
+           (_, attr, path) => `${attr}="${path}?v=${stamp(path)}"`);
 const mainRaw = read('_main.html');
 const tail = read('_tail.html');
 
@@ -31,6 +41,6 @@ for (const d of DEALERS) {
   const menu = existsSync(`_mobilemenu-${d.id}.html`) ? read(`_mobilemenu-${d.id}.html`) : '';
   const main = mainRaw.replaceAll('{{DEALER}}', d.name);
   const page = [head, read(`_header-${d.id}.html`), menu, main, read(`_footer-${d.id}.html`), tail].join('\n');
-  writeFileSync(d.out, page);
+  writeFileSync(d.out, bust(page));
   console.log(`${d.out.padEnd(24)} ${page.split('\n').length} lines`);
 }

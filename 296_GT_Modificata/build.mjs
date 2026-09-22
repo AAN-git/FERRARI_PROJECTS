@@ -1,0 +1,35 @@
+/* Assembles the 296 GT Modificata page from its parts.
+   Edit the parts, run `node build.mjs`, never edit index.html by hand.
+
+     _head.html            document head + skip link
+     _header-<dealer>.html the retailer's own masthead, taken from their site
+     _mobilemenu-<dealer>.html
+     _main.html            the ten acts — the page itself, dealer-agnostic
+     _footer-<dealer>.html the retailer's own footer
+     _tail.html            scripts
+
+   The acts are identical for every retailer: the dealer header and footer
+   are the only per-retailer difference, so nothing about the argument or
+   the imagery changes between them. */
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+
+const DEALERS = [
+  { id: 'cauley', name: 'Cauley Ferrari', out: 'index.html' },
+  // { id: 'lasvegas',  name: 'Ferrari of Las Vegas',  out: 'index_lasvegas.html' },
+  // { id: 'greenwich', name: 'Ferrari of Greenwich', out: 'index_greenwich.html' },
+];
+
+const read = f => readFileSync(f, 'utf8');
+const main = read('_main.html');
+const tail = read('_tail.html');
+
+for (const d of DEALERS) {
+  for (const part of [`_header-${d.id}.html`, `_footer-${d.id}.html`]) {
+    if (!existsSync(part)) { console.error(`missing ${part} — ${d.name} not built`); process.exit(1); }
+  }
+  const head = read('_head.html').replaceAll('{{DEALER}}', d.name);
+  const menu = existsSync(`_mobilemenu-${d.id}.html`) ? read(`_mobilemenu-${d.id}.html`) : '';
+  const page = [head, read(`_header-${d.id}.html`), menu, main, read(`_footer-${d.id}.html`), tail].join('\n');
+  writeFileSync(d.out, page);
+  console.log(`${d.out.padEnd(24)} ${page.split('\n').length} lines`);
+}

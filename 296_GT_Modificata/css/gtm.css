@@ -363,3 +363,13 @@ body.nav-pinned .header__navigation-section {
   body.nav-pinned .header { position: fixed; }
   body.nav-pinned .header__navigation-section { position: relative; }
 }
+
+/* ═══ the dealer's footer, minimally corrected ══════════════════════════
+   Two lines in the retailer's own footer — the copyright credit and the
+   "powered by" link — are #6f6f6f on #181818 at 11px, which measures
+   3.53:1 and is under AA. They come from the dealer's live site, and the
+   page ships them, so they are this page's problem too. #818181 is the
+   lightest grey that clears the floor (4.56:1) and the smallest change
+   that fixes it: nothing else about their footer is touched. */
+.super-footer__credit,
+.power a span { color: #818181; }

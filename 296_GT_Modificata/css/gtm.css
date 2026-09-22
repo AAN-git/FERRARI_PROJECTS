@@ -120,7 +120,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 }
 /* a right-set shot moves the whole block, not just the ragging: the type
    stands in the margin on that side of the picture */
-.shot--right .shot__type { text-align: end; }
+.shot--right .shot__type { text-align: start; }
 .shot--right .shot__type > * { margin-inline-start: auto; }
 .shot__title { margin: 0; max-width: 15ch; }
 /* the register voice is lifted over a photograph: at 64% ink the engine
@@ -158,7 +158,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   font-size: var(--t-read); line-height: 1.6;
   color: var(--ink-80); text-wrap: pretty;
 }
-.read + .read { margin-block-start: var(--s-6); }
+.read + .read { margin-block-start: 2em; }   /* FNA: paragraph spacing = 2× the font size */
 .reg {
   font-size: var(--t-reg); line-height: 1.3; font-weight: 400;
   letter-spacing: .14em; text-transform: uppercase; color: var(--ink-60);

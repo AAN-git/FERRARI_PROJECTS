@@ -137,7 +137,11 @@ body {
   text-transform: uppercase;
   text-wrap: balance;
 }
+/* a value is evidence and outranks its own label: full ink against the
+   register voice's 62%, which is what makes the record readable as fact
+   rather than as another line of caption */
 .value {
+  color: var(--ink);
   font-size: var(--t-value);
   font-weight: 500;
   line-height: 1.1;

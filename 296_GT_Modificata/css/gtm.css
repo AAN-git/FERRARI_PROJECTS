@@ -255,52 +255,45 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
    cropped picture on the page and the trim is 4% — at 1440x900 the screen
    leaves 769px and a full-width 16:9 frame stands 801. That 4% is what
    puts the words above the fold. */
-/* Text never sits on the car. The picture takes the top of the first
-   screen and the words stand under it on the page's own black.
+/* ═══ the first screen ══════════════════════════════════════════════════
+   The whole frame, fitted to the space above the words. The picture is
+   never cropped and the car is never cut: it is scaled to whatever height
+   the screen leaves, and the hall's own black fills the width either side
+   — invisible, because the frame's edges and the page's ground are the
+   same black (measured: the brightest edge strip on this frame is
+   luminance 0.005 against a ground of 0.000).
 
-   The height is measured, not guessed: in this frame the car — splitter
-   and shadow included — ends at 52.8% of the frame's height, and the
-   frame renders at 1/1.445 of the window's width. 52.8% of that is
-   36.5vw, so a picture area of 36.5vw shows the whole car and not one
-   pixel of it is under type. The rest of the screen is the words. */
+   This is what makes all three of the brief's demands hold at once on any
+   window: the frame whole, nothing cropped, and every word above the
+   fold. */
 .hero {
   position: relative;
-  /* 100svh reports taller than the window in some engines, which pushed
-     the words below the fold; the first screen is measured against the
-     window itself. */
   height: calc(100vh - var(--head-h, 0px));
   /* base.css carries its own .hero — 100svh with the header's padding
-     built in — and its min-height was overriding this height outright */
+     built in — and its min-height would override this outright */
   min-height: 0;
   padding: 0;
   margin-block-start: var(--head-h, 0px);
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr auto;
+  /* base.css's .hero aligns its children to the end; inherited here that
+     collapsed the picture's box to nothing */
+  align-items: stretch;
   overflow: hidden;
 }
-.hero__frame {
-  position: relative; margin: 0;
-  /* 36.5vw showed the car exactly to its last pixel, which put the fade
-     across the splitter. 39vw leaves a band of floor under the car for the
-     fade to happen in. */
-  height: min(39vw, calc(100vh - var(--head-h, 0px) - 200px));
-  overflow: hidden;
-}
+/* the picture takes the space the row gives it rather than setting it:
+   left to size itself, the image grew the track and cropped the car */
+.hero__frame { position: relative; margin: 0; min-height: 0; overflow: hidden; }
 .hero__frame img {
+  position: absolute; inset: 0;
   width: 100%; height: 100%;
-  /* anchored to the top: the picture shows the hall's ceiling, the car,
-     and the floor it stands on — and stops before the words */
-  object-fit: cover; object-position: 50% 0%;
-  /* the picture holds to 93% — which is where the car ends, measured —
-     and goes to nothing over the floor beneath it, so it hands over to the
-     black the words stand on with no edge between them */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 93%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0, #000 93%, transparent 100%);
+  object-fit: contain; object-position: 50% 50%;
+  /* one fade, top and bottom. The sides need none: the frame's own edges
+     are the hall's black and the page's ground is the same black. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
-/* base.css caps .hero__type at 46rem because on the Purosangue page it was
-   a left-set column. Here it is a centred line under the picture, and the
-   cap was what broke the subhead onto two lines and pushed the block up
-   into the name that is set into the frame. */
+
 .hero__type {
   position: relative; z-index: 1;
   align-self: end;

@@ -35,19 +35,26 @@
   --rule:      rgb(255 255 255 / .22);
   --rule-fine: rgb(255 255 255 / .10);
 
-  /* Rosso corsa at the Brand Book's own value — #ED1C24, Pantone 485,
-     RAL 3020, p104 — rather than the darker token the digital library
-     carries. The choice is a measured one, not a preference: as TEXT on
-     black the book's red reads 4.79:1 and the library's 4.31:1, which is
-     under AA at the 12px the marque's chapter marker is set in. As a FILL
-     it takes a black label at 4.79:1, which is also the pairing the
-     covenants show — the black logo goes on Ferrari Red. White on it
-     would be 4.38:1 and fail.
-     Giallo Modena (#FFF200) is a Ferrari colour too, and it stays where
-     it belongs on this page: on the car. */
-  --accent:     #ED1C24;
-  --accent-ink: #05080A;
-  --rosso-corsa: #ED1C24;   /* the chapter marker inherits this */
+  /* Two values of one red, each measured into the role it serves — this
+     is not a preference and it is not a mistake left in.
+
+     FILLS take ferrari.com's own red, #DA291C, with a WHITE label. That
+     is what their site ships: their primary button is rgb(218,41,28),
+     white label, 16px regular, square, 57px tall. White on it measures
+     4.87:1 and clears AA; white on the Brand Book's brighter #ED1C24
+     would be 4.38:1 and fail, which is why a black label was tried here
+     and was wrong — Ferrari does not set black type on red.
+
+     RED TEXT takes the Brand Book value, #ED1C24 (p104, Pantone 485).
+     The marque's chapter marker is 12px, and at that size the darker
+     #DA291C measures 4.31:1 on black — under the floor. ferrari.com ships
+     it anyway; this page does not get to.
+
+     Giallo Modena (#FFF200) is a Ferrari colour too, and on this page it
+     stays where it belongs: on the car. */
+  --accent:      #DA291C;   /* fills */
+  --accent-ink:  #FFFFFF;
+  --rosso-corsa: #ED1C24;   /* red type — the chapter marker inherits it */
 
   --measure: 1280px;
   --gutter:  clamp(20px, 4vw, 64px);
@@ -217,6 +224,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 /* ═══ the route and the control ═════════════════════════════════════════ */
 .route {
   display: inline-block; margin-block-start: var(--s-8);
+  font-size: 1rem; letter-spacing: normal; text-transform: none;
   padding-block-end: var(--s-2);
   border-block-end: 1px solid var(--accent);
   color: var(--ink); text-decoration: none;
@@ -224,17 +232,23 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 }
 .route:hover { color: var(--accent); }
 .route:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+/* The control is ferrari.com's, measured off their own page rather than
+   styled to taste: 16px at regular weight, sentence case, no tracking,
+   square corners, 21px of padding and 57px tall, white on #DA291C. The
+   uppercase, tracked, 14px version that stood here was mine, and it read
+   as a template button rather than as theirs. */
 .btn {
-  display: inline-flex; align-items: center; min-height: 56px;
+  display: inline-flex; align-items: center;
+  min-height: 57px;
   white-space: nowrap;
   margin-block-start: var(--s-9);
-  padding-inline: var(--s-8);
+  padding-inline: 21px;
   background: var(--accent); color: var(--accent-ink);
-  font-size: var(--t-reg); letter-spacing: .14em; text-transform: uppercase;
-  text-decoration: none; transition: opacity var(--dur) var(--ease-out);
+  font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;
+  text-decoration: none; transition: background-color var(--dur) var(--ease-out);
 }
-.btn:hover { opacity: .88; }
-.btn:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: -4px; box-shadow: 0 0 0 2px var(--ink); }
+.btn:hover { background: #C0241A; }
+.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ═══ the silence ═══════════════════════════════════════════════════════
    The only screen with no photograph. It exists to give the engine its

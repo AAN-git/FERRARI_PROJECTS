@@ -1,109 +1,92 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   Ferrari 296 GT Modificata — the one temporal idea on this page.
+   Ferrari 296 GT Modificata — the camera.
 
-   The room opens. Every photographic frame is an aperture cut into the
-   page's ground: a 1px hairline lit in that frame's own floor colour,
-   which opens symmetrically about its centre line while the picture
-   inside settles late. Nothing else on the page moves, and no type ever
-   animates.
+   One temporal idea on this page: a shot arrives. As a screen enters, the
+   picture opens vertically out of the hall, the lens closes on the object,
+   and the title settles last. Nothing else moves — no reveals on body
+   copy, no counters, no parallax on the reading bands.
 
-   Progressive enhancement, in both directions:
-   · the CSS default state is OPEN. This file is the only thing that ever
-     closes a frame, so with the script blocked, failed or removed the
-     page is the finished composition rather than an empty one;
-   · under prefers-reduced-motion nothing is closed at all, and the
-     apertures keep a static 1px rule along their bottom edge so the
-     device leaves a trace instead of vanishing.
+   Progressive enhancement in both directions: the CSS finished state is
+   "arrived", so with the script blocked, failed or switched off the page
+   is the completed composition, and prefers-reduced-motion is answered by
+   never starting.
 
-   GSAP earns its place here for exactly one reason: two scrubbed rates on
-   one scroll range, so the frame arrives and the object catches up. If
-   the lag is ever dropped, this dependency goes with it and the opening
-   becomes a scroll-driven CSS animation.
+   GSAP earns its place for one thing — three scrubbed rates on one range,
+   with the title deliberately behind the picture. Drop the offset and this
+   becomes a scroll-driven CSS animation with no dependency.
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)');
   var phone = window.matchMedia('(max-width: 60rem)');
-
-  if (still.matches) return;                       // authored still, already open
+  if (still.matches) return;
   if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') return;
 
   gsap.registerPlugin(ScrollTrigger);
-
-  var frames = Array.prototype.slice.call(document.querySelectorAll('.frame'));
-  if (!frames.length) return;
-
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.shot'));
+  if (!shots.length) return;
   document.documentElement.classList.add('js-motion');
 
-  /* the two rates. The opening finishes at 72% of the range; the picture
-     starts at 28% and finishes with it, so the object settles last. On a
-     phone the lag is removed outright — at a 219px frame the two-rate
-     settle is invisible and only costs frames. */
-  function rates(progress, lagged) {
-    var open = Math.min(1, progress / 0.72);
-    var pic  = lagged ? Math.max(0, Math.min(1, (progress - 0.28) / 0.72)) : open;
-    return [open, pic];
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function ease(v) { return 1 - Math.pow(1 - v, 3); }   /* out-cubic, a camera settling */
+
+  function apply(shot, p, isPhone) {
+    /* the aperture: the picture opens out of the hall */
+    var openEnd = isPhone ? 0.22 : 0.30;
+    var open = 1 - ease(clamp(p / openEnd));
+    /* the push-in: shorter on a phone, where the screen is close to the eye */
+    var zoomFrom = isPhone ? 1.06 : 1.10;
+    var zoom = zoomFrom + (1 - zoomFrom) * ease(clamp(p / (isPhone ? 0.5 : 0.55)));
+    /* the title lands after the picture — on a phone it simply is there */
+    var t = isPhone ? (p > 0.12 ? 1 : 0) : ease(clamp((p - 0.08) / 0.26));
+    shot.style.setProperty('--open', open.toFixed(4));
+    shot.style.setProperty('--zoom', zoom.toFixed(4));
+    shot.style.setProperty('--t', t.toFixed(4));
   }
 
+  var triggers = [];
   function build() {
     var isPhone = phone.matches;
-
-    frames.forEach(function (frame) {
-      var peak = frame.classList.contains('peak__frame');
-      /* Ranges are authored per format, never scaled: a phone scroll is
-         fast, and a long scrub there reads as lag rather than as weight. */
-      var start = isPhone ? 'top 78%' : 'top 82%';
-      var end   = isPhone ? 'top 56%' : 'top 52%';
-      if (peak) { start = isPhone ? 'top 88%' : 'top 90%'; end = isPhone ? 'top 48%' : 'top 20%'; }
-
-      frame.classList.add('is-waiting');
-
-      ScrollTrigger.create({
-        trigger: frame,
-        start: start,
-        end: end,
+    shots.forEach(function (shot) {
+      triggers.push(ScrollTrigger.create({
+        trigger: shot,
+        start: 'top bottom',
+        end: 'bottom top',
         scrub: true,
-        onUpdate: function (self) {
-          var r = rates(self.progress, !isPhone);
-          frame.style.setProperty('--p', r[0].toFixed(4));
-          frame.style.setProperty('--q', r[1].toFixed(4));
-        },
-        onRefreshInit: function () {
-          frame.style.removeProperty('--p');
-          frame.style.removeProperty('--q');
-        }
-      });
+        onUpdate: function (self) { apply(shot, self.progress, isPhone); },
+        onRefresh: function (self) { apply(shot, self.progress, isPhone); }
+      }));
     });
   }
-
   build();
 
-  /* the phone choreography is a different animation, not a smaller one, so
-     a crossing of the breakpoint rebuilds rather than rescales */
+  function rebuild() {
+    triggers.forEach(function (t) { t.kill(); });
+    triggers = [];
+    shots.forEach(function (s) {
+      s.style.removeProperty('--open'); s.style.removeProperty('--zoom'); s.style.removeProperty('--t');
+    });
+    build();
+    ScrollTrigger.refresh();
+  }
+
+  /* the phone choreography is a different cut, not a scaled one */
   var last = phone.matches;
   window.addEventListener('resize', function () {
     if (phone.matches === last) return;
     last = phone.matches;
-    ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
-    frames.forEach(function (f) {
-      f.classList.remove('is-waiting');
-      f.style.removeProperty('--p');
-      f.style.removeProperty('--q');
-    });
-    build();
-    ScrollTrigger.refresh();
+    rebuild();
   }, { passive: true });
 
-  /* someone switching the system setting on mid-visit gets the still */
+  /* someone turning the system setting on mid-visit gets the still */
   if (still.addEventListener) {
     still.addEventListener('change', function () {
       if (!still.matches) return;
-      ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
-      frames.forEach(function (f) {
-        f.classList.remove('is-waiting');
-        f.style.removeProperty('--p');
-        f.style.removeProperty('--q');
+      triggers.forEach(function (t) { t.kill(); });
+      triggers = [];
+      shots.forEach(function (s) {
+        s.style.removeProperty('--open'); s.style.removeProperty('--zoom'); s.style.removeProperty('--t');
       });
     });
   }

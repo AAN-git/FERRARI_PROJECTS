@@ -20,7 +20,7 @@ const DEALERS = [
 ];
 
 const read = f => readFileSync(f, 'utf8');
-const main = read('_main.html');
+const mainRaw = read('_main.html');
 const tail = read('_tail.html');
 
 for (const d of DEALERS) {
@@ -29,6 +29,7 @@ for (const d of DEALERS) {
   }
   const head = read('_head.html').replaceAll('{{DEALER}}', d.name);
   const menu = existsSync(`_mobilemenu-${d.id}.html`) ? read(`_mobilemenu-${d.id}.html`) : '';
+  const main = mainRaw.replaceAll('{{DEALER}}', d.name);
   const page = [head, read(`_header-${d.id}.html`), menu, main, read(`_footer-${d.id}.html`), tail].join('\n');
   writeFileSync(d.out, page);
   console.log(`${d.out.padEnd(24)} ${page.split('\n').length} lines`);

@@ -1,504 +1,288 @@
 /* ═══════════════════════════════════════════════════════════════════════
    Ferrari 296 GT Modificata — dealer landing page
-   Grammar: technical-dossier. Anchor technical-luxury, contrast
-   cinematic-industrial, signature none.
+   Grammar: filmic one-shot. Every act is a screen, every screen is a shot.
 
-   Concept: a GT3 race car with the rulebook taken out of it, presented as
-   the technical dossier it will never need — one dark hall, one object,
-   opened part by part, every claim produced as evidence.
+   The first version of this page set the frames as inset plates on a
+   sampled ground — a dossier. It was rejected: the page has to be cinema.
+   The plate version is kept beside this file as gtm.dossier.css.bak, with
+   its markup as _main.dossier.html.bak, because the client may come back
+   to the record-and-plate treatment for a spec page.
 
-   The one signature move is "the room is continuous":
-   · the page's ground is SAMPLED from the photographs' own edge strips, so
-     the page's dark and the pictures' dark are the same dark, and type can
-     cross a frame's edge without a seam appearing;
-   · every frame OPENS out of that ground from a 1px hairline lit in that
-     frame's own floor colour, while the picture inside settles late.
+   What that changes, concretely:
+   · a frame is no longer a rectangle on a page — it IS the page. Every
+     photograph is full-bleed and owns a whole screen;
+   · type lives inside the picture, in regions measured dark enough to
+     carry it, lifted by a scrim built as a directional gradient rather
+     than a flat wash;
+   · reading is never done over a moving picture: every paragraph sits on
+     its own quiet band between two shots.
 
-   Every value here is measured or resolves to the 4px scale. Nothing is
-   picked. Measurements were taken on the shipped webp at 1600px.
+   The photographs are a single studio session — one hall, one light rig,
+   a wet floor lit petrol. The page keeps that hall unbroken: the bands
+   between shots are the hall's own dark, sampled from the frames' edges.
    ═══════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── the room, in three steps ───────────────────────────────────────
-     Sampled from the frames' own 24px edge strips, not chosen:
-       A  front elevation, top strip        #02070C  L 0.0019
-       B  between engine and side floors    #07161B  L 0.0070
-       C  side elevation, top strip         #08232A  L 0.0136
-     The page travels A → B → C, continuously, never as a cut.          */
-  --room-a: #03080C;
-  --room-b: #07161B;
-  --room-c: #0A2028;
+  /* the hall, sampled from the frames' own edge strips */
+  --hall:      #03080C;
+  --hall-lift: #07161B;
 
-  /* ── ink ──────────────────────────────────────────────────────────── */
-  --ink:      #E8EAEC;            /* 16.3:1 on A, 13.1:1 on C            */
-  --ink-reg:  rgb(232 234 236 / .62);  /* register voice, ≥ 5.5:1 on C   */
-  --ink-quiet:rgb(232 234 236 / .78);  /* body over the deepest room     */
-  --rule:     rgb(232 234 236 / .16);  /* group rules                    */
-  --rule-fine:rgb(232 234 236 / .08);  /* row hairlines, lighter         */
+  --ink:       #FFFFFF;
+  --ink-80:    rgb(255 255 255 / .82);
+  --ink-60:    rgb(255 255 255 / .64);
+  --rule:      rgb(255 255 255 / .22);
+  --rule-fine: rgb(255 255 255 / .10);
 
-  /* ── accent ───────────────────────────────────────────────────────────
-     Modena yellow, measured off the livery on details_005 (75th
-     percentile of the livery pixels). Rosso stays on the marque lockup
-     and enters the page only through the car. 9.5:1 on room A.        */
+  /* Modena yellow, measured off the livery (75th percentile of the
+     livery pixels on the splitter frame). Rosso stays with the marque. */
   --accent:     #DFAF00;
-  --accent-ink: #05080A;          /* label on the fill — 9.8:1          */
+  --accent-ink: #05080A;
 
-  /* ── aperture hairlines ───────────────────────────────────────────────
-     The brightest 5% of each frame's lower third — its own floor glow —
-     scaled to L ≈ 0.085 so every frame opens with a different light.   */
-  --hair-front:       #305766;
-  --hair-34:          #3E565D;
-  --hair-motore:      #365666;
-  --hair-details-005: #3F5844;
-  --hair-interni-05:  #654D3D;
-  --hair-interni-03:  #525250;
-  --hair-side:        #2F5863;
-  --hair-details-002: #29586A;
-  --hair-back:        #3E565C;
+  --measure: 1280px;
+  --gutter:  clamp(20px, 4vw, 64px);
 
-  /* ── measure ─────────────────────────────────────────────────────────
-     12 columns, 24px gutter, 1280 measure, page gutters that never drop
-     below 20px on a phone.                                            */
-  --measure:  1280px;
-  --gutter:   clamp(20px, 4vw, 64px);
-  --col-gap:  24px;
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 56px; --s-10: 80px; --s-11: 120px;
 
-  /* ── spacing, 4px scale ───────────────────────────────────────────── */
-  --s-1: 4px;   --s-2: 8px;   --s-3: 12px;  --s-4: 16px;
-  --s-5: 20px;  --s-6: 24px;  --s-7: 32px;  --s-8: 40px;
-  --s-9: 56px;  --s-10: 80px; --s-11: 120px;
-
-  /* acts exhale downward — 1 : 1.55 → 1 : 1.7 */
-  --act-top:    clamp(4rem, 7vw, 6.5rem);
-  --act-bottom: clamp(6rem, 12vw, 11rem);
-
-  /* ── type ─────────────────────────────────────────────────────────────
-     One family. Four sizes, never more than three visible at once. The
-     scale ratio is 60/18 = 3.33; adjacent ranks 2.0 and 1.67.
-     14px is the floor and the register voice sits on it.              */
-  --t-display: clamp(2.25rem, 4.4vw, 3.75rem);
-  --t-value:   clamp(1.5rem, 1.6vw + .8rem, 1.875rem);
-  --t-read:    clamp(1rem, .35vw + .94rem, 1.125rem);
+  /* type — one family, four sizes. The display is the page's voice and it
+     is set big, because a shot needs a title, not a label. */
+  --t-hero:    clamp(2.25rem, 3.6vw, 3.25rem);
+  --t-display: clamp(1.75rem, 2.9vw, 2.75rem);
+  --t-value:   clamp(1.75rem, 2.4vw, 2.5rem);
+  --t-read:    clamp(1.0625rem, .4vw + .95rem, 1.25rem);
   --t-reg:     .875rem;
 
-  /* how far the picture travels while it settles. Authored per format:
-     27px at the hero's 596px frame on desktop, 10px at the phone's. */
-  --float:    4.5%;
-
-  --dur:      .12s;
+  --dur: .15s;
   --ease-out: cubic-bezier(.22, .61, .36, 1);
 }
 
-/* ═══ the page is one room ═══════════════════════════════════════════════
-   The ground is not a brand colour and not a flat fill: it is the
-   photographs' own dark, and it moves down the page in three measured
-   steps. Each act paints its own step; the travel between steps happens
-   across the interval, so there is never a drawn edge between rooms.   */
-body {
-  background: var(--room-a);
-  color: var(--ink);
-  font-family: var(--font);
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-}
-
+body { background: var(--hall); color: var(--ink); font-family: var(--font); font-synthesis: none; -webkit-font-smoothing: antialiased; }
 .gtm { overflow-x: clip; }
 
-/* the three rooms, as grounds an act can stand in */
-.room-a { background: var(--room-a); }
-.room-b { background: var(--room-b); }
-.room-c { background: var(--room-c); }
-/* the travel: an act that changes room carries the gradient itself, so
-   the change happens over the act's own top padding rather than at a
-   boundary the eye can find */
-.room-ab { background: linear-gradient(to bottom, var(--room-a), var(--room-b) 46%); }
-.room-bc { background: linear-gradient(to bottom, var(--room-b), var(--room-c) 60%); }
-
-/* ═══ shell ═════════════════════════════════════════════════════════════ */
-.shell {
-  max-width: var(--measure);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-.act {
-  padding-block: var(--act-top) var(--act-bottom);
-}
-
-/* ═══ the four type roles ═══════════════════════════════════════════════
-   Display, value, reading, register. The register voice serves many
-   roles — running head, view caption, record key, spec label — because a
-   role is not a voice.                                                 */
-.display {
-  margin: 0;
-  font-size: var(--t-display);
-  font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-/* a value is evidence and outranks its own label: full ink against the
-   register voice's 62%, which is what makes the record readable as fact
-   rather than as another line of caption */
-.value {
-  color: var(--ink);
-  font-size: var(--t-value);
-  font-weight: 500;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums lining-nums;
-  font-feature-settings: "tnum" 1, "lnum" 1;
-}
-.read {
-  margin: 0;
-  max-width: 64ch;
-  font-size: var(--t-read);
-  line-height: 1.65;
-  color: var(--ink-quiet);
-  text-wrap: pretty;
-}
-.read + .read { margin-block-start: var(--s-6); }
-.reg {
-  font-size: var(--t-reg);
-  line-height: 1.3;
-  font-weight: 400;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink-reg);
-}
-
-/* the running head — the page's furniture, and the same 1px weight the
-   apertures are born from */
-.runhead {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--s-5);
-  margin-block-end: var(--s-9);
-}
-.runhead::after,
-.runhead__rule { display: block; height: 1px; background: var(--rule); }
-
-/* ═══ the aperture ══════════════════════════════════════════════════════
-   A frame is not a band laid over the page. It is an opening made in the
-   ground: a 1px hairline in the frame's own floor colour, which opens
-   symmetrically about its centre line while the picture inside settles
-   late. --p drives the opening, --q the picture. Both default to 1 — the
-   open, finished state — so with no JS, and under reduced motion, the
-   page is simply already open.                                          */
-/* inherits: true — the value is set on the figure and read by the window
-   and the picture inside it; registered as false, the children silently
-   fall back to 1 and the aperture never closes. */
-@property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
-@property --q { syntax: "<number>"; inherits: true; initial-value: 1; }
-
-.frame {
-  --p: 1;
-  --q: 1;
-  --hair: var(--hair-front);
-  position: relative;
-  display: block;
-  margin: 0;
-}
-.frame__win {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  /* the opening itself: from a 1px line at the centre to the full height */
-  clip-path: inset(calc((1 - var(--p)) * 50%) 0 calc((1 - var(--p)) * 50%) 0);
-}
-.frame__win img {
-  display: block;
-  width: 100%;
-  height: auto;
-  /* the picture arrives after the frame does */
-  transform: translateY(calc((1 - var(--q)) * var(--float)));
-  will-change: transform;
-}
-/* the light the opening is made from — a hairline of the frame's own floor
-   colour, at full strength while closed, gone once open */
-.frame__win::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 50%;
-  height: 1px;
-  background: var(--hair);
-  opacity: calc(1 - var(--p));
-  pointer-events: none;
-}
-.frame__cap {
-  margin-block-start: var(--s-5);
-  display: block;
-}
-
-/* ═══ ACT 1 · THE HALL ══════════════════════════════════════════════════
-   The event: a track-only race car faces the visitor across a dark hall,
-   small in its own air, while the page names it, states in three facts
-   what it is and is not, and offers the one route to register.
-
-   The type column crosses the frame's right edge on purpose. It is
-   legible on both grounds because the two grounds measure the same:
-   the frame's right strip is L 0.0010 and the hall is L 0.0021 — a
-   difference of 0.0011, which is not visible. That seam is the page.   */
-.hall .shell { max-width: 1440px; }
-.hall {
+/* ═══ a shot ════════════════════════════════════════════════════════════
+   One screen, one photograph, edge to edge. The picture is not a block in
+   the layout — it is the ground the type stands on. */
+.shot {
   position: relative;
   min-height: 100svh;
   display: grid;
-  align-content: center;
-  /* the dealer's header is position:absolute over the document, so the
-     event begins below it rather than under it — the bar is the frame
-     around the event, not part of it */
-  padding-block: calc(var(--head-h, 0px) + var(--s-7)) var(--s-9);
+  align-items: end;
+  overflow: clip;
+  isolation: isolate;
 }
-.hall__grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--col-gap);
-  align-items: center;
+.shot__media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+/* The frame is shown WHOLE, at the size of the screen, and the hall it was
+   shot in continues past its edges — the photographs' own dark and the
+   page's dark are the same value, so the letterbox is invisible and the
+   picture reads as a room rather than as a crop. This is also what makes
+   the type safe: the car is centred inside its frame with its own dark
+   margins, and the words stand in those margins instead of on the car.
+   The phone is a different cut — see the branch at the foot of this file. */
+.shot__media img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: var(--pos, 50% 50%);
+  /* the push-in: the camera closes on the object as the shot arrives */
+  transform: scale(var(--zoom, 1));
+  transform-origin: var(--pos, 50% 50%);
+  will-change: transform;
 }
-.hall__frame { grid-column: 1 / span 9; grid-row: 1; }
-/* the seam: the type column starts at column 8, two columns inside the
-   frame's right edge. Both masses share row 1 — they are one scene, not a
-   picture with a caption beside it. */
-.hall__type  { grid-column: 8 / span 5; grid-row: 1; align-self: center; position: relative; z-index: 2; }
-/* the hero title is set one step under the display ceiling: at the seam
-   the column is 471px and the page's longest authored line, GT MODIFICATA,
-   measures wider than that at 60px. Three lines, not four. */
-.hall__title { margin: 0; font-size: clamp(2rem, 3.4vw, 3rem); }
-.hall__sub {
+/* the lift is directional, built to the side the type sits on, and it
+   stops well short of the far edge so the picture is never flattened */
+.shot__lift {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(to right, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 20%, rgb(3 8 12 / .20) 40%, rgb(3 8 12 / 0) 56%),
+    linear-gradient(to top, rgb(3 8 12 / .62) 0%, rgb(3 8 12 / 0) 34%);
+}
+.shot--right .shot__lift {
+  background:
+    linear-gradient(to left, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 20%, rgb(3 8 12 / .20) 40%, rgb(3 8 12 / 0) 56%),
+    linear-gradient(to top, rgb(3 8 12 / .62) 0%, rgb(3 8 12 / 0) 34%);
+}
+/* the shot hands over to the band below it — the hall closing back in */
+.shot::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 22svh; z-index: 1;
+  background: linear-gradient(to bottom, rgb(3 8 12 / 0), var(--hall));
+  pointer-events: none;
+}
+.shot__type {
+  position: relative; z-index: 2;
+  width: min(100%, var(--measure));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block-end: clamp(3rem, 9vh, 7rem);
+}
+/* a right-set shot moves the whole block, not just the ragging: the type
+   stands in the margin on that side of the picture */
+.shot--right .shot__type { text-align: end; }
+.shot--right .shot__type > * { margin-inline-start: auto; }
+.shot__title { margin: 0; max-width: 15ch; }
+.shot--hero .shot__title { max-width: 9ch; }
+.shot__type > * { max-width: min(34ch, 26vw); }
+.shot__sub, .shot__type .read { max-width: min(38ch, 27vw); }
+.shot__sub {
   margin-block-start: var(--s-6);
-  max-width: 34ch;
+  max-width: 44ch;
   font-size: var(--t-read);
   line-height: 1.5;
-  color: var(--ink-quiet);
+  color: var(--ink-80);
+}
+.shot--right .shot__sub { margin-inline-start: auto; }
+
+/* ═══ type ══════════════════════════════════════════════════════════════ */
+.hero-type, .display {
+  margin: 0;
+  font-weight: 500;
+  line-height: .96;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.hero-type { font-size: var(--t-hero); }
+.display   { font-size: var(--t-display); }
+.read {
+  margin: 0; max-width: 62ch;
+  font-size: var(--t-read); line-height: 1.6;
+  color: var(--ink-80); text-wrap: pretty;
+}
+.read + .read { margin-block-start: var(--s-6); }
+.reg {
+  font-size: var(--t-reg); line-height: 1.3; font-weight: 400;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-60);
+}
+.value {
+  color: var(--ink);
+  font-size: var(--t-value); font-weight: 500; line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
-/* the admission record — three facts on hairlines, stating what this is
-   and is not before anything else on the page speaks */
-.facts {
-  margin-block-start: var(--s-9);
-  border-block-start: 1px solid var(--rule);
+/* ═══ a band — where reading happens ════════════════════════════════════
+   Never over a photograph, never while anything moves. The hall's own
+   dark, the measure, and air. */
+.band {
+  background: var(--hall);
+  padding-block: clamp(4.5rem, 10vw, 9rem);
 }
-.facts div {
-  padding-block: var(--s-3);
+.band--lift { background: var(--hall-lift); }
+.band__in {
+  width: min(100%, var(--measure));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* A band carries the argument and nothing else: the headline it belongs to
+   is on the shot above it, so there is no second heading and no label
+   standing in for one. One column, one measure. */
+.prose { max-width: 62ch; }
+.prose .read { font-size: clamp(1.125rem, .5vw + 1rem, 1.375rem); }
+
+/* Section labels are the Purosangue page's own marker — the marque's
+   Chapter component, inherited from base.css rather than re-drawn here:
+   number, a fixed 96px rule, name, 12/15 in rosso corsa. The only thing
+   this page adds is the interval under it. */
+.marker { margin-block-end: clamp(2rem, 4vw, 3.5rem); }
+
+/* ═══ the record — facts on hairlines ═══════════════════════════════════ */
+.facts { margin-block-start: var(--s-8); border-block-start: 1px solid var(--rule); max-width: 46ch; }
+.facts > div {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s-5);
+  align-items: baseline; padding-block: var(--s-4);
   border-block-end: 1px solid var(--rule-fine);
 }
-.facts--kv {
-  display: grid;
-  gap: 0;
-}
-.facts--kv div {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--s-5);
-  align-items: baseline;
-}
+.facts--plain > div { display: block; }
+.shot--right .facts { max-width: 46ch; }
 
-/* the route — the means of the task, above the fold at every width, and
-   deliberately not a button: a car that cannot be bought does not get a
-   filled control on its first screen */
+/* ═══ the route and the control ═════════════════════════════════════════ */
 .route {
-  display: inline-block;
-  margin-block-start: var(--s-8);
+  display: inline-block; margin-block-start: var(--s-8);
   padding-block-end: var(--s-2);
   border-block-end: 1px solid var(--accent);
-  color: var(--ink);
-  text-decoration: none;
+  color: var(--ink); text-decoration: none;
   transition: color var(--dur) var(--ease-out);
 }
 .route:hover { color: var(--accent); }
 .route:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-
-/* ═══ acts ══════════════════════════════════════════════════════════════ */
-.act__grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--col-gap);
-  align-items: start;
+.btn {
+  display: inline-flex; align-items: center; min-height: 56px;
+  margin-block-start: var(--s-9);
+  padding-inline: var(--s-8);
+  background: var(--accent); color: var(--accent-ink);
+  font-size: var(--t-reg); letter-spacing: .14em; text-transform: uppercase;
+  text-decoration: none; transition: opacity var(--dur) var(--ease-out);
 }
-.act__head { margin-block-end: var(--s-7); }
-.act__body { margin-block-start: var(--s-6); }
+.btn:hover { opacity: .88; }
+.btn:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: -4px; box-shadow: 0 0 0 2px var(--ink); }
 
-/* ACT 3 · SILENCE — the only screen with no photograph and no paragraph.
-   It exists to give the peak its silence. */
+/* ═══ the silence ═══════════════════════════════════════════════════════
+   The only screen with no photograph. It exists to give the engine its
+   entrance. */
 .silence {
-  min-height: 55svh;
-  display: grid;
-  align-content: center;
+  min-height: 62svh; display: grid; align-content: center;
+  background: var(--hall);
 }
-.silence .display { max-width: 12ch; }
+.silence .display { max-width: 10ch; font-size: var(--t-hero); }
 
-/* ACT 4 · THE PEAK — the engine, alone on the floor, edge to edge.
-   The page's only full-bleed frame and its only two drawn horizontal
-   edges. Its hairline runs the full viewport width, not the frame's. */
-.peak__frame { margin-inline: calc(50% - 50vw); width: 100vw; }
-.peak__frame .frame__win::after { inset-inline: 0; }
-
-/* ACT 6 · BORN FOR TWO — the page's only paired act, and deliberately its
-   quietest: intimacy rather than scale, so it never competes with the
-   peak for rank. */
-.pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--col-gap);
-}
-
-/* ACT 9 · THE SHEET — the one dense mass on the page. No prose: after
-   nine acts of argument the evidence is produced without comment. */
-.sheet {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--s-10) var(--s-11);
-}
+/* ═══ the sheet ═════════════════════════════════════════════════════════ */
+.sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-10) var(--s-11); }
 .sheet__group + .sheet__group { margin-block-start: var(--s-9); }
-.sheet__label {
-  display: block;
-  padding-block-end: var(--s-3);
-  border-block-end: 1px solid var(--rule);
-}
+.sheet__label { display: block; padding-block-end: var(--s-3); border-block-end: 1px solid var(--rule); }
 .sheet__rows { margin: 0; }
 .sheet__row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--s-5);
-  align-items: baseline;
-  padding-block: var(--s-3);
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s-5);
+  align-items: baseline; padding-block: var(--s-3);
   border-block-end: 1px solid var(--rule-fine);
 }
 .sheet__row dt { margin: 0; }
 .sheet__row dd {
-  margin: 0;
-  font-size: 1.0625rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums lining-nums;
-  font-feature-settings: "tnum" 1, "lnum" 1;
-  text-align: end;
+  margin: 0; font-size: 1.0625rem; font-weight: 500; text-align: end;
+  font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1;
 }
-
-/* ═══ ACT 10 · CLOSE ════════════════════════════════════════════════════
-   The page arrives somewhere and stops: the room at its lightest, one
-   thing to do. The only filled control on the page. */
-.close__cta { margin-block-start: var(--s-9); }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  min-height: 56px;
-  padding-inline: var(--s-8);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: var(--t-reg);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: opacity var(--dur) var(--ease-out);
-}
-.btn:hover { opacity: .88; }
-/* a single light ring on yellow measures 1.65:1 and fails; the ring is
-   two-part so it clears AA against both the fill and the hall */
-.btn:focus-visible {
-  outline: 2px solid var(--accent-ink);
-  outline-offset: -4px;
-  box-shadow: 0 0 0 2px var(--ink);
-}
-
-/* ═══ the phone is recomposed, not stacked ══════════════════════════════
-   The hero's two-mass overlap cannot survive at 390: the frame's dark
-   right quarter — the thing that made the seam possible — is cropped
-   away by the portrait window. So the type leaves the photograph and
-   stands on the page's own ground, and the frame is re-cropped to 5:4
-   around the car's own centre (the car spans x 0.270–0.728 of the frame,
-   so a 0.1485–0.8515 window holds it centred with equal margins).
-   Every other frame stays full-bleed at its native 16:9 and uncropped:
-   these are documents of an object, and cropping them at phone width
-   would contradict the page's own idea.                                */
-@media (max-width: 60rem) {
-  /* the dealer's mobile masthead measures 119px on their own site; the
-     event begins under it and still owns the screen */
-  :root { --head-h-m: 120px; }
-  .hall {
-    min-height: 100svh;
-    padding-block: calc(var(--head-h-m) + var(--s-3)) var(--s-9);
-    align-content: start;
-  }
-  /* the intervals close up at phone width — the screen is the constraint,
-     and the event has to fit inside it whole */
-  .hall__frame { margin-block-end: var(--s-6) !important; }
-  .hall__sub { margin-block-start: var(--s-4); }
-  .hall .facts { margin-block-start: var(--s-6); }
-  .hall .facts div { padding-block: var(--s-1); }
-  .hall__frame .frame__cap { margin-block-start: var(--s-3); }
-  .hall .route { margin-block-start: var(--s-6); }
-  .hall__grid { display: block; }
-  .hall__frame { margin-inline: calc(var(--gutter) * -1); }
-  /* The window is authored, not left to object-fit: a 4:3 crop of the 16:9
-     frame keeps 75% of its width, so the margins are 0.125 either side and
-     the car — which spans x 0.270–0.728 of the source — lands with 0.145
-     left and 0.147 right. Centred by measurement, and 19px shorter than
-     the 5:4 it replaces, which is what puts the route above the fold. */
-  .hall__frame .frame__win { aspect-ratio: 4 / 3; }
-  .hall__frame .frame__win img {
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 50%;
-  }
-  .hall__sub { max-width: none; }
-
-  .act__grid { display: block; }
-  .act__grid > * + * { margin-block-start: var(--s-9); }
-
-  /* frames run to the page edges on a phone: presence comes from
-     interval and the continuous room, never from zoom. Their captions do
-     not go with them — a caption belongs to the text column, and a bled
-     figure would otherwise drag it onto the screen edge. */
-  .act .frame:not(.peak__frame) { margin-inline: calc(var(--gutter) * -1); }
-  .frame__cap { padding-inline: var(--gutter); }
-  .act .frame:not(.peak__frame) .frame__cap,
-  .hall__frame .frame__cap { padding-inline: var(--gutter); }
-
-  /* the peak keeps its disruption at phone width, as a 4:3 window */
-  .peak__frame .frame__win { aspect-ratio: 4 / 3; }
-  .peak__frame .frame__win img { height: 100%; object-fit: cover; object-position: 46% 50%; }
-
-  .pair { grid-template-columns: 1fr; gap: var(--s-9); }
-  .sheet { grid-template-columns: 1fr; gap: var(--s-10); }
-}
-
-@media (max-width: 60rem) {
-  :root { --float: 3%; }
-}
-
-@media (max-width: 30rem) {
-  .runhead { gap: var(--s-4); }
-}
+@media (max-width: 60rem) { .sheet { grid-template-columns: 1fr; gap: var(--s-10); } }
 
 /* ═══ motion ════════════════════════════════════════════════════════════
-   One temporal idea on this page: the room opens. Nothing else moves, and
-   no type on this page ever animates — that single rule is what keeps it
-   a document instead of a showreel, and it is why comprehension never
-   waits on choreography.
+   One temporal idea: the camera arrives. A shot opens vertically out of
+   the hall while the lens closes on the object, and the title settles
+   after the picture does — the frame arrives, the object catches up, the
+   words land last.
 
-   The closed state is applied by script only. With JS removed, or under
-   prefers-reduced-motion, --p and --q stay at their initial 1 and the
-   page is the finished composition: every aperture open, every picture
-   settled. The device still leaves a trace — a 1px rule along each
-   frame's bottom edge — so the reduced-motion path is an authored still
-   rather than a blank.                                                  */
-.js-motion .frame.is-waiting { --p: 0; --q: 0; }
+   Three registered properties drive it, all defaulting to their finished
+   state, so a page with no script, or one asked for reduced motion, is
+   the completed composition rather than an empty screen.             */
+@property --open { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --zoom { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --t    { syntax: "<number>"; inherits: true; initial-value: 1; }
 
+.shot { --open: 0; --zoom: 1; --t: 1; }
+.shot__media { clip-path: inset(calc(var(--open) * 9%) 0 calc(var(--open) * 9%) 0); }
+.shot__type  { opacity: var(--t); transform: translateY(calc((1 - var(--t)) * 26px)); }
+
+/* the still: everything arrived, nothing moving */
 @media (prefers-reduced-motion: reduce) {
-  .js-motion .frame.is-waiting { --p: 1; --q: 1; }
-  .frame__win img { transform: none; }
+  .shot { --open: 0 !important; --zoom: 1 !important; --t: 1 !important; }
+  .shot__type { transform: none !important; }
 }
-/* the device leaves a trace wherever it cannot run: under reduced motion,
-   and on a page whose script never arrived */
-@media (prefers-reduced-motion: reduce) {
-  .frame__win { border-block-end: 1px solid var(--hair); }
-}
-html:not(.js-motion) .frame__win { border-block-end: 1px solid var(--hair); }
 
-/* ═══ chrome ════════════════════════════════════════════════════════════
-   The dealer's header is the frame around the event, not part of it. It
-   stays the retailer's own; nothing here restyles it beyond holding it to
-   this page's ground so the room starts at the top of the document. */
-.skip:focus { outline: 2px solid var(--ink); }
+/* ═══ the phone is a different cut ══════════════════════════════════════
+   A phone scroll is fast: the same travel reads as lag. The shots keep
+   their full height, the camera move is halved, and the title does not
+   float at all — at this size the settle is invisible and only costs
+   frames. Crops are authored per shot, never inherited from desktop. */
+@media (max-width: 60rem) {
+  .shot { min-height: 100svh; }
+  /* a 16:9 frame contained on a 390-wide screen is a 219px strip, which is
+     not a shot. The phone gets a crop instead, authored per frame by its
+     own object-position, and it fills the screen. */
+  .shot__media img { object-fit: cover; transform: scale(var(--zoom, 1)); }
+  .shot__type { padding-block-end: clamp(2.5rem, 7vh, 4rem); }
+  .shot__title { max-width: 16ch; }
+  .shot--hero .shot__title { max-width: 11ch; }
+  .shot--right .shot__type { text-align: start; }
+  .shot--right .shot__type .read, .shot--right .shot__type .facts { margin-inline-start: 0; }
+  /* the type sits over the bottom of the picture on a phone, so the lift
+     is vertical there rather than directional */
+  .shot__lift, .shot--right .shot__lift {
+    background: linear-gradient(to top, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 30%, rgb(3 8 12 / .22) 58%, rgb(3 8 12 / 0) 78%);
+  }
+  .silence { min-height: 50svh; }
+}

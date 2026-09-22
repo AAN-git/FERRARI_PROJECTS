@@ -294,3 +294,19 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   }
   .silence { min-height: 50svh; }
 }
+
+/* ═══ the dealer's navigation band pins ═════════════════════════════════
+   Taken from the Purosangue build, which took it from cauleyferrari.com
+   itself: the contact bar rides away with the page and the navigation band
+   stays at the top. `.header` is absolute, so lifting the band out of its
+   flow costs no reflow below it — and on a page made of full-screen shots
+   the band is the only chrome, so it is counted in the composition rather
+   than added to it. */
+body.nav-pinned .header__navigation-section {
+  position: fixed; inset-inline: 0; inset-block-start: 0; z-index: 10;
+}
+@media (max-width: 64rem) {
+  /* no contact bar to lose at this width, so the whole header pins at once */
+  body.nav-pinned .header { position: fixed; }
+  body.nav-pinned .header__navigation-section { position: relative; }
+}

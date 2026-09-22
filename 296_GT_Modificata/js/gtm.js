@@ -98,3 +98,27 @@
     });
   }
 })();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The dealer's navigation band pins, exactly as it does on the Purosangue
+   pages and on cauleyferrari.com: past the height of the contact bar the
+   band goes fixed and the bar scrolls away. Below 64rem there is no
+   contact bar, so the whole header pins at once.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var bar  = document.querySelector('.header__top-bar');
+  var wide = window.matchMedia('(min-width: 64.0625rem)');
+  function syncPin() {
+    var threshold = wide.matches && bar ? bar.offsetHeight : 0;
+    document.body.classList.toggle('nav-pinned', window.scrollY > threshold);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { syncPin(); ticking = false; });
+  }, { passive: true });
+  if (wide.addEventListener) wide.addEventListener('change', syncPin);
+  syncPin();
+})();

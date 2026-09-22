@@ -67,3 +67,23 @@
   if (wide.addEventListener) wide.addEventListener('change', sync);
   sync();
 })();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The drawer over the cabin frame. It is open in the markup, so the text
+   exists without this file; the button is only what puts it away so the
+   picture can be seen whole.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  document.querySelectorAll('.drawer__toggle').forEach(function (btn) {
+    var stage = btn.closest('.stage');
+    if (!stage) return;
+    btn.addEventListener('click', function () {
+      var closed = stage.classList.toggle('is-closed');
+      btn.setAttribute('aria-expanded', String(!closed));
+      btn.querySelector('.sr-only').textContent = closed
+        ? 'Show the text about the cabin'
+        : 'Hide the text and see the picture';
+    });
+  });
+})();

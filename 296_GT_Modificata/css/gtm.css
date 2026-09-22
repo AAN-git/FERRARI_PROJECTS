@@ -28,7 +28,6 @@
      interval rather than by tint — so the page is black, the pictures
      carry the colour, and no blue-grey of my own enters the palette. */
   --hall:      #000000;
-  --hall-lift: #141414;
 
   --ink:       #FFFFFF;
   --ink-80:    rgb(255 255 255 / .82);
@@ -36,12 +35,19 @@
   --rule:      rgb(255 255 255 / .22);
   --rule-fine: rgb(255 255 255 / .10);
 
-  /* The accent is the marque's own rosso corsa — the same token the
-     chapter marker uses, inherited from the base stylesheet. White on it
-     measures 4.8:1, which clears AA for the control's label. The livery
-     yellow is in the photographs and stays there. */
-  --accent:     var(--rosso-corsa);
-  --accent-ink: #FFFFFF;
+  /* Rosso corsa at the Brand Book's own value — #ED1C24, Pantone 485,
+     RAL 3020, p104 — rather than the darker token the digital library
+     carries. The choice is a measured one, not a preference: as TEXT on
+     black the book's red reads 4.79:1 and the library's 4.31:1, which is
+     under AA at the 12px the marque's chapter marker is set in. As a FILL
+     it takes a black label at 4.79:1, which is also the pairing the
+     covenants show — the black logo goes on Ferrari Red. White on it
+     would be 4.38:1 and fail.
+     Giallo Modena (#FFF200) is a Ferrari colour too, and it stays where
+     it belongs on this page: on the car. */
+  --accent:     #ED1C24;
+  --accent-ink: #05080A;
+  --rosso-corsa: #ED1C24;   /* the chapter marker inherits this */
 
   --measure: 1280px;
   --gutter:  clamp(20px, 4vw, 64px);
@@ -177,7 +183,10 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   background: var(--hall);
   padding-block: clamp(4.5rem, 10vw, 9rem);
 }
-.band--lift { background: var(--hall-lift); }
+/* There is no raised band. Ferrari's own site is one ground and separates
+   its sections by imagery and interval; a lifted panel here also put the
+   chapter marker's 12px red on #141414, which measures 4.20:1 and is under
+   AA. One black, and the marker reads 4.79:1 everywhere. */
 .band__in {
   width: min(100%, var(--measure));
   margin-inline: auto;

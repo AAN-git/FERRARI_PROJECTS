@@ -40,9 +40,14 @@
     var zoom = zoomFrom + (1 - zoomFrom) * ease(clamp(p / (isPhone ? 0.5 : 0.55)));
     /* the title lands after the picture — on a phone it simply is there */
     var t = isPhone ? (p > 0.12 ? 1 : 0) : ease(clamp((p - 0.08) / 0.26));
+    /* the travel: the picture runs against the scroll the whole time it is
+       on screen, ±6% of its own height, which is why the media box is 7%
+       taller than the screen — the edge is never reachable */
+    var par = (0.5 - p) * (isPhone ? 7 : 12);
     shot.style.setProperty('--open', open.toFixed(4));
     shot.style.setProperty('--zoom', zoom.toFixed(4));
     shot.style.setProperty('--t', t.toFixed(4));
+    shot.style.setProperty('--par', par.toFixed(3));
   }
 
   var triggers = [];
@@ -65,7 +70,8 @@
     triggers.forEach(function (t) { t.kill(); });
     triggers = [];
     shots.forEach(function (s) {
-      s.style.removeProperty('--open'); s.style.removeProperty('--zoom'); s.style.removeProperty('--t');
+      s.style.removeProperty('--open'); s.style.removeProperty('--zoom');
+      s.style.removeProperty('--t'); s.style.removeProperty('--par');
     });
     build();
     ScrollTrigger.refresh();
@@ -86,7 +92,8 @@
       triggers.forEach(function (t) { t.kill(); });
       triggers = [];
       shots.forEach(function (s) {
-        s.style.removeProperty('--open'); s.style.removeProperty('--zoom'); s.style.removeProperty('--t');
+        s.style.removeProperty('--open'); s.style.removeProperty('--zoom');
+        s.style.removeProperty('--t'); s.style.removeProperty('--par');
       });
     });
   }

@@ -23,9 +23,12 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* the hall, sampled from the frames' own edge strips */
-  --hall:      #03080C;
-  --hall-lift: #07161B;
+  /* Ferrari's own ground and nothing sampled from anywhere else. Their
+     site is one black, and its sections are separated by imagery and
+     interval rather than by tint — so the page is black, the pictures
+     carry the colour, and no blue-grey of my own enters the palette. */
+  --hall:      #000000;
+  --hall-lift: #141414;
 
   --ink:       #FFFFFF;
   --ink-80:    rgb(255 255 255 / .82);
@@ -33,10 +36,12 @@
   --rule:      rgb(255 255 255 / .22);
   --rule-fine: rgb(255 255 255 / .10);
 
-  /* Modena yellow, measured off the livery (75th percentile of the
-     livery pixels on the splitter frame). Rosso stays with the marque. */
-  --accent:     #DFAF00;
-  --accent-ink: #05080A;
+  /* The accent is the marque's own rosso corsa — the same token the
+     chapter marker uses, inherited from the base stylesheet. White on it
+     measures 4.8:1, which clears AA for the control's label. The livery
+     yellow is in the photographs and stays there. */
+  --accent:     var(--rosso-corsa);
+  --accent-ink: #FFFFFF;
 
   --measure: 1280px;
   --gutter:  clamp(20px, 4vw, 64px);
@@ -70,20 +75,20 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   overflow: clip;
   isolation: isolate;
 }
-.shot__media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-/* The frame is shown WHOLE, at the size of the screen, and the hall it was
-   shot in continues past its edges — the photographs' own dark and the
-   page's dark are the same value, so the letterbox is invisible and the
-   picture reads as a room rather than as a crop. This is also what makes
-   the type safe: the car is centred inside its frame with its own dark
-   margins, and the words stand in those margins instead of on the car.
-   The phone is a different cut — see the branch at the foot of this file. */
+.shot__media { position: absolute; inset: -7% 0; z-index: 0; overflow: hidden; }
+/* Every frame fills the screen, edge to edge, at every width. The crop is
+   authored per shot by its own object-position, chosen so the subject
+   stands clear of the side the words are on — the type is never asked to
+   sit on the car. The media box is taller than the screen so the picture
+   can travel against the scroll without ever showing its edge. */
 .shot__media img {
   width: 100%; height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: var(--pos, 50% 50%);
-  /* the push-in: the camera closes on the object as the shot arrives */
-  transform: scale(var(--zoom, 1));
+  /* the camera: it closes on the object as the shot arrives, and the
+     picture travels against the scroll the whole time it is on screen.
+     One idea — a camera move — expressed as two rates. */
+  transform: translateY(calc(var(--par, 0) * 1%)) scale(var(--zoom, 1));
   transform-origin: var(--pos, 50% 50%);
   will-change: transform;
 }
@@ -92,18 +97,18 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .shot__lift {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    linear-gradient(to right, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 20%, rgb(3 8 12 / .20) 40%, rgb(3 8 12 / 0) 56%),
-    linear-gradient(to top, rgb(3 8 12 / .62) 0%, rgb(3 8 12 / 0) 34%);
+    linear-gradient(to right, rgb(0 0 0 / .95) 0%, rgb(0 0 0 / .90) 22%, rgb(0 0 0 / .62) 38%, rgb(0 0 0 / .22) 52%, rgb(0 0 0 / 0) 68%),
+    linear-gradient(to top, rgb(0 0 0 / .70) 0%, rgb(0 0 0 / .18) 34%, rgb(0 0 0 / 0) 52%);
 }
 .shot--right .shot__lift {
   background:
-    linear-gradient(to left, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 20%, rgb(3 8 12 / .20) 40%, rgb(3 8 12 / 0) 56%),
-    linear-gradient(to top, rgb(3 8 12 / .62) 0%, rgb(3 8 12 / 0) 34%);
+    linear-gradient(to left, rgb(0 0 0 / .95) 0%, rgb(0 0 0 / .90) 22%, rgb(0 0 0 / .62) 38%, rgb(0 0 0 / .22) 52%, rgb(0 0 0 / 0) 68%),
+    linear-gradient(to top, rgb(0 0 0 / .70) 0%, rgb(0 0 0 / .18) 34%, rgb(0 0 0 / 0) 52%);
 }
 /* the shot hands over to the band below it — the hall closing back in */
 .shot::after {
   content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 22svh; z-index: 1;
-  background: linear-gradient(to bottom, rgb(3 8 12 / 0), var(--hall));
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0), var(--hall));
   pointer-events: none;
 }
 .shot__type {
@@ -118,12 +123,17 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 .shot--right .shot__type { text-align: end; }
 .shot--right .shot__type > * { margin-inline-start: auto; }
 .shot__title { margin: 0; max-width: 15ch; }
+/* the register voice is lifted over a photograph: at 64% ink the engine
+   shot's record measured 4.40:1 against its own background, which is under
+   the floor. 78% puts it at 5.8:1 and changes nothing on the flat bands. */
+.shot__type .reg, .shot__type .facts { color: rgb(255 255 255 / .78); }
 .shot--hero .shot__title { max-width: 9ch; }
-.shot__type > * { max-width: min(34ch, 26vw); }
-.shot__sub, .shot__type .read { max-width: min(38ch, 27vw); }
+.shot__type > * { max-width: min(24ch, 29vw); }
+.shot__sub, .shot__type .read { max-width: min(30ch, 29vw); }
+.shot__type .facts { max-width: min(34ch, 29vw); }
 .shot__sub {
   margin-block-start: var(--s-6);
-  max-width: 44ch;
+  max-width: min(30ch, 29vw);
   font-size: var(--t-read);
   line-height: 1.5;
   color: var(--ink-80);
@@ -252,14 +262,15 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
 @property --open { syntax: "<number>"; inherits: true; initial-value: 0; }
 @property --zoom { syntax: "<number>"; inherits: true; initial-value: 1; }
 @property --t    { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --par  { syntax: "<number>"; inherits: true; initial-value: 0; }
 
-.shot { --open: 0; --zoom: 1; --t: 1; }
+.shot { --open: 0; --zoom: 1; --t: 1; --par: 0; }
 .shot__media { clip-path: inset(calc(var(--open) * 9%) 0 calc(var(--open) * 9%) 0); }
 .shot__type  { opacity: var(--t); transform: translateY(calc((1 - var(--t)) * 26px)); }
 
 /* the still: everything arrived, nothing moving */
 @media (prefers-reduced-motion: reduce) {
-  .shot { --open: 0 !important; --zoom: 1 !important; --t: 1 !important; }
+  .shot { --open: 0 !important; --zoom: 1 !important; --t: 1 !important; --par: 0 !important; }
   .shot__type { transform: none !important; }
 }
 
@@ -270,10 +281,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
    frames. Crops are authored per shot, never inherited from desktop. */
 @media (max-width: 60rem) {
   .shot { min-height: 100svh; }
-  /* a 16:9 frame contained on a 390-wide screen is a 219px strip, which is
-     not a shot. The phone gets a crop instead, authored per frame by its
-     own object-position, and it fills the screen. */
-  .shot__media img { object-fit: cover; transform: scale(var(--zoom, 1)); }
+  .shot__media { inset: -5% 0; }
   .shot__type { padding-block-end: clamp(2.5rem, 7vh, 4rem); }
   .shot__title { max-width: 16ch; }
   .shot--hero .shot__title { max-width: 11ch; }
@@ -282,7 +290,7 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
   /* the type sits over the bottom of the picture on a phone, so the lift
      is vertical there rather than directional */
   .shot__lift, .shot--right .shot__lift {
-    background: linear-gradient(to top, rgb(3 8 12 / .92) 0%, rgb(3 8 12 / .74) 30%, rgb(3 8 12 / .22) 58%, rgb(3 8 12 / 0) 78%);
+    background: linear-gradient(to top, rgb(0 0 0 / .92) 0%, rgb(0 0 0 / .74) 30%, rgb(0 0 0 / .22) 58%, rgb(0 0 0 / 0) 78%);
   }
   .silence { min-height: 50svh; }
 }

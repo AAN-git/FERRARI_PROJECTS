@@ -238,3 +238,64 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
   .facts { gap: var(--s-6) var(--s-8); }
   .spec { grid-template-columns: 1fr; gap: var(--s-9); }
 }
+
+/* ═══ the first screen ══════════════════════════════════════════════════
+   The supplied HERO1 frame carries the model name inside the picture, so
+   the page's H1 is present for assistive technology and search and is not
+   set a second time in type. Under the name, inside the fold: the
+   subhead, the three admission facts, and the route to register.
+
+   The frame fills the screen below the dealer's header. It is the only
+   cropped picture on the page and the trim is 4% — at 1440x900 the screen
+   leaves 769px and a full-width 16:9 frame stands 801. That 4% is what
+   puts the words above the fold. */
+.hero {
+  position: relative;
+  min-height: calc(100svh - var(--head-h, 0px));
+  margin-block-start: var(--head-h, 0px);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+}
+.hero__frame { position: absolute; inset: 0; margin: 0; }
+.hero__frame img {
+  width: 100%; height: 100%;
+  /* the 4% trim is taken off the top, which lifts the name set into the
+     picture to y≈693 at 1440×900 and leaves the words below it clear */
+  object-fit: cover; object-position: 50% 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 92%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0, #000 92%, transparent 100%);
+}
+/* base.css caps .hero__type at 46rem because on the Purosangue page it was
+   a left-set column. Here it is a centred line under the picture, and the
+   cap was what broke the subhead onto two lines and pushed the block up
+   into the name that is set into the frame. */
+.hero__type {
+  position: relative; z-index: 1;
+  width: 100%;
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block-end: clamp(1.25rem, 2.6vh, 2rem);
+  text-align: center;
+}
+/* the block sits under the name that is already in the picture, so it is
+   kept short: one line of subhead, one of facts, one route */
+.hero__type .lead { margin-block-end: var(--s-3); max-width: none; }
+/* cauleyferrari.com's secondary grey (#8F8F8F) is right on black and
+   measures 3.26:1 on this picture's lit floor, which is under AA. On the
+   frame it is lifted to white at 78%: 6.8:1, same weight, same role. */
+.hero__type .micro { margin-block-end: var(--s-6); color: rgb(255 255 255 / .78); }
+.hero__type p { margin-block-start: 0; }
+
+/* the name is in the picture; the heading still exists for anything that
+   cannot see it */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+@media (max-width: 60rem) {
+  .hero { min-height: calc(100svh - var(--head-h-m, 120px)); margin-block-start: var(--head-h-m, 120px); }
+  .hero__frame img { object-position: 50% 44%; }
+}

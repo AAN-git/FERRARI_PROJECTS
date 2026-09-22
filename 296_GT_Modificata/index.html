@@ -158,22 +158,30 @@
 
 <main class="gtm" id="main">
 
-  <!-- ══ the hall ═════════════════════════════════════════════════════════
-       The frame runs the width of the screen at its own 16:9 and is never
-       cropped; the words stand on the page's black underneath it. -->
-  <figure class="frame reveal">
-    <img src="img/front-2400.webp"
-         srcset="img/front-800.webp 800w, img/front-1200.webp 1200w, img/front-1600.webp 1600w, img/front-2400.webp 2400w, img/front-3200.webp 3200w"
-         sizes="100vw" width="1600" height="900" fetchpriority="high" decoding="async"
-         alt="Ferrari 296 GT Modificata, front elevation, lit in a dark hall.">
-  </figure>
+  <!-- ══ the first screen ══════════════════════════════════════════════
+       HERO1.jpg as supplied, with the model name already set into the
+       picture — so the page's own H1 is kept for assistive technology and
+       search and is not shown again in type. Everything the brief asks to
+       be above the fold is: the name (in the frame), the subhead, the
+       three admission facts and the route to register.
 
-  <section class="block block--tight">
-    <div class="block__in">
-      <h1 class="h1 slide">Ferrari 296 GT Modificata</h1>
-      <p class="lead slide" style="margin-block-start: var(--s-6)">The most extreme model yet created for the Club Competizioni GT program</p>
-      <p class="micro slide" style="margin-block-start: var(--s-7)">Track use only &nbsp;·&nbsp; Club Competizioni GT &nbsp;·&nbsp; Produced in exceptionally limited numbers</p>
-      <p class="slide" style="margin-block-start: var(--s-8)"><a class="link action" href="#register">Register your interest</a></p>
+       This is the one frame that is cropped, and by 4%: at 1440x900 the
+       screen leaves 769px under the dealer's header and a 16:9 frame at
+       full width stands 801px. Four per cent is what buys the text its
+       place above the fold. -->
+  <section class="hero">
+    <figure class="hero__frame">
+      <img src="img/hero1-1920.webp"
+           srcset="img/hero1-800.webp 800w, img/hero1-1200.webp 1200w, img/hero1-1600.webp 1600w, img/hero1-1920.webp 1920w"
+           sizes="100vw" width="1920" height="1080" fetchpriority="high" decoding="async"
+           alt="Ferrari 296 GT Modificata, front elevation, lit in a dark hall.">
+    </figure>
+
+    <div class="hero__type">
+      <h1 class="sr-only">Ferrari 296 GT Modificata</h1>
+      <p class="lead">The most extreme model yet created for the Club Competizioni GT program</p>
+      <p class="micro">Track use only &nbsp;·&nbsp; Club Competizioni GT &nbsp;·&nbsp; Produced in exceptionally limited numbers</p>
+      <p><a class="link action" href="#register">Register your interest</a></p>
     </div>
   </section>
 

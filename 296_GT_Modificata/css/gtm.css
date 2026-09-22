@@ -283,7 +283,48 @@ body { background: var(--hall); color: var(--ink); font-family: var(--font); fon
    float at all — at this size the settle is invisible and only costs
    frames. Crops are authored per shot, never inherited from desktop. */
 @media (max-width: 60rem) {
+  :root { --head-h-m: 120px; }
   .shot { min-height: 100svh; }
+
+  /* A 390-wide window takes a narrow vertical slice out of a 16:9 frame,
+     so the desktop crop — which pushes the subject away from the words —
+     would show nothing but floor here. The phone re-centres on the car by
+     default, and any shot that needs a different centre carries --pos-m. */
+  .shot__media img { object-position: var(--pos-m, 50% 50%); }
+
+  /* the type is the width of the screen, not of a desktop column: at 29vw
+     it was breaking every two or three words */
+  .shot__type > *,
+  .shot__sub,
+  .shot__type .read,
+  .shot__type .facts { max-width: none; }
+
+  /* the first screen begins under the dealer's masthead, and the block is
+     bottom-set, so it is the block's own top padding that keeps the title
+     out from behind the bar */
+  .shot--hero .shot__type { padding-block-start: calc(var(--head-h-m) + var(--s-4)); }
+  .shot--hero .shot__title { font-size: clamp(2rem, 8.6vw, 2.75rem); }
+  .shot--hero .shot__sub { margin-block-start: var(--s-5); }
+  .shot--hero .facts { margin-block-start: var(--s-6); }
+  .shot--hero .facts > div { padding-block: var(--s-3); }
+  .shot--hero .route { margin-block-start: var(--s-6); }
+
+  /* The close carries the most type on the page — eyebrow, headline,
+     paragraph, control and its note. Over the rear three-quarter's yellow
+     bodywork that block measured 2.18:1, and no scrim deep enough to fix
+     it would leave a photograph underneath. So the phone gets its own
+     composition: the shot plays at 56svh and the words stand on the page's
+     own black beneath it, where the control is also easiest to hit. */
+  .shot--close { min-height: 0; display: block; }
+  .shot--close .shot__media { position: relative; inset: auto; height: 56svh; }
+  .shot--close .shot__lift {
+    background: linear-gradient(to top, rgb(0 0 0 / .85) 0%, rgb(0 0 0 / .25) 26%, rgb(0 0 0 / 0) 46%);
+  }
+  .shot--close::after { display: none; }
+  .shot--close .shot__type {
+    padding-block: var(--s-9) var(--s-10);
+    background: var(--hall);
+  }
   .shot__media { inset: -5% 0; }
   .shot__type { padding-block-end: clamp(2.5rem, 7vh, 4rem); }
   .shot__title { max-width: 16ch; }

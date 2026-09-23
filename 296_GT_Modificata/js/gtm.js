@@ -87,3 +87,30 @@
     });
   });
 })();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The first screen opens itself. The stylesheet holds the picture and the
+   words back only while `.js` is set, so with the script blocked or with
+   prefers-reduced-motion the first screen is simply there; here it is
+   released as soon as the picture has decoded, and in any case within
+   1.2s, so a slow image can never leave the screen empty.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+  var img  = hero.querySelector('img');
+  var done = false;
+  function open() {
+    if (done) return; done = true;
+    /* two frames: the held state has to be painted once, or the browser
+       has nothing to transition from and the screen simply appears */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add('is-in'); });
+    });
+  }
+  if (img && typeof img.decode === 'function') { img.decode().then(open, open); }
+  else if (img && !img.complete) { img.addEventListener('load', open); img.addEventListener('error', open); }
+  else { open(); }
+  setTimeout(open, 1200);
+})();

@@ -228,6 +228,27 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
   .js .slide:nth-child(2) { transition-delay: .08s; }
   .js .slide:nth-child(3) { transition-delay: .16s; }
   .js .slide:nth-child(4) { transition-delay: .24s; }
+
+  /* The first screen, on load and once only: the picture settles out of a
+     slow 6% zoom while it fades up, and the words follow from under it a
+     beat apart — the same grammar the scroll uses, so the page opens the
+     way it continues. The hero is marked as soon as its picture has
+     decoded, never later than 1.2s, so the screen is never held empty. */
+  .js .hero__frame img {
+    opacity: 0; transform: scale(1.06);
+    transition: opacity .9s var(--ease-arrive), transform 1.8s var(--ease-arrive);
+  }
+  .js .hero.is-in .hero__frame img { opacity: 1; transform: scale(1); }
+
+  .js .hero__type > * {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .7s var(--ease-arrive), transform .8s var(--ease-arrive);
+  }
+  .js .hero.is-in .hero__type > * { opacity: 1; transform: none; }
+  .js .hero.is-in .hero__type > :nth-child(1) { transition-delay: .34s; }
+  .js .hero.is-in .hero__type > :nth-child(2) { transition-delay: .46s; }
+  .js .hero.is-in .hero__type > :nth-child(3) { transition-delay: .58s; }
+  .js .hero.is-in .hero__type > :nth-child(4) { transition-delay: .70s; }
 }
 
 /* ═══ the phone ═════════════════════════════════════════════════════════
@@ -246,73 +267,116 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
 }
 
 /* ═══ the first screen ══════════════════════════════════════════════════
-   The supplied HERO1 frame carries the model name inside the picture, so
-   the page's H1 is present for assistive technology and search and is not
-   set a second time in type. Under the name, inside the fold: the
-   subhead, the three admission facts, and the route to register.
+   Set against `hero screen.jpg`, the Figma frame (2026-09-22). Everything
+   below is measured off that frame at 1920×1080 and off HERO1 itself.
 
-   The frame fills the screen below the dealer's header. It is the only
-   cropped picture on the page and the trim is 4% — at 1440x900 the screen
-   leaves 769px and a full-width 16:9 frame stands 801. That 4% is what
-   puts the words above the fold. */
-/* ═══ the first screen ══════════════════════════════════════════════════
-   The whole frame, fitted to the space above the words. The picture is
-   never cropped and the car is never cut: it is scaled to whatever height
-   the screen leaves, and the hall's own black fills the width either side
-   — invisible, because the frame's edges and the page's ground are the
-   same black (measured: the brightest edge strip on this frame is
-   luminance 0.005 against a ground of 0.000).
+   HERO1 is 1921×1329 (ratio 1.4458). Re-measured — the earlier reading of
+   y 0.033 was the ceiling spotlights, not the car:
 
-   This is what makes all three of the brief's demands hold at once on any
-   window: the frame whole, nothing cropped, and every word above the
-   fold. */
+       car          x 0.306–0.671,  y 0.225–0.572
+       spotlights   y 0.038–0.095
+
+   In the Figma frame the picture runs the full width of the screen and is
+   pulled up 108px — 8.1% of its own height — so the header sits over its
+   top and the spotlights go above the screen. The car's lowest point then
+   lands at
+
+       (0.572 − 0.081) × W / 1.4458 = 0.3396 × W
+
+   and the type block — 195px tall, the last 57 of it ferrari.com's button —
+   stands 40px below that, with 160px of floor left under it.
+
+   The picture is allowed to fill the width while that still fits:
+
+       0.3396 × W + 195 + 40 + 24 ≤ 100vh,  i.e. W ≤ (100vh − 259px) × 2.945
+
+   which holds at every ordinary window, 2560×1440 down to 1152×700. Past
+   it — wide and very short — the picture stops growing and the hall's own
+   black fills the sides rather than the car being cut. When the floor runs
+   short before that, it is the 210px under the words that gives way first,
+   down to 24px: the car is never touched.
+
+   The frame's edge strips measure luminance 0.005 against a ground of
+   0.000, and the mask fades the last 10% of the picture and 2% of each
+   side to nothing, so no window shows an edge. */
 .hero {
+  /* the width of the picture, and the one number the rest is derived from */
+  --pic-w: min(100vw, calc((100vh - 16.2rem) * 2.945));
+  /* the rise: 8.1% of the picture's height, as the frame has it, but never
+     so much that the wing goes under the header — the header is a fixed
+     131px while the picture scales, so on a narrower screen the rise gives
+     way and keeps 40px of air between the band and the wing:
+         rise ≤ 0.225 × picH − 131 − 40 = 0.1556 × picW − 171px           */
+  --rise: max(0px, min(calc(var(--pic-w) * 0.056), calc(var(--pic-w) * 0.1556 - 10.7rem)));
   position: relative;
-  height: calc(100vh - var(--head-h, 0px));
-  /* base.css carries its own .hero — 100svh with the header's padding
-     built in — and its min-height would override this outright */
+  height: 100vh;
+  /* base.css carries its own .hero — 100svh, padded for the header, with
+     its children aligned to the end — and every part of that had to go */
   min-height: 0;
   padding: 0;
-  margin-block-start: var(--head-h, 0px);
-  display: grid;
-  grid-template-rows: 1fr auto;
-  /* base.css's .hero aligns its children to the end; inherited here that
-     collapsed the picture's box to nothing */
-  align-items: stretch;
+  margin: 0;
+  display: block;
   overflow: hidden;
 }
-/* the picture takes the space the row gives it rather than setting it:
-   left to size itself, the image grew the track and cropped the car */
-.hero__frame { position: relative; margin: 0; min-height: 0; overflow: hidden; }
+.hero__frame { position: absolute; inset: 0; margin: 0; overflow: hidden; }
 .hero__frame img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: contain; object-position: 50% 50%;
-  /* one fade, top and bottom. The sides need none: the frame's own edges
-     are the hall's black and the page's ground is the same black. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  display: block;
+  width: var(--pic-w);
+  max-width: none;
+  height: auto;
+  margin-inline: auto;
+  margin-block-start: calc(var(--rise) * -1);
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 0, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+          mask-image:
+    linear-gradient(to bottom, #000 0, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
 }
 
+/* The words: the Figma frame's own sizes, taken off the cap heights at
+   1920 (cap height is 0.74em in this face, calibrated on our own render) —
+   title 30px, subhead 18px, facts 15px, the route 16px, all upper case,
+   centred, and the block ending 210px above the fold. */
 .hero__type {
-  position: relative; z-index: 1;
-  align-self: end;
+  position: absolute; inset-inline: 0; inset-block-end: 0; z-index: 1;
   width: 100%;
   max-width: none;
   margin-inline: auto;
   padding-inline: var(--gutter);
-  padding-block-end: clamp(1.25rem, 2.6vh, 2rem);
+  /* 160px of floor under the words — the frame's 199px, dropped 39px on
+     Alex's call — and it is this that gives way first, never the car */
+  padding-block-end: clamp(1.5rem, calc(100vh - (var(--pic-w) * 0.3957 - var(--rise)) - 14.7rem), 10rem);
   text-align: center;
 }
-/* the gap between the name and what follows it is closed up: the title,
-   the subhead, the facts and the route read as one block, not four */
-.hero__type .h1 { margin-block-end: var(--s-3); }
-.hero__type .lead { margin-block-end: var(--s-2); max-width: none; }
+.hero__type .h1 {
+  font-size: clamp(1.375rem, 2vw, 1.875rem);
+  text-transform: uppercase;
+  letter-spacing: .005em;
+  margin-block-end: 16px;
+}
+.hero__type .lead {
+  font-size: clamp(.9375rem, 1.2vw, 1.125rem);
+  margin-block-end: 17px;
+  max-width: none;
+}
 /* cauleyferrari.com's secondary grey (#8F8F8F) is right on black and
-   measures 3.26:1 on this picture's lit floor, which is under AA. On the
-   frame it is lifted to white at 78%: 6.8:1, same weight, same role. */
-.hero__type .micro { margin-block-end: var(--s-5); color: rgb(255 255 255 / .78); }
+   measures 3.26:1 on this picture's lit floor, which is under AA; the
+   frame's own grey (#707070) is 2.4:1. It is lifted to white at 78% —
+   6.8:1 on the floor, the same weight and the same role. */
+.hero__type .micro {
+  font-size: clamp(.75rem, .9vw, .9375rem);
+  margin-block-end: 24px;
+  color: rgb(255 255 255 / .78);
+}
 .hero__type p { margin-block-start: 0; }
+/* The route is the page's primary control, not a line of text: ferrari.com's
+   own button — #DA291C, white label at 16px regular, square, 57px — the same
+   one that closes the page. Sentence case is that component's, measured; the
+   frame set this line as plain upper-case type. */
+.hero__type .btn { margin-block-start: 0; }
 
 /* the name is in the picture; the heading still exists for anything that
    cannot see it */
@@ -322,11 +386,30 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
 }
 
 @media (max-width: 60rem) {
+  /* On a phone the hall is 390px wide and the car — 36.5% of the frame —
+     would be 142px of it. So the picture is enlarged to 175% and pulled
+     back by half the overflow: the hall's empty sides go past the edges,
+     the whole car stays, and it reads 64% of the screen. Nothing is taken
+     off the car; the frame's own centre of mass (x 0.4885) is the screen's.
+     At 390 the picture is then 682×472 and the words follow beneath it. */
   .hero { height: auto; min-height: 0; margin-block-start: var(--head-h-m, 120px); }
-  .hero__frame { height: auto; }
-  .hero__frame img { height: auto; aspect-ratio: 1921 / 1329; }
-  .hero__type { padding-block: var(--s-9) var(--s-10); }
-  .hero__frame img { object-position: 50% 44%; }
+  /* the picture is then 121vw tall and the car's lowest point lands at
+     63.8vw, so the frame is cut at 80vw — 16vw of floor under the car —
+     and the picture's own fade is moved up to land on that cut, not on
+     the hall's far end which nobody would see */
+  .hero__frame { position: static; height: 80vw; overflow: hidden; }
+  /* base.css caps every image at max-width:100% — that has to go here,
+     or 175% silently computes back to the frame's own width */
+  .hero__frame img {
+    width: 175%; max-width: none; margin-inline: -37.5%; height: auto;
+    -webkit-mask-image:
+      linear-gradient(to bottom, #000 0, #000 54%, transparent 66%),
+      linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+            mask-image:
+      linear-gradient(to bottom, #000 0, #000 54%, transparent 66%),
+      linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+  }
+  .hero__type { position: static; padding-block: var(--s-6) var(--s-9); }
 }
 
 /* ═══ the dealer's header, exactly as their own site behaves ════════════
@@ -336,6 +419,10 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
    reflow. Below 64rem there is no contact bar, so the whole header pins. */
 body.nav-pinned .header__navigation-section {
   position: fixed; inset-inline: 0; inset-block-start: 0; z-index: 10;
+  /* the band keeps their 60% black; what passes under it is blurred, or
+     the hero's own words read straight through the nav on the way past */
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
 }
 @media (max-width: 64rem) {
   body.nav-pinned .header { position: fixed; }

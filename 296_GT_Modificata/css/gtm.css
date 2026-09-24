@@ -628,6 +628,21 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
   .stage--brakes .frame--stage img { height: calc(max(100vh, 50rem) * 1.2); margin-block-start: calc(max(100vh, 50rem) * -0.2); }
 }
 
+/* chapter 4's floor goes down into the black over a long fade — the
+   lower half of the plate, eased so it is barely there at first
+   (Alex, 24 Sep 2026) */
+.stage--aero .frame--stage::after {
+  content: ""; position: absolute; inset-inline: 0; inset-block-end: 0;
+  height: 55%; pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgb(0 0 0 / 0) 0%,     rgb(0 0 0 / .013) 8.1%, rgb(0 0 0 / .049) 15.5%,
+    rgb(0 0 0 / .104) 22.5%, rgb(0 0 0 / .175) 29%,  rgb(0 0 0 / .259) 35.3%,
+    rgb(0 0 0 / .352) 41.2%, rgb(0 0 0 / .45) 47.1%,  rgb(0 0 0 / .55) 52.9%,
+    rgb(0 0 0 / .648) 58.8%, rgb(0 0 0 / .741) 64.7%, rgb(0 0 0 / .825) 71%,
+    rgb(0 0 0 / .896) 77.5%, rgb(0 0 0 / .951) 84.5%, rgb(0 0 0 / .987) 91.9%,
+    #000 100%);
+}
+
 /* chapters 4 and 6 hand straight on to the next plate (Alex, 24 Sep
    2026): their words keep
    only their own height, so the next plate follows them without a screen

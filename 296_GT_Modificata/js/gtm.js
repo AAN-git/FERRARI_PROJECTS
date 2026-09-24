@@ -365,11 +365,31 @@
     items.forEach(function (el) {
       var fig = el.parentElement.querySelector('.frame--stage');
       var floor = fig ? Math.min(window.innerHeight, fig.offsetHeight) : window.innerHeight;
-      el.style.setProperty('--hold-top', Math.max(0, floor - el.offsetHeight) + 'px');
+      var top = floor - el.offsetHeight;
+      /* data-car: where the car ends in the source frame (share of its
+         height). Where it is given, the words rest just under the car
+         rather than on the foot of the screen (chapter 6, Alex, 24 Sep
+         2026) — never lower than the foot allows. */
+      var img = fig && fig.querySelector('img[data-car]');
+      if (img && img.naturalWidth) {
+        var ir = img.getBoundingClientRect(), fr = fig.getBoundingClientRect();
+        var sx = ir.width / img.naturalWidth, sy = ir.height / img.naturalHeight;
+        var scale = getComputedStyle(img).objectFit === 'contain' ? Math.min(sx, sy) : Math.max(sx, sy);
+        var carFoot = ir.top - fr.top + img.naturalHeight * scale * parseFloat(img.getAttribute('data-car'));
+        var gap = parseFloat(img.getAttribute('data-car-gap') || '64');
+        top = Math.min(top, carFoot + gap);
+      }
+      top = Math.max(0, Math.round(top));
+      el.style.setProperty('--hold-top', top + 'px');
+      /* resting above the foot, the words keep the rest of the plate as
+         their own margin, so picture and words still leave as one */
+      el.style.marginBlockEnd = Math.max(0, (fig ? fig.offsetHeight : floor) - top - el.offsetHeight) + 'px';
     });
   }
   window.addEventListener('resize', measure);
   window.addEventListener('load', measure);
+  document.querySelectorAll('.frame--stage img[data-car]').forEach(function (i) { i.addEventListener('load', measure); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   measure();
 })();
 

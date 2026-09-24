@@ -1,0 +1,66 @@
+
+<!-- ══ Register your interest — the dealer's contacts form, retitled ══════
+     As cauleyferrari.com opens it on every model page
+     (?form=contacts&form_state=opened): a panel from the right over the
+     dimmed page, the round close button standing on its edge. Field names
+     are the site's own (fname, lname, address, city, email, phone, state,
+     zip, contact_mode, i_agree,
+     more_information_financing_options, terms_agree), so the platform's
+     handler can take it over as it is. A layout: it sends nothing. -->
+<div class="inq" id="inquire" role="dialog" aria-modal="true" aria-labelledby="inq-title" hidden>
+  <div class="inq__backdrop" data-inq-close></div>
+  <div class="inq__dialog">
+    <button class="inq__close" type="button" data-inq-close aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 9.32703L3.05025 13.6581C2.85509 13.8532 2.53831 13.8532 2.34315 13.6581C2.14798 13.4629 2.14798 13.1461 2.34315 12.951L6.67417 8.00121L2.34315 3.05146C2.14798 2.8563 2.14798 2.53952 2.34315 2.34435C2.53831 2.14919 2.85509 2.14919 3.05025 2.34435L8 6.67538L12.9497 2.34435C13.1449 2.14919 13.4617 2.14919 13.6569 2.34435C13.852 2.53952 13.852 2.8563 13.6569 3.05146L9.32583 8.00121L13.6569 12.951C13.852 13.1461 13.852 13.4629 13.6569 13.6581C13.4617 13.8532 13.1449 13.8532 12.9497 13.6581L8 9.32703Z" fill="#303030"/></svg>
+    </button>
+    <div class="inq__content">
+      <p class="inq__model">Ferrari 296 GT Modificata</p>
+      <h2 class="inq__title" id="inq-title">Register your interest</h2>
+      <p class="inq__required">*Required fields</p>
+
+      <form class="inq__form" method="post" novalidate>
+        <input type="hidden" name="uuid" value="">
+        <input type="hidden" name="model" value="Ferrari 296 GT Modificata">
+
+        <div class="inq__section">
+          <h3 class="inq__h">Contact information</h3>
+          <div class="inq__grid">
+            <div class="inq__field"><input id="fname" name="fname" type="text" placeholder="First Name*" autocomplete="given-name" required><label for="fname">First Name*</label></div>
+            <div class="inq__field"><input id="lname" name="lname" type="text" placeholder="Last Name*" autocomplete="family-name" required><label for="lname">Last Name*</label></div>
+            <div class="inq__field"><input id="address" name="address" type="text" placeholder="Your Address" autocomplete="street-address"><label for="address">Your Address</label></div>
+            <div class="inq__field"><input id="city" name="city" type="text" placeholder="City" autocomplete="address-level2"><label for="city">City</label></div>
+            <div class="inq__field"><input id="email" name="email" type="email" placeholder="Your Email*" autocomplete="email" required><label for="email">Your Email*</label></div>
+            <div class="inq__field"><input id="phone" name="phone" type="tel" placeholder="Your Phone*" autocomplete="tel" required><label for="phone">Your Phone*</label></div>
+            <div class="inq__field inq__field--select">
+              <select id="state" name="state" aria-label="State" autocomplete="address-level1">
+                <option value="">State</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option><option>CO</option><option>CT</option><option>DE</option><option>DC</option><option>FL</option><option>GA</option><option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option><option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option><option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option><option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option><option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option><option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option><option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option><option>VI</option><option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option>
+              </select>
+            </div>
+            <div class="inq__field"><input id="zip" name="zip" type="text" inputmode="numeric" placeholder="Zip" autocomplete="postal-code"><label for="zip">Zip</label></div>
+          </div>
+        </div>
+
+        <fieldset class="inq__radios">
+          <legend>Best Time to Contact*</legend>
+          <label class="inq__choice"><input type="radio" name="contact_mode" value="Morning" required><span>Morning</span></label>
+          <label class="inq__choice"><input type="radio" name="contact_mode" value="Afternoon"><span>Afternoon</span></label>
+          <label class="inq__choice"><input type="radio" name="contact_mode" value="Evening"><span>Evening</span></label>
+        </fieldset>
+
+        <div class="inq__checks">
+          <label class="inq__choice inq__choice--box"><input type="checkbox" name="i_agree" value="1"><span>Please note that by completing this form, you agree to being contacted via text, phone and email.</span></label>
+          <label class="inq__choice inq__choice--box"><input type="checkbox" name="more_information_financing_options" value="1"><span>I would like to receive more information on financing options</span></label>
+          <label class="inq__choice inq__choice--box"><input type="checkbox" name="terms_agree" value="1" required><span>I have read and accept the general terms of use of the site and code of conduct for registered users.*</span></label>
+        </div>
+
+        <div class="inq__actions">
+          <button class="btn inq__submit" type="submit" name="submit">
+            <span>Register your interest</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.2686 9.5459C11.278 9.53814 11.2866 9.52941 11.2959 9.52148L11.373 9.45312H11.3711C11.7574 9.08846 12 8.57313 12 8C12 7.42711 11.7571 6.91249 11.3711 6.54785L11.373 6.54688L11.2959 6.47949C11.2866 6.47156 11.278 6.46284 11.2686 6.45508L4 0L8 8L4 16L11.2686 9.5459Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

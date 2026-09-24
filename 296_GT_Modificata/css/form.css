@@ -1,0 +1,179 @@
+/* ═══ Register your interest — the dealer's contacts panel ══════════════
+   Taken off cauleyferrari.com's own model-page form (Luce, 24 Sep 2026):
+   a 720px white panel from the right, 64px padding, Ferrari Sans, the
+   title 40/44 medium upper case, each section in a 1px rgba(24,24,24,.35)
+   box, fields underlined, the round white close button standing on the
+   panel's left edge, the page behind at 55% black.
+
+   Two departures from the source, both invariants of this build:
+     · functional text is 14px, not the site's 13px (11px for "*Required
+       fields");
+     · the placeholder that stands in for each label is #707070 on white
+       (4.9:1), not the site's #8F8F8F (3.3:1, below AA). */
+
+.inq {
+  --inq-ink: #181818;
+  --inq-soft: #212121;
+  --inq-hint: #707070;
+  --inq-rule: #8F8F8F;
+  --inq-box: rgb(24 24 24 / .35);
+  --inq-w: min(720px, 100%);
+  position: fixed; inset: 0; z-index: 1000;
+  font-family: var(--font, "Ferrari Sans", "Helvetica Neue", Helvetica, Arial, sans-serif);
+  font-size: 14px; line-height: 1.5; letter-spacing: .015em;
+  color: var(--inq-ink);
+}
+.inq[hidden] { display: none; }
+
+.inq__backdrop {
+  position: absolute; inset: 0;
+  background: rgb(0 0 0 / .55);
+  opacity: 0; transition: opacity .4s ease;
+}
+.inq__dialog {
+  position: absolute; inset-block: 0; inset-inline-end: 0;
+  width: var(--inq-w);
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform .55s cubic-bezier(.22, .61, .36, 1);
+}
+.inq.is-open .inq__backdrop { opacity: 1; }
+.inq.is-open .inq__dialog { transform: none; }
+
+/* the round close button, standing out on the panel's left edge,
+   centred on the screen's height */
+.inq__close {
+  position: absolute; inset-inline-end: calc(100% + 64px); inset-block-start: 50%;
+  width: 40px; height: 40px; margin-block-start: -20px;
+  display: grid; place-items: center;
+  border: 2px solid #CDCBCB; border-radius: 50%;
+  background: #fff; cursor: pointer; padding: 0;
+  transition: transform .3s ease;
+}
+.inq__close:hover { transform: rotate(90deg); }
+.inq__close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+.inq__content {
+  height: 100%;
+  /* the form fits the screen whole — no scroll inside the panel (Alex,
+     24 Sep 2026); overflow is kept only as a last resort on a very short
+     window */
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: clamp(16px, 3.4vh, 48px) 64px;
+  display: flex; flex-direction: column; justify-content: safe center;
+}
+.inq__title {
+  margin: 0;
+  font-size: clamp(28px, 4vh, 40px); line-height: 1.1; font-weight: 500;
+  text-transform: uppercase; letter-spacing: normal;
+}
+.inq__model {
+  margin: 0 0 8px;
+  font-size: 14px; line-height: 18px; letter-spacing: .08em;
+  text-transform: uppercase; color: #707070;
+}
+.inq__required { margin: clamp(6px, 1.2vh, 12px) 0 clamp(12px, 2.2vh, 20px); }
+
+.inq__form { display: grid; gap: clamp(8px, 1.6vh, 20px); }
+.inq__section {
+  border: 1px solid var(--inq-box); border-radius: 1px;
+  padding: clamp(10px, 1.8vh, 24px) 32px clamp(12px, 2.4vh, 32px);
+}
+.inq__h {
+  margin: 0 0 clamp(4px, 1.4vh, 16px);
+  font-size: clamp(24px, 3.4vh, 32px); line-height: 1.12; font-weight: 500;
+  text-transform: uppercase; letter-spacing: normal;
+}
+.inq__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0px, .8vh, 12px) 32px;
+}
+
+/* fields: the placeholder is the label until there is a value; then the
+   label rises into the field's top padding */
+.inq__field { position: relative; }
+.inq__field input,
+.inq__field select,
+.inq__field textarea {
+  display: block; width: 100%;
+  font: inherit; color: var(--inq-ink); letter-spacing: inherit;
+  background: #fff;
+  border: 0; border-bottom: 1px solid var(--inq-rule); border-radius: 0;
+  padding: clamp(16px, 2.2vh, 24px) 2px clamp(4px, .7vh, 8px);
+  appearance: none; -webkit-appearance: none;
+  transition: border-color .2s ease;
+}
+.inq__field textarea { resize: vertical; min-height: 128px; }
+.inq__field input::placeholder,
+.inq__field textarea::placeholder { color: var(--inq-hint); opacity: 1; }
+.inq__field input:focus,
+.inq__field select:focus,
+.inq__field textarea:focus { outline: none; border-bottom-color: var(--inq-ink); }
+.inq__field label {
+  position: absolute; inset-inline-start: 2px; inset-block-start: 2px;
+  font-size: 14px; line-height: 18px; color: var(--inq-hint);
+  pointer-events: none;
+  opacity: 0; transition: opacity .2s ease;
+}
+.inq__field input:not(:placeholder-shown) + label,
+.inq__field textarea:not(:placeholder-shown) + label { opacity: 1; }
+.inq__field--select select {
+  cursor: pointer;
+  padding-inline-end: 24px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23181818' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 2px bottom 14px;
+}
+.inq__field.is-invalid input,
+.inq__field.is-invalid select { border-bottom-color: #DA291C; }
+
+/* choices: the site's plain 16px square and circle */
+.inq__radios { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 16px 32px; }
+.inq__radios legend { padding: 0; margin-block-end: clamp(6px, 1.2vh, 12px); color: var(--inq-soft); float: left; width: 100%; }
+.inq__choice {
+  display: inline-flex; align-items: flex-start; gap: 8px;
+  color: var(--inq-soft); cursor: pointer;
+}
+.inq__choice input {
+  flex: none; margin: 2px 0 0; width: 16px; height: 16px;
+  appearance: none; -webkit-appearance: none;
+  border: 1px solid var(--inq-soft); border-radius: 50%;
+  background: #fff; cursor: pointer; display: grid; place-items: center;
+}
+.inq__choice input:checked::after {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--inq-ink);
+}
+.inq__choice--box input { border-radius: 0; }
+.inq__choice--box input:checked::after {
+  width: 9px; height: 5px; border-radius: 0; background: none;
+  border: solid var(--inq-ink); border-width: 0 0 2px 2px;
+  transform: translateY(-1px) rotate(-45deg);
+}
+.inq__choice input:focus-visible { outline: 2px solid var(--inq-ink); outline-offset: 2px; }
+.inq__checks { display: grid; gap: clamp(6px, 1.2vh, 16px); }
+.inq__choice.is-invalid input { border-color: #DA291C; }
+.inq__radios.is-invalid legend { color: #B01E0A; }
+
+.inq__status { margin: 0; min-height: 0; color: var(--inq-ink); }
+.inq__status:empty { display: none; }
+
+.inq__actions { display: flex; justify-content: flex-end; }
+.inq__submit { gap: 24px; }
+.inq__submit svg { flex: none; }
+
+/* the page holds still under the panel */
+html.inq-lock, html.inq-lock body { overflow: hidden; }
+
+/* a phone: the panel is the screen, the close button sits inside it */
+@media (max-width: 47.9375rem) {
+  .inq__content { padding: 72px 24px 40px; }
+  .inq__close { inset-inline-end: 16px; inset-block-start: 16px; margin: 0; }
+  .inq__title { font-size: 32px; line-height: 36px; }
+  .inq__h { font-size: 28px; line-height: 32px; margin-block-end: 32px; }
+  .inq__section { padding: 20px 20px 32px; }
+  .inq__grid { grid-template-columns: 1fr; gap: 24px; }
+  .inq__actions .btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inq__backdrop, .inq__dialog, .inq__close { transition: none; }
+}

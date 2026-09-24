@@ -263,10 +263,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   text-transform: uppercase; color: #fff; text-decoration: none;
   transition: color var(--dur) var(--ease);
 }
-.header__menu > li > a:hover, .header__menu > li > a:focus-visible { color: var(--rosso-lift); }
+/* cauleyferrari.com: `.header__menu .menu-item a:hover { color: #f7f7f7 }` */
+.header__menu > li > a:hover, .header__menu > li > a:focus-visible { color: #F7F7F7; }
 
-/* the drop-down: a full-width band on the retailer's own #181818, drawn by
-   the panel itself so it is exactly as tall as whatever opened it */
+/* the drop-down: a full-width band on the retailer's own #181818 at their
+   0.9 opacity (`.header__submenu-backdrop`, measured open on
+   cauleyferrari.com, 23 Sep 2026 — no blur), drawn by the panel itself so
+   it is exactly as tall as whatever opened it */
 .header__menu .sub-menu {
   /* the panel hangs off the item but opens at the header's own bottom edge,
      as theirs does. 33px is that distance: the band's 24px bottom padding
@@ -284,8 +287,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    width, clipped back to the panel's own height, and never enters layout. */
 .header__menu .sub-menu::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: #181818;
-  box-shadow: 0 0 0 100vmax #181818;
+  background: rgb(24 24 24 / .9);
+  box-shadow: 0 0 0 100vmax rgb(24 24 24 / .9);
   clip-path: inset(0 -100vmax);
 }
 /* The panel hangs from its item's left edge, which runs off-screen for the
@@ -305,7 +308,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font-size: 13px; line-height: 1.5; color: #fff; text-decoration: none; white-space: nowrap;
   transition: color var(--dur) var(--ease);
 }
-.header__menu .sub-menu a:hover, .header__menu .sub-menu a:focus-visible { color: var(--rosso-lift); }
+/* theirs: hover and the current page both go to #8f8f8f */
+.header__menu .sub-menu a:hover, .header__menu .sub-menu a:focus-visible,
+.header__menu .sub-menu .current-menu-item a { color: #8F8F8F; }
 .header__submenu-backdrop { display: none; }
 
 /* mobile bar — theirs switches at 1025 */

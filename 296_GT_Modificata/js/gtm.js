@@ -68,24 +68,215 @@
   sync();
 })();
 
+/* The arrival's layout, with or without motion: on a wide, short screen
+   the words would reach the car's final nose (y 0.42 of the frame), so
+   the frame is lifted until 40px stands between them. */
+(function () {
+  'use strict';
+  var section = document.querySelector('.scrub');
+  if (!section) return;
+  var media = section.querySelector('.scrub__media');
+  var type = section.querySelector('.scrub__type');
+  var phone = window.matchMedia('(max-width: 60rem)');
+  function fit() {
+    if (phone.matches) { section.style.removeProperty('--scrub-rise'); return; }
+    var w = media.offsetWidth, h = media.offsetHeight;
+    var frameH = 907 * Math.max(w / 1600, h / 907);        /* object-fit: cover */
+    var rise = Math.max(0, frameH * 0.42 + 40 - type.offsetTop);
+    section.style.setProperty('--scrub-rise', Math.round(rise) + 'px');
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+
 /* ═══════════════════════════════════════════════════════════════════════
-   The drawer over the cabin frame. It is open in the markup, so the text
-   exists without this file; the button is only what puts it away so the
-   picture can be seen whole.
+   The arrival. The scroll through chapter 7 picks the frame: 72 stills of
+   the one locked-off shot, drawn to a canvas. Paced in the extraction, not
+   here — frame i belongs to progress i/71 — so the arrival itself has most
+   of the travel. The frames load only as the chapter comes within two
+   screens, and until they have, the poster (the last frame) stands.
+
+   On a wide screen the stage is held for 150vh of scroll. On the phone the
+   frame is held at the top while the words scroll beneath it, and the
+   arrival runs from the moment the frame is half-way up the screen.
+
+   The words come up from below one at a time (Alex, 23 Sep 2026) — the
+   marker, the title, each paragraph, the facts — and the scroll drives
+   them as it drives the frames, so they can be stopped half-way and run
+   back. On a wide screen they have all arrived over the empty floor, by
+   a third of the run, before the car does; on the phone each one comes
+   up as it reaches the screen.
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
-  document.querySelectorAll('.drawer__toggle').forEach(function (btn) {
-    var stage = btn.closest('.stage');
-    if (!stage) return;
-    btn.addEventListener('click', function () {
-      var closed = stage.classList.toggle('is-closed');
-      btn.setAttribute('aria-expanded', String(!closed));
-      btn.querySelector('.sr-only').textContent = closed
-        ? 'Show the text about the cabin'
-        : 'Hide the text and see the picture';
-    });
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var section = document.querySelector('.scrub');
+  var canvas = section && section.querySelector('.scrub__canvas');
+  if (!canvas || still.matches || !canvas.getContext || !('IntersectionObserver' in window)) return;
+
+  var ctx = canvas.getContext('2d');
+  var base = canvas.getAttribute('data-frames');
+  var count = +canvas.getAttribute('data-count');
+  var frames = new Array(count);
+  var phone = window.matchMedia('(max-width: 60rem)');
+  var shown = -1, loading = false;
+  var lines = section.querySelectorAll('.scrub__type .marker, .scrub__type .h2, .scrub__type .copy > p, .scrub__type .facts');
+  var RISE = 32;                                         /* px, from below */
+
+  document.documentElement.classList.add('scrub-on');
+
+  function load() {
+    if (loading) return;
+    loading = true;
+    for (var i = 0; i < count; i++) {
+      (function (i) {
+        var img = new Image();
+        img.decoding = 'async';
+        img.onload = function () { frames[i] = img; if (i === want()) draw(); };
+        img.src = base + ('00' + i).slice(-3) + '.webp';
+      })(i);
+    }
+  }
+
+  function progress() {
+    var r = section.getBoundingClientRect(), vh = window.innerHeight;
+    var start = phone.matches ? vh * 0.5 : 0;           /* where the run begins */
+    var run = r.height - vh + start;
+    return run > 0 ? Math.min(1, Math.max(0, (start - r.top) / run)) : 1;
+  }
+  function want() { return Math.round(progress() * (count - 1)); }
+
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(x) { return 1 - Math.pow(1 - x, 3); }   /* out-cubic */
+  function set(el, t) {
+    t = ease(t);
+    el.style.opacity = t;
+    el.style.transform = t < 1 ? 'translateY(' + ((1 - t) * RISE).toFixed(1) + 'px)' : '';
+  }
+  function words() {
+    var vh = window.innerHeight, n = lines.length, i;
+    if (phone.matches) {
+      /* each line on its own: from the moment it clears the screen's foot
+         to a fifth of a screen above it */
+      for (i = 0; i < n; i++) set(lines[i], clamp((vh - lines[i].getBoundingClientRect().top) / (vh * 0.2)));
+      return;
+    }
+    /* one shared clock: from the stage half-way up the screen to a third
+       of the held run; each line takes 30% of it, a step of 15% apart */
+    var r = section.getBoundingClientRect();
+    var run = r.height - vh;
+    var q = clamp((vh * 0.5 - r.top) / (vh * 0.5 + run / 3));
+    for (i = 0; i < n; i++) set(lines[i], clamp((q - i * 0.15) / 0.3));
+  }
+
+  function draw() {
+    var i = want(), j = i;
+    while (j >= 0 && !frames[j]) j--;                   /* nearest loaded, never ahead */
+    if (j < 0 || j === shown) return;
+    ctx.drawImage(frames[j], 0, 0, canvas.width, canvas.height);
+    shown = j;
+    section.classList.add('is-playing');
+  }
+
+  new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) load();
+  }, { rootMargin: '200% 0px' }).observe(section);
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { draw(); words(); ticking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', function () { shown = -1; draw(); words(); });
+  words();
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The specification comes up with the scroll (Alex, 23 Sep 2026). Each
+   group label and each row rises 24px and fades in over the fifth of a
+   screen after it clears the screen's foot; the right-hand column runs a
+   step behind the left. Driven by the scroll, so it can be stopped half-way
+   and runs back on the way up. With no script or reduced motion the table
+   is simply there.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var items = document.querySelectorAll('.spec__label, .spec__row');
+  var spec = document.querySelector('.spec');
+  if (!items.length || !spec) return;
+  var RISE = 24;
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(x) { return 1 - Math.pow(1 - x, 3); }
+  function run() {
+    var vh = window.innerHeight, mid = spec.getBoundingClientRect().left + spec.offsetWidth / 2;
+    for (var i = 0; i < items.length; i++) {
+      var r = items[i].getBoundingClientRect();
+      var lag = r.left > mid ? 0.35 : 0;                 /* the right column, a step behind */
+      var t = ease(clamp((vh - r.top) / (vh * 0.2) - lag));
+      items[i].style.opacity = t;
+      items[i].style.transform = t < 1 ? 'translateY(' + ((1 - t) * RISE).toFixed(1) + 'px)' : '';
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { run(); ticking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', run);
+  run();
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Words that come up as you arrive ([data-rise]) — the pinned chapters'
+   title, paragraphs and facts (Alex, 23 Sep 2026: "the moment I enter
+   that area"). As soon as a line clears the screen's foot it rises 32px
+   into place on its own clock, the lines of one block a beat apart; they
+   reset only once the block is back below the screen, so it plays on every
+   pass down. No script or reduced motion: .rise-on is never set.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var items = document.querySelectorAll('[data-rise]');
+  if (!items.length || !('IntersectionObserver' in window)) return;
+  /* the beat: each line's place in its own block */
+  items.forEach(function (el) {
+    var sibs = el.closest('.block__in').querySelectorAll('[data-rise]');
+    el.style.setProperty('--rise-i', Array.prototype.indexOf.call(sibs, el));
   });
+  document.documentElement.classList.add('rise-on');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) e.target.classList.add('is-up');
+      else if (e.boundingClientRect.top > 0) e.target.classList.remove('is-up');
+    });
+  }, { rootMargin: '0px 0px -6% 0px' });
+  items.forEach(function (el) { io.observe(el); });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The box door ([data-door]). The stylesheet runs the lift; this only says
+   when: open once a third of the plate is on screen, closed again once the
+   plate is wholly below the screen, so it plays on every pass down. No
+   script or reduced motion: .door-on is never set and the plate is open.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var doors = document.querySelectorAll('[data-door]');
+  /* the lift needs a registered --door (@property); without it, stay open */
+  if (!doors.length || !('IntersectionObserver' in window) || !(window.CSS && CSS.registerProperty)) return;
+  document.documentElement.classList.add('door-on');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.intersectionRatio >= 0.33) e.target.classList.add('is-open');
+      else if (!e.isIntersecting && e.boundingClientRect.top > 0) e.target.classList.remove('is-open');
+    });
+  }, { threshold: [0, 0.33] });
+  doors.forEach(function (d) { io.observe(d); });
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -114,3 +305,124 @@
   else { open(); }
   setTimeout(open, 1200);
 })();
+
+/* ═══ chapter 5: the cockpit lifts over the seats ══════════════════════
+   While the .swap track passes, --swap runs 0 → 1 with the scroll and
+   the stylesheet uncovers the second frame from the foot. The first and
+   last tenth of the travel are held, so each frame is seen whole. The
+   scroll is the transport: stop and it stops, go back and it closes.
+   Phone, reduced motion or no script: .swap-on is never set. */
+(function () {
+  'use strict';
+  var track = document.querySelector('[data-swap]');
+  if (!track) return;
+  var wide = window.matchMedia('(min-width: 60.0625rem)');
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var frame = track.querySelector('.swap__frame');
+  var queued = false;
+  function update() {
+    queued = false;
+    var r = track.getBoundingClientRect();
+    var run = r.height - frame.offsetHeight;
+    var p = run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+    /* 130vh of track: the lift runs over the first 100vh, the rest is the hold */
+    p = Math.min(1, Math.max(0, (p - 0.05) / 0.72));
+    p = p * p * (3 - 2 * p);
+    track.style.setProperty('--swap', p.toFixed(4));
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  function mode() {
+    var on = wide.matches && !still.matches;
+    document.documentElement.classList.toggle('swap-on', on);
+    if (on) update(); else track.style.removeProperty('--swap');
+  }
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+  (wide.addEventListener ? wide.addEventListener('change', mode) : wide.addListener(mode));
+  (still.addEventListener ? still.addEventListener('change', mode) : still.addListener(mode));
+  mode();
+})();
+
+/* ═══ the hold ═════════════════════════════════════════════════════════
+   Where a pinned chapter's words come to rest: their foot on the foot of
+   the screen, or — in chapter 8 — on the foot of the picture they stand
+   on. The stylesheet makes them sticky there; this only measures. */
+(function () {
+  'use strict';
+  var items = document.querySelectorAll('[data-hold]');
+  if (!items.length) return;
+  function measure() {
+    items.forEach(function (el) {
+      var fig = el.parentElement.querySelector('.frame--stage');
+      var floor = fig ? Math.min(window.innerHeight, fig.offsetHeight) : window.innerHeight;
+      el.style.setProperty('--hold-top', Math.max(0, floor - el.offsetHeight) + 'px');
+    });
+  }
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  measure();
+})();
+
+/* ═══ Register your interest: the contacts panel ═══════════════════════
+   Every [data-inquire] opens #inquire, as cauleyferrari.com opens its own
+   form, and the address carries ?form=contacts&form_state=opened so the
+   state can be linked to and the platform's own form takes over there.
+   Esc, the backdrop and the round button close it; focus goes in and
+   comes back to the button that opened it. It is a layout: nothing is
+   sent. */
+(function () {
+  'use strict';
+  var panel = document.getElementById('inquire');
+  if (!panel) return;
+  var dialog = panel.querySelector('.inq__dialog');
+  var form = panel.querySelector('form');
+  var opener = null, closing = null;
+
+  function setUrl(open) {
+    if (!window.history || !history.replaceState) return;
+    var u = new URL(window.location.href);
+    if (open) { u.searchParams.set('form', 'contacts'); u.searchParams.set('form_state', 'opened'); }
+    else { u.searchParams.delete('form'); u.searchParams.delete('form_state'); }
+    history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+  }
+  function open(from) {
+    clearTimeout(closing);
+    opener = from || document.activeElement;
+    panel.hidden = false;
+    document.documentElement.classList.add('inq-lock');
+    requestAnimationFrame(function () { requestAnimationFrame(function () { panel.classList.add('is-open'); }); });
+    setUrl(true);
+    setTimeout(function () { var f = panel.querySelector('#fname'); if (f) f.focus({ preventScroll: true }); }, 60);
+  }
+  function close() {
+    panel.classList.remove('is-open');
+    document.documentElement.classList.remove('inq-lock');
+    setUrl(false);
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    closing = setTimeout(function () { panel.hidden = true; }, still ? 0 : 560);
+    if (opener && opener.focus) opener.focus({ preventScroll: true });
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-inquire]');
+    if (t) { e.preventDefault(); open(t); return; }
+    if (e.target.closest('[data-inq-close]')) { e.preventDefault(); close(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (panel.hidden) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = dialog.querySelectorAll('button, input, select, textarea, a[href]');
+    f = Array.prototype.filter.call(f, function (el) { return !el.disabled && el.type !== 'hidden'; });
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* a layout: submitting goes nowhere */
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  var q = new URLSearchParams(window.location.search);
+  if (q.get('form') === 'contacts' && q.get('form_state') === 'opened') open(null);
+})();
+

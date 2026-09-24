@@ -6,6 +6,7 @@
      _mobilemenu-<dealer>.html
      _main.html            the ten acts — the page itself, dealer-agnostic
      _footer-<dealer>.html the retailer's own footer
+     _form-<dealer>.html   the retailer's contacts panel (Register your interest)
      _tail.html            scripts
 
    The acts are identical for every retailer: the dealer header and footer
@@ -40,7 +41,8 @@ for (const d of DEALERS) {
   const head = read('_head.html').replaceAll('{{DEALER}}', d.name);
   const menu = existsSync(`_mobilemenu-${d.id}.html`) ? read(`_mobilemenu-${d.id}.html`) : '';
   const main = mainRaw.replaceAll('{{DEALER}}', d.name);
-  const page = [head, read(`_header-${d.id}.html`), menu, main, read(`_footer-${d.id}.html`), tail].join('\n');
+  const form = existsSync(`_form-${d.id}.html`) ? read(`_form-${d.id}.html`) : '';
+  const page = [head, read(`_header-${d.id}.html`), menu, main, read(`_footer-${d.id}.html`), form, tail].join('\n');
   writeFileSync(d.out, bust(page));
   console.log(`${d.out.padEnd(24)} ${page.split('\n').length} lines`);
 }

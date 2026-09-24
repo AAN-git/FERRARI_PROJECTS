@@ -613,6 +613,21 @@ h3, .h3 { margin: 0; font-size: var(--t-h3); font-weight: 500; line-height: 1.2;
   }
 }
 
+/* chapters 4 and 6 held as grounds (Alex, 24 Sep 2026): the front and
+   side elevations have less floor under the car than chapter 8's view
+   from above, so their words sit closer together, and the side
+   elevation is lifted by its empty ceiling (the lamps go above the
+   screen) so the car stands higher and the floor under it grows. */
+@media (min-width: 60.0625rem) {
+  .stage--aero > .stage__words,
+  .stage--brakes > .stage__words { padding-block: var(--s-4) var(--s-7); }
+  .stage--aero .copy,
+  .stage--brakes .copy { margin-block-start: var(--s-5) !important; }
+  .stage--brakes .facts { margin-block-start: var(--s-6); padding-block-start: var(--s-5); }
+  .stage--brakes .frame--stage { overflow: hidden; }
+  .stage--brakes .frame--stage img { height: calc(max(100vh, 50rem) * 1.2); margin-block-start: calc(max(100vh, 50rem) * -0.2); }
+}
+
 /* chapters 4 and 6 hand straight on to the next plate (Alex, 24 Sep
    2026): their words keep
    only their own height, so the next plate follows them without a screen

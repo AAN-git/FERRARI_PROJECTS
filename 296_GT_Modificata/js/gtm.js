@@ -328,13 +328,23 @@
     /* 130vh of track: the lift runs over the first 100vh, the rest is the hold */
     p = Math.min(1, Math.max(0, (p - 0.05) / 0.72));
     p = p * p * (3 - 2 * p);
-    track.style.setProperty('--swap', p.toFixed(4));
+    target = p;
+    if (!easing) { easing = true; requestAnimationFrame(ease); }
+  }
+  /* the lift follows the scroll with a little lag, so it settles rather
+     than stops dead (Alex, 24 Sep 2026) */
+  var target = 0, shown = 0, easing = false;
+  function ease() {
+    shown += (target - shown) * 0.14;
+    if (Math.abs(target - shown) < 0.0005) { shown = target; easing = false; }
+    else requestAnimationFrame(ease);
+    track.style.setProperty('--swap', shown.toFixed(4));
   }
   function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
   function mode() {
     var on = wide.matches && !still.matches;
     document.documentElement.classList.toggle('swap-on', on);
-    if (on) update(); else track.style.removeProperty('--swap');
+    if (on) { update(); shown = target; track.style.setProperty('--swap', shown.toFixed(4)); } else track.style.removeProperty('--swap');
   }
   window.addEventListener('scroll', queue, { passive: true });
   window.addEventListener('resize', queue);
@@ -424,5 +434,25 @@
 
   var q = new URLSearchParams(window.location.search);
   if (q.get('form') === 'contacts' && q.get('form_state') === 'opened') open(null);
+})();
+
+/* ═══ smooth scroll ════════════════════════════════════════════════════
+   Lenis gives the wheel inertia; the page still scrolls natively, so
+   every sticky and scroll-driven chapter works as before, only softer.
+   Touch keeps the device's own scroll. Reduced motion, or no Lenis: the
+   browser's scroll, untouched. The contacts panel scrolls itself
+   (data-lenis-prevent) and the page is held still while it is open. */
+(function () {
+  'use strict';
+  if (!window.Lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lenis = new window.Lenis({ autoRaf: true, lerp: 0.09, anchors: true, allowNestedScroll: true });
+  window.gtmLenis = lenis;
+  var panel = document.getElementById('inquire');
+  if (panel && 'MutationObserver' in window) {
+    new MutationObserver(function () {
+      if (panel.classList.contains('is-open')) lenis.stop(); else lenis.start();
+    }).observe(panel, { attributes: true, attributeFilter: ['class'] });
+    if (panel.classList.contains('is-open')) lenis.stop();
+  }
 })();
 

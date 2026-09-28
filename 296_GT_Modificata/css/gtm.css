@@ -787,3 +787,10 @@ body.nav-pinned .header__navigation-section {
   body.nav-pinned .header__navigation-section { position: relative; }
 }
 
+
+/* ── module headlines in capitals ─────────────────────────────────────────
+   The Tier 3 copy deck sets every module headline in capitals, and the page is
+   required to read 1:1 against that document. The h1 and the buttons were
+   already uppercased here; the module headlines were the only strings left
+   differing from the deck, and they differed by case alone. */
+.block h2 { text-transform: uppercase; }

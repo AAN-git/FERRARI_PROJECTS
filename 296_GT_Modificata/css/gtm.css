@@ -794,3 +794,22 @@ body.nav-pinned .header__navigation-section {
    already uppercased here; the module headlines were the only strings left
    differing from the deck, and they differed by case alone. */
 .block h2 { text-transform: uppercase; }
+
+/* ═══ the phone: every line starts at the left edge (Alex, 28 Sep 2026) ═══
+   Below the width where the pinned chapters switch off, the page reads as
+   a column, and a column reads from its left edge: the first screen, every
+   chapter's title and copy, the fact plates and the buttons. */
+@media (max-width: 60rem) {
+  .hero__type,
+  .block__in,
+  .scrub__type { text-align: start; }
+  .copy { margin-inline: 0; text-wrap: wrap; }
+  .facts { justify-content: flex-start; }
+  /* one left edge for everything: the dealer's logo, the eyebrows and
+     the words all start on --logo-x */
+  .block,
+  .hero__type { padding-inline: var(--logo-x); }
+  .block__in > .marker { margin-inline-start: 0; }
+  /* the page's buttons run the full width of the column */
+  main .btn { display: flex; width: 100%; }
+}

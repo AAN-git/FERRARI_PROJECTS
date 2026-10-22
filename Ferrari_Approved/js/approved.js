@@ -57,4 +57,23 @@
     });
   });
 
+  /* 2 · The program tiles arrive one by one.
+     Tiles that enter together (a row) are staggered 140 ms by their order;
+     each is revealed once and then left alone. */
+  window.__faReveal = true;
+  var root = document.documentElement;
+  var tiles = [].slice.call(document.querySelectorAll('.fa-tile'));
+  if (root.classList.contains('js-reveal') && tiles.length) {
+    var io = new IntersectionObserver(function (entries) {
+      var batch = entries.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return tiles.indexOf(a.target) - tiles.indexOf(b.target); });
+      batch.forEach(function (e, i) {
+        e.target.style.setProperty('--fa-d', (i * 140) + 'ms');
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+    tiles.forEach(function (t) { io.observe(t); });
+  }
+
 })();

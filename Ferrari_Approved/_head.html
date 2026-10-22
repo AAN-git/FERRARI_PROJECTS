@@ -10,6 +10,14 @@
 <link rel="preload" href="img/hero-1920.webp" as="image" imagesrcset="img/hero-800.webp 800w, img/hero-1280.webp 1280w, img/hero-1920.webp 1920w" imagesizes="100vw">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/approved.css">
+<!-- The tiles' reveal has to be armed before first paint or there is nothing
+     to animate from. If approved.js never arrives, they stand at 3s. -->
+<script>
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-reveal');
+    setTimeout(function () { if (!window.__faReveal) document.documentElement.classList.remove('js-reveal'); }, 3000);
+  }
+</script>
 </head>
 <body>
 

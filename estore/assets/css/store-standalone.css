@@ -1,0 +1,111 @@
+/* Genuine Store — VERSION 2 (standalone): the store's own header, drawer and footer.
+   No CauleyFerrari.com theme chrome. Dealer facts come from DEALER in tools/build_store.py.
+   All chrome aligns to the Momentum container (same edges as the page content). */
+
+.v-standalone{--chrome-w:calc(var(--container) + var(--lateral)*2)}
+.shead__util-in,.shead__main,.shead__nav{width:100%;max-width:var(--chrome-w);margin:0 auto;padding-inline:var(--lateral)}
+
+/* ---------------- header: 32 utility (scrolls away) + 80 main + 48 departments; sticky at -32 ---------------- */
+.shead{position:sticky;top:-32px;z-index:20;background:#fff;border-bottom:1px solid var(--f-color-ui-20)}
+.shead__util{background:#181818;color:#8f8f8f;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.shead__util-in{display:flex;align-items:center;justify-content:space-between;height:32px}
+.shead__util-r{display:flex;gap:24px}
+.shead__util a{color:#d2d2d2;display:inline-flex;align-items:center;gap:6px;transition:color var(--motion-d1)}
+.shead__util a:hover{color:#fff}
+.ext{width:10px;height:10px;fill:currentColor;flex:0 0 auto}
+.shead__main{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:80px}
+.shead__l{display:flex;align-items:center;gap:16px}
+.shead__store{display:flex;flex-direction:column;font-size:12px;line-height:1.25;letter-spacing:.05em;text-transform:uppercase}
+.shead__store b{font-weight:500;font-size:14px;letter-spacing:.04em}
+.shead__store span{color:var(--f-color-ui-50)}
+.shead__lockup img{height:40px;width:auto}
+.shead .tools{justify-self:end;margin:0}
+.shead__navbar{border-top:1px solid var(--f-color-ui-20)}
+.shead__nav{display:flex;justify-content:center;height:48px}
+.shead .cats{display:flex;margin:0;align-self:stretch}
+.shead__burger{display:none;width:40px;height:40px;flex-direction:column;justify-content:center;gap:7px}
+.shead__burger span{display:block;height:1.5px;background:var(--f-color-ui-100);width:22px}
+.shead__burger span:last-child{width:14px}
+/* sticky offsets: the visible header is 128px once the utility row has scrolled away */
+.v-standalone .ptool{top:calc(var(--sb,160px) - 32px)}
+.v-standalone .pdp__info{top:152px}
+.v-standalone .hero{height:calc(100svh - 160px)}
+
+@media (max-width:1100px){.shead__lockup img{height:34px}}
+@media (max-width:960px){
+  .shead{top:0}
+  .shead__util{display:none}
+  .shead__main{height:64px;grid-template-columns:auto 1fr auto;gap:12px}
+  .shead__burger{display:flex}
+  .shead__store{display:none}
+  .shead__lockup{justify-self:center}
+  .shead__lockup img{height:28px}
+  .shead .tool--acc{display:none}
+  .shead__nav{height:44px;justify-content:flex-start;padding-inline:0}
+  .shead .cats{flex:1 1 auto;margin:0;padding:0 var(--lateral);height:44px;border-top:0;order:0}
+  .v-standalone .ptool{top:var(--sb,108px)}
+  .v-standalone .hero{height:auto}
+}
+@media (max-width:420px){.shead__lockup img{height:24px}.shead__main{padding-inline:12px 4px;gap:4px}}
+
+/* ---------------- drawer (burger, ≤960) — left panel, same motion as the filter panel ---------------- */
+.sdrawer{position:fixed;inset:0;z-index:9998;pointer-events:none;visibility:hidden;transition:visibility 0s linear .5s}
+.sdrawer.is-active{pointer-events:auto;visibility:visible;transition:none}
+.sdrawer__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;transition:opacity .2s}
+.sdrawer.is-active .sdrawer__backdrop{opacity:1}
+.sdrawer__panel{position:absolute;top:0;left:0;bottom:0;width:min(420px,100vw);background:#fff;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.sdrawer.is-active .sdrawer__panel{transform:none}
+.sdrawer__head{display:flex;align-items:center;gap:12px;height:72px;padding:0 24px;border-bottom:1px solid var(--f-color-ui-20);font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+.sdrawer__head b{font-weight:500}
+.sdrawer .sdrawer__close{position:static;transform:none;margin-left:auto}
+.sdrawer__body{flex:1;overflow:auto;padding:8px 24px 32px}
+.sdrawer__top,.sdrawer__dept summary{display:flex;align-items:center;justify-content:space-between;min-height:56px;border-bottom:1px solid var(--f-color-ui-20);font-size:14px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;list-style:none}
+.sdrawer__dept summary::-webkit-details-marker{display:none}
+.sdrawer__dept summary em{margin-left:auto;margin-right:16px;font-style:normal;font-size:12px;color:var(--f-color-ui-50)}
+.sdrawer__dept summary::after{content:"";width:12px;height:12px;background:linear-gradient(currentColor,currentColor) center/12px 1px no-repeat,linear-gradient(currentColor,currentColor) center/1px 12px no-repeat;transition:transform .3s}
+.sdrawer__dept[open] summary::after{transform:rotate(45deg)}
+.sdrawer__dept ul{padding:8px 0 16px 16px;border-bottom:1px solid var(--f-color-ui-20)}
+.sdrawer__dept li a{display:flex;gap:8px;align-items:baseline;padding:10px 0;font-size:14px}
+.sdrawer__dept li em{font-style:normal;font-size:12px;color:var(--f-color-ui-50)}
+.sdrawer__all{font-weight:500}
+.sdrawer__top.is-sale{color:var(--f-color-accent-100)}
+.sdrawer__links{margin-top:24px;display:flex;flex-direction:column}
+.sdrawer__links a{display:inline-flex;align-items:center;gap:6px;padding:10px 0;font-size:14px;color:var(--f-color-ui-80)}
+@media (prefers-reduced-motion:reduce){.sdrawer,.sdrawer__panel,.sdrawer__backdrop{transition:none}}
+
+/* ---------------- footer ---------------- */
+.sfoot{background:#181818;color:#fff}
+.sfoot__trust{border-bottom:1px solid #303030}
+.sfoot__trust-in{display:grid;grid-template-columns:1fr;gap:24px;padding-block:var(--f-space-l)}
+@media (min-width:768px){.sfoot__trust-in{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1281px){.sfoot__trust-in{grid-template-columns:repeat(4,1fr)}}
+.sfoot__trust-in div{display:flex;flex-direction:column;gap:6px;padding-left:16px;border-left:2px solid var(--f-color-accent-100)}
+.sfoot__trust b{font-weight:500;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+.sfoot__trust span{font-size:14px;color:#a6a6a6}
+.sfoot__cols{display:grid;grid-template-columns:1fr;gap:var(--f-space-l);padding-block:var(--f-space-xl)}
+@media (min-width:768px){.sfoot__cols{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1281px){.sfoot__cols{grid-template-columns:2fr 1fr 1fr 1fr}}
+.sfoot__brand img{height:40px;width:auto;margin-bottom:24px}
+.sfoot__brand address{font-style:normal;font-size:14px;line-height:1.7;color:#d2d2d2}
+.sfoot__brand address a{color:#fff}
+.sfoot__hours{margin-top:12px;font-size:14px;color:#8f8f8f}
+.sfoot h2{font-weight:500;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.sfoot nav ul{display:flex;flex-direction:column;gap:4px}
+.sfoot nav a{display:inline-flex;align-items:center;gap:6px;padding:4px 0;font-size:14px;color:#d2d2d2;transition:color var(--motion-d1)}
+.sfoot nav a:hover{color:#fff}
+.sfoot__social{margin-top:24px;flex-direction:row!important;gap:20px!important}
+.sfoot__social a{font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.sfoot__legal{background:#0f0f0f}
+.sfoot__legal-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-block:24px;font-size:12px;color:#8f8f8f}
+.sfoot__legal-in p{max-width:70ch}
+.sfoot__legal ul{display:flex;flex-wrap:wrap;gap:24px}
+.sfoot__legal a{color:#d2d2d2}
+.sfoot__legal a:hover{color:#fff}
+/* home already states these facts in the Parts desk directly above — no repeat */
+.v-standalone:has(.desk) .sfoot__trust{display:none}
+.shead .cats{min-width:0}
+.sfoot__brand img{width:300px;max-width:100%;height:auto}
+.sfoot__social{flex-wrap:wrap}
+/* mega: first column starts on the same vertical as the header and the page content */
+.shead{container-type:inline-size}
+@media (min-width:961px){.shead .mega__col:first-child{padding-left:max(var(--lateral),calc((100cqw - var(--chrome-w))/2 + var(--lateral)))}}

@@ -177,6 +177,18 @@
     location.href = 'shop.html' + (q.toString() ? '?' + q : '');
   });
 
+  /* ---------------- standalone drawer (v2) ---------------- */
+  const drawer = $('#sdrawer'), burger = $('.shead__burger');
+  if (drawer && burger) {
+    const openD = () => { lastFocus = burger; drawer.classList.add('is-active'); drawer.setAttribute('aria-hidden', 'false'); burger.setAttribute('aria-expanded', 'true'); lock(true); setTimeout(() => $('.sdrawer__close', drawer).focus({ preventScroll: true }), 60); };
+    const closeD = () => { drawer.classList.remove('is-active'); drawer.setAttribute('aria-hidden', 'true'); burger.setAttribute('aria-expanded', 'false'); lock(false); burger.focus({ preventScroll: true }); };
+    burger.addEventListener('click', openD);
+    $$('[data-sdrawer-close]', drawer).forEach(b => b.addEventListener('click', closeD));
+    $$('[data-request]', drawer).forEach(a => a.addEventListener('click', () => { drawer.classList.remove('is-active'); drawer.setAttribute('aria-hidden', 'true'); }));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('is-active')) closeD(); });
+    desktop.addEventListener('change', () => { if (desktop.matches && drawer.classList.contains('is-active')) closeD(); });
+  }
+
   /* ---------------- product page ---------------- */
   const qin = $('[data-qty-input]');
   $$('[data-qty]').forEach(b => b.addEventListener('click', () => { qin.value = Math.min(9, Math.max(1, (+qin.value || 1) + +b.dataset.qty)); }));

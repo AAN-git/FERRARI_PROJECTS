@@ -269,3 +269,5 @@
   .pdp .crumbs li:nth-last-child(2) a::before{content:"‹ "}
   .pdp__shot{width:min(100%,calc(40vh*.78))}
 }
+.pdp__grid>*{min-width:0}.pbuy .btn{min-width:0}
+@media (max-width:600px){.pfact{grid-template-columns:minmax(0,1fr);gap:4px}}

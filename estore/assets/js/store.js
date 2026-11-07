@@ -16,6 +16,7 @@
     if (num) num.textContent = String(i + 1).padStart(2, '0');
   };
   const setIcon = () => {
+    if (!toggle) return;
     toggle.innerHTML = `<svg><use href="#i-${playing ? 'pause' : 'play'}"/></svg>`;
     toggle.setAttribute('aria-label', playing ? 'Pause slideshow' : 'Play slideshow');
   };
@@ -29,7 +30,7 @@
   hero?.addEventListener('mouseleave', start);
   hero?.addEventListener('focusin', stop);
   hero?.addEventListener('focusout', start);
-  setIcon(); start();
+  if (slides.length) { setIcon(); start(); }
 
   // Product rail arrows
   const rail = document.getElementById('rail');

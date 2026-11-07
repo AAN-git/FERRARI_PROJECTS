@@ -6,7 +6,7 @@
      "col2": "models", "feature": null},
     {"id": "accessories", "name": "Accessories", "desc": "Travel sets and bags, wallets, keychains and jewelry.",
      "subs": [{"id": "wallets", "name": "Wallets & keychains"}, {"id": "jewelry", "name": "Jewelry"}, {"id": "travel", "name": "Travel & bags"}],
-     "col2": "models", "feature": "acc-duffle-qcycle-nylon.jpg", "featureName": "Q-Cycle® Nylon Duffle Bag"},
+     "col2": "highlights", "feature": "acc-duffle-qcycle-nylon.jpg", "featureName": "Q-Cycle® Nylon Duffle Bag"},
     {"id": "apparel", "name": "Apparel", "desc": "Caps, shirts and outerwear for men and women.",
      "subs": [{"id": "men", "name": "Men"}, {"id": "women", "name": "Women"}],
      "col2": "highlights", "feature": "app-jacket-quilted-down.jpg", "featureName": "Quilted Hooded Down Jacket"},

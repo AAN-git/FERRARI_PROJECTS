@@ -75,13 +75,6 @@ ul{padding:0;list-style:none}
 .storebar__name{font-size:12px;line-height:1.2;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
 .storebar__name b{display:block;font-weight:500;font-size:14px;letter-spacing:.04em}
 .storebar__name span{color:var(--f-color-ui-50)}
-.cats{display:none;align-items:center;gap:32px;margin-inline:auto;font-size:12px;letter-spacing:1px;text-transform:uppercase}
-.cats a{position:relative;padding:22px 0;color:var(--f-color-ui-80);transition:color var(--motion-d1)}
-.cats a:hover{color:var(--f-color-ui-100)}
-.cats a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--f-color-accent-100);transform:scaleX(0);transition:transform var(--motion-d3) var(--motion-accelerate)}
-.cats a:hover::after{transform:scaleX(1)}
-.cats a.is-sale{color:var(--f-color-accent-100)}
-@media (min-width:961px){.cats{display:flex}}
 .tools{display:flex;align-items:center;gap:8px;margin-left:auto}
 @media (min-width:961px){.tools{margin-left:0}}
 .tool{width:44px;height:44px;display:grid;place-items:center;position:relative}
@@ -222,7 +215,7 @@ ul{padding:0;list-style:none}
 .badge span{font-size:12px;line-height:1;letter-spacing:.05em;text-transform:uppercase;padding:9px 18px 9px 12px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
 .badge{z-index:1}
 .badge .b-new{background:#181818;color:#fff}
-.badge .b-sold{background:#fff;color:#181818}
+.badge .b-sold{background:#6f6f6f;color:#fff}
 .tile__cat{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-global-red-400);margin-top:4px}
 .tile__name{font-size:16px;line-height:1.35;font-weight:500;text-transform:uppercase}
 .tile__fit{font-size:14px;color:#d2d2d2}

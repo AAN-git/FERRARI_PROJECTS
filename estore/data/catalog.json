@@ -1,0 +1,53 @@
+{
+  "_note": "SIMULATED launch catalogue for the mockup: 25 products (brief: 25-50 at launch). Names of accessories/apparel/collectibles are real Ferrari Store items (images: assets/img/products, see SOURCES.md). Parts are plausible types from the 2026-10-21 call, no photos (client supplies). Prices are placeholders - never Cauley's real prices.",
+  "departments": [
+    {"id": "parts", "name": "Parts", "desc": "Genuine service and replacement parts, skid plates and take-off components.",
+     "subs": [{"id": "skid", "name": "Front skid plates"}, {"id": "parts", "name": "Parts"}],
+     "col2": "models", "feature": null},
+    {"id": "accessories", "name": "Accessories", "desc": "Travel sets and bags, wallets, keychains and jewelry.",
+     "subs": [{"id": "wallets", "name": "Wallets & keychains"}, {"id": "jewelry", "name": "Jewelry"}, {"id": "travel", "name": "Travel & bags"}],
+     "col2": "models", "feature": "acc-duffle-qcycle-nylon.jpg", "featureName": "Q-Cycle® Nylon Duffle Bag"},
+    {"id": "apparel", "name": "Apparel", "desc": "Caps, shirts and outerwear for men and women.",
+     "subs": [{"id": "men", "name": "Men"}, {"id": "women", "name": "Women"}],
+     "col2": "highlights", "feature": "app-jacket-quilted-down.jpg", "featureName": "Quilted Hooded Down Jacket"},
+    {"id": "collectibles", "name": "Collectibles", "desc": "Books, helmets and scale models from the Cauley collection.",
+     "subs": [{"id": "books", "name": "Books"}, {"id": "helmets", "name": "Helmets"}, {"id": "models", "name": "Scale models"}],
+     "col2": "highlights", "feature": "col-model-v12-engine-1-4.jpg", "featureName": "12-cylinder engine model, 1:4 scale"}
+  ],
+  "models": [
+    {"id": "296", "name": "296 GTB / GTS"}, {"id": "12cil", "name": "12Cilindri"}, {"id": "puro", "name": "Purosangue"},
+    {"id": "amalfi", "name": "Amalfi / Amalfi Spider"}, {"id": "roma", "name": "Roma / Roma Spider"},
+    {"id": "sf90", "name": "SF90 Stradale / Spider"}, {"id": "f8", "name": "F8 Tributo / Spider"}, {"id": "past", "name": "Past models"}
+  ],
+  "currentModels": ["296", "12cil", "puro", "amalfi", "roma", "sf90"],
+  "products": [
+    {"dept": "parts", "sub": "skid", "name": "Front skid plate", "fit": ["296"], "fitLabel": "For 296 GTB", "price": "$0,000.00", "new": true},
+    {"dept": "parts", "sub": "skid", "name": "Front skid plate", "fit": ["sf90"], "fitLabel": "For SF90 Stradale", "price": "$0,000.00"},
+    {"dept": "parts", "sub": "parts", "name": "Front suspension corner, take-off", "img": "dept-parts-suspension.jpg", "fit": ["puro"], "fitLabel": "For Purosangue", "price": "$0,000.00", "new": true},
+    {"dept": "parts", "sub": "parts", "name": "Oil filter", "fit": ["12cil"], "fitLabel": "For 12Cilindri", "price": "$00.00"},
+    {"dept": "parts", "sub": "parts", "name": "Auxiliary drive belt", "fit": ["puro"], "fitLabel": "For Purosangue", "price": "$000.00"},
+    {"dept": "parts", "sub": "parts", "name": "Floor mats, set of 4", "fit": ["296"], "fitLabel": "For 296 GTS", "price": "$000.00"},
+    {"dept": "parts", "sub": "parts", "name": "Indoor car cover", "fit": ["puro"], "fitLabel": "For Purosangue", "price": "$0,000.00"},
+    {"dept": "parts", "sub": "parts", "name": "Battery conditioner", "fit": ["all"], "fitLabel": "All current models", "price": "$000.00"},
+    {"dept": "parts", "sub": "parts", "name": "Carbon fibre Cavallino badge", "fit": ["roma", "amalfi"], "fitLabel": "For Roma / Amalfi", "price": "$000.00"},
+    {"dept": "parts", "sub": "parts", "name": "OEM exhaust, take-off", "fit": ["f8"], "fitLabel": "For F8 Tributo", "price": "$0,000.00", "sold": true, "new": true},
+
+    {"dept": "accessories", "sub": "travel", "name": "Ferrari Pillow Bag in Glossy Leather", "img": "acc-pillow-bag-glossy-leather.jpg", "fitLabel": "Travel & bags", "price": "$0,000.00", "new": true},
+    {"dept": "accessories", "sub": "travel", "name": "Waxed Leather Duffle Bag", "img": "acc-duffle-waxed-leather.jpg", "fitLabel": "Travel & bags", "price": "$0,000.00", "sold": true, "new": true},
+    {"dept": "accessories", "sub": "wallets", "name": "Leather Trifold Wallet with Diagonal Stitching", "img": "acc-wallet-trifold-tan.jpg", "fitLabel": "Wallets & keychains", "price": "$000.00", "new": true},
+    {"dept": "accessories", "sub": "wallets", "name": "Horizontal leather and carbon fiber wallet", "img": "acc-wallet-leather-carbon.jpg", "fitLabel": "Wallets & keychains", "price": "$000.00"},
+    {"dept": "accessories", "sub": "wallets", "name": "Smooth Leather Keyring", "img": "acc-keyring-smooth-leather-white.jpg", "fitLabel": "Wallets & keychains", "price": "$000.00"},
+    {"dept": "accessories", "sub": "jewelry", "name": "Leather Cap Charm with Prancing Horse", "img": "acc-cap-charm-prancing-horse-red.jpg", "fitLabel": "Jewelry", "price": "$000.00"},
+
+    {"dept": "apparel", "sub": "men", "name": "Baseball cap with metal Prancing Horse", "img": "app-cap-metal-prancing-horse-red.jpg", "fitLabel": "Men · one size", "price": "$000.00", "was": "$000.00", "new": true},
+    {"dept": "apparel", "sub": "men", "name": "Cotton piqué polo shirt with Prancing Horse", "img": "app-polo-prancing-horse-burgundy.jpg", "fitLabel": "Men", "price": "$000.00", "new": true},
+    {"dept": "apparel", "sub": "men", "name": "Quilted Hooded Down Jacket", "img": "app-jacket-quilted-down.jpg", "fitLabel": "Men", "price": "$0,000.00"},
+    {"dept": "apparel", "sub": "women", "name": "Cotton T-shirt with the Prancing Horse of Maranello", "img": "app-tshirt-women-prancing-horse-white.jpg", "fitLabel": "Women", "price": "$000.00", "was": "$000.00"},
+    {"dept": "apparel", "sub": "women", "name": "Cashwool beanie with Prancing Horse motif", "img": "app-beanie-prancing-horse-red.jpg", "fitLabel": "Women · one size", "price": "$000.00"},
+
+    {"dept": "collectibles", "sub": "books", "name": "Ferrari TASCHEN XL Edition", "img": "col-book-taschen-xl.jpg", "fitLabel": "Books", "price": "$000.00", "new": true},
+    {"dept": "collectibles", "sub": "books", "name": "Ferrari 2001 Yearbook", "img": "col-book-yearbook-2001.jpg", "fitLabel": "Books · limited stock", "price": "$000.00"},
+    {"dept": "collectibles", "sub": "helmets", "name": "Mini Leclerc Replica 2026 helmet, 1:2 scale", "img": "col-helmet-leclerc-mini-1-2.jpg", "fitLabel": "Helmets", "price": "$000.00", "new": true},
+    {"dept": "collectibles", "sub": "models", "name": "Ferrari Enzo model in 1:18 scale", "img": "col-model-enzo-1-18.jpg", "fitLabel": "Scale models", "price": "$0,000.00", "new": true}
+  ]
+}

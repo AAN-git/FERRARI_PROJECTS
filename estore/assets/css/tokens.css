@@ -1,0 +1,79 @@
+/* Ferrari Momentum tokens — values as shipped on www.ferrari.com (see FERRARI_DESIGN.md §12).
+   Only the tokens this store uses are declared here. */
+
+@font-face{font-family:"FerrariSans";src:url(../fonts/Ferrari-SansLight.woff2) format("woff2");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:"FerrariSans";src:url(../fonts/Ferrari-SansRegular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"FerrariSans";src:url(../fonts/Ferrari-SansMedium.woff2) format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"FerrariSans";src:url(../fonts/Ferrari-SansBold.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  --f-ferrari-font:"FerrariSans", Arial, sans-serif;
+
+  /* global scales */
+  --f-color-global-white:#fff;
+  --f-color-global-black:#000;
+  --f-color-global-grey-050:#f7f7f7;
+  --f-color-global-grey-100:#ebebeb;
+  --f-color-global-grey-200:#d2d2d2;
+  --f-color-global-grey-500:#8f8f8f;
+  --f-color-global-grey-600:#666;
+  --f-color-global-grey-700:#303030;
+  --f-color-global-grey-900:#181818;
+  --f-color-global-red-400:#f13a2c;
+  --f-color-global-red-600:#da291c;
+  --f-color-global-red-700:#b01e0a;
+  --f-color-global-red-800:#9d2211;
+
+  /* semantic — light (root default) */
+  --f-color-accent-100:#da291c;
+  --f-color-accent-90:#b01e0a;
+  --f-color-accent-80:#9d2211;
+  --f-color-ui-0:#fff;
+  --f-color-ui-10:#f7f7f7;
+  --f-color-ui-20:#d2d2d2;
+  --f-color-ui-50:#8f8f8f;
+  --f-color-ui-80:#666;
+  --f-color-ui-90:#303030;
+  --f-color-ui-100:#181818;
+  --f-color-background-0:#fff;
+  --f-color-background-10:#ebebeb;
+  --f-color-focus:#da291c;
+  --f-color-overlay:rgba(0,0,0,.3);
+  --f-color-overlay-darker:hsla(0,0%,7%,.8);
+
+  --f-color-gradient-red:linear-gradient(180deg,#a00c01 0%,#da291c 64%);
+  --f-color-gradient-shadow-light:linear-gradient(180deg,transparent,transparent 7%,rgba(0,0,0,.02) 13%,rgba(0,0,0,.04) 20%,rgba(0,0,0,.08) 27%,rgba(0,0,0,.13) 33%,rgba(0,0,0,.18) 40%,rgba(0,0,0,.24) 47%,rgba(0,0,0,.3) 53%,rgba(0,0,0,.36) 60%,rgba(0,0,0,.41) 67%,rgba(0,0,0,.46) 73%,rgba(0,0,0,.5) 80%,rgba(0,0,0,.52) 87%,rgba(0,0,0,.54) 93%,rgba(0,0,0,.54));
+
+  /* space */
+  --f-space-xxxs:4px; --f-space-xxs:8px; --f-space-xs:16px; --f-space-s:24px;
+  --f-space-m:32px; --f-space-l:48px; --f-space-xl:64px; --f-space-xxl:96px; --f-space-super:128px;
+
+  --f-radius-full:9999px;
+  --f-shadow-small:0 4px 8px 0 rgba(0,0,0,.1);
+
+  /* motion (FERRARI_DESIGN.md §7) */
+  --motion-accelerate:cubic-bezier(0,0,.38,1);
+  --motion-decelerate:cubic-bezier(.62,0,1,1);
+  --motion-d1:100ms; --motion-d2:200ms; --motion-d3:400ms; --motion-d4:600ms;
+
+  /* container (f-container--l) */
+  --lateral:24px;
+  --container:1008px;
+}
+@media (min-width:601px){:root{--lateral:32px}}
+@media (min-width:961px){:root{--lateral:48px}}
+@media (min-width:1281px){:root{--container:1216px}}
+@media (min-width:1601px){:root{--container:1376px}}
+
+.f-theme-dark{
+  --f-color-background-0:#181818;
+  --f-color-background-10:#303030;
+  --f-color-accent-100:#f13a2c;
+  --f-color-ui-100:#fff;
+  --f-color-ui-90:#f7f7f7;
+  --f-color-ui-80:#d2d2d2;
+  --f-color-ui-50:#8f8f8f;
+  --f-color-ui-20:#666;
+  --f-color-ui-10:#303030;
+  --f-color-ui-0:#181818;
+}

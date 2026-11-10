@@ -131,33 +131,28 @@ main .copy { font-size: 14px; line-height: 1.7; letter-spacing: .015em; max-widt
 .fc-value { display: grid; gap: var(--space-3); align-content: start; }
 .fc-value .fc-card-title { margin-block-start: var(--space-4); }
 
-/* ── 3 · certification steps — one row, one line through the numbers ───
-   The index is the retailer's spec figure (28/33.6 Medium, tabular) on a
-   1px rule. On the four-up row the rule runs on across the gap into the
-   next step, so the four read as one sequence; it stops at the last. */
-.fc-steplist {
-  display: grid; gap: var(--space-8) 32px;
-  counter-reset: step;
+/* ── 3 · certification steps — Ferrari's split banners ───────────────────
+   As on ferrari.com/…/classiche-certification: each step is a row, the
+   photograph filling one half to the viewport edge (720 × 650 at 1440, so
+   cropped to cover), the text on the other half, centred on the row as
+   Ferrari sets it; the sides alternate. The rows stand flush, no gaps. */
+.fc-steps { padding-block-end: 0; }
+.fc-steplist { margin-block-start: clamp(3rem, 5vw, 4rem); }
+.fc-step { display: grid; }
+.fc-step__media { aspect-ratio: 960 / 650; }
+.fc-step__media img { width: 100%; height: 100%; object-fit: cover; }
+.fc-step__body {
+  display: grid; gap: var(--space-5); align-content: center;
+  padding: var(--space-7) var(--logo-x) var(--space-8);
 }
-@media (min-width: 40rem) { .fc-steplist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 80rem) { .fc-steplist { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.fc-step { display: grid; gap: var(--space-3); align-content: start; }
-.fc-step__index {
-  display: flex; align-items: center; gap: var(--space-4);
-  margin-block-end: var(--space-4);
-  font-size: 28px; line-height: 33.6px; font-weight: 500;
-  font-variant-numeric: tabular-nums; color: var(--ink);
+.fc-step__title { font-size: clamp(22px, .8vw + 1rem, 28px); line-height: 1.2; font-weight: 500; color: var(--ink); }
+.fc-step__body .copy { max-width: 46ch; }
+@media (min-width: 64rem) {
+  .fc-step { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fc-step__media { aspect-ratio: 720 / 650; }
+  .fc-step__body { padding: var(--space-8) clamp(3rem, 8vw, 8rem); }
+  .fc-step:nth-child(even) .fc-step__media { order: 2; }
 }
-.fc-step__index::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
-@media (min-width: 80rem) {
-  .fc-step:not(:last-child) .fc-step__index::after { margin-inline-end: -32px; }
-}
-/* index · photograph · title · text share rows across the four, so a title
-   that runs to two lines does not push one step's text below the others' */
-@media (min-width: 40rem) {
-  .fc-step { grid-row: span 4; grid-template-rows: subgrid; }
-}
-.fc-step .fc-card-title { margin-block-start: var(--space-4); }
 
 /* ── 4 · officine classiche — the photograph and its text, top-aligned ── */
 .fc-feature { display: grid; gap: var(--space-7); margin-block-start: var(--space-8); }
@@ -217,6 +212,43 @@ main .copy { font-size: 14px; line-height: 1.7; letter-spacing: .015em; max-widt
   .fc-close .actions, .fc-split__copy .actions { display: grid; width: 100%; }
   .fc-close .btn, .fc-split__copy .btn { width: 100%; }
 }
+
+/* ── arrival — Momentum §7, bound to roles, not to sections ────────────────
+   Fade and Slide are Ferrari's only two types. Text fades in rising 16 px
+   (cards 32 px, neighbours 120 ms apart); photographs slide 32 px in from
+   their own viewport edge while fading. Accelerate curve, 600 ms for text,
+   800 ms for photographs; each element once, then text never moves again.
+   Armed only by the head script (html.js-rv) and only when motion is
+   allowed, so with no script or reduced motion everything stands as drawn.
+   The hero photograph is never hidden — it is the page's first paint. */
+.js-rv :is(.fc-hero__pretitle, .fc-hero__title, .fc-hero__body .actions,
+           .fc-intro__body > *, .fc-shell > .marker, .fc-split > *,
+           .fc-value, .fc-step__body, .fc-feature__copy, .fc-card, .fc-close__copy) {
+  opacity: 0; transform: translateY(var(--rv-y, 16px));
+  transition: opacity .6s cubic-bezier(0, 0, .38, 1) var(--rv-d, 0ms),
+              transform .6s cubic-bezier(0, 0, .38, 1) var(--rv-d, 0ms);
+}
+.js-rv :is(.fc-step__media, .fc-feature__media, .fc-close__media) {
+  opacity: 0; transform: translateX(var(--rv-x, -32px));
+  transition: opacity .8s cubic-bezier(0, 0, .38, 1) var(--rv-d, 0ms),
+              transform .8s cubic-bezier(0, 0, .38, 1) var(--rv-d, 0ms);
+}
+.js-rv .is-in { opacity: 1 !important; transform: none !important; }
+
+/* distances and order */
+.fc-value, .fc-card { --rv-y: 32px; }
+.fc-value:nth-child(2), .fc-card:nth-child(2) { --rv-d: 120ms; }
+.fc-card:nth-child(3) { --rv-d: 240ms; }
+.fc-split > :nth-child(2) { --rv-d: 120ms; }
+.fc-intro__body > :nth-child(2) { --rv-d: 120ms; }
+.fc-intro__body > :nth-child(3) { --rv-d: 240ms; }
+.fc-step__body, .fc-feature__copy { --rv-d: 200ms; }
+.fc-close__media { --rv-x: 32px; }
+@media (min-width: 64rem) { .fc-step:nth-child(even) .fc-step__media { --rv-x: 32px; } }
+/* the hero runs on load: the lockup, then the title, then the actions */
+.fc-hero__pretitle { --rv-d: 150ms; }
+.fc-hero__title    { --rv-d: 270ms; }
+.fc-hero__body .actions { --rv-d: 390ms; }
 
 /* ── reduced motion: the ring is already drawn, nothing travels ──────── */
 @media (prefers-reduced-motion: reduce) {

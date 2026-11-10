@@ -12,6 +12,11 @@ page and nothing is claimed about the retailer beyond what Ferrari says of any
 authorized dealer. Photos are Ferrari's (from their CDN, originals in
 `_intake/photos/`): placeholders until the client sends their own.
 
+**Client preview:** https://aan-git.github.io/FERRARI_PROJECTS/Ferrari_Classiche/
+— repo `AAN-git/FERRARI_PROJECTS`, folder `Ferrari_Classiche/` (first push
+6a330cd, 9 Nov 2026). `_intake/` is not pushed. Push with tree plumbing, as
+`push-estore.sh` does — never a normal checkout/commit inside `C:/____WORK/_git/*`.
+
 Same shape as `../Ferrari_Approved/`: the retailer's header and footer 1:1,
 `build.mjs` assembling the parts, `css/base.css` shared, `css/classiche.css`
 for this page only. No page script beyond the menu (`js/page.js`).

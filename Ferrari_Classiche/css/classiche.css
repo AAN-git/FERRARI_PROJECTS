@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Ferrari Classiche — the page's own sections.
+   Content is Ferrari's (ferrari.com/en-US/auto/ferrari-classiche and
+   /classiche-certification). The language is the retailer's, as on the
+   Ferrari Approved page beside it: the marker, the fr-* action pair, the
+   rollover ring link, the record rule. What this page adds is the second
+   ground: Ferrari's dealer system alternates white and #181818 bands
+   (FERRARI_DESIGN.md §11.4) and both reference pages open on a white
+   intro — so History, Certification steps and Events are set on paper,
+   and the dark chapters between them carry the photographs of the cars.
+   Paper values are Ferrari's own greys (§2): #fff, #181818, #303030, #666,
+   #d2d2d2. Nothing else is new.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── the frame — the retailer's logo line, as on the Approved page ─────── */
+:root { --logo-x: 64px; --fc-inset: 64px; --text-body: 14px; }
+@media (max-width: 87.5rem) { :root { --logo-x: 40px; } }
+@media (max-width: 64rem)   { :root { --logo-x: 16px; --fc-inset: 0px; } }
+
+.fc-shell {
+  width: 100%;
+  max-width: 120rem;
+  margin-inline: auto;
+  padding-inline: calc(var(--logo-x) + var(--fc-inset)) var(--logo-x);
+}
+.fc-shell > .marker { margin-inline-start: calc(-1 * var(--fc-inset)); }
+
+/* body text at the 14 px floor, the retailer's tracking */
+main .copy { font-size: 14px; line-height: 1.7; letter-spacing: .015em; max-width: 64ch; }
+
+/* ── the paper ground ─────────────────────────────────────────────────────
+   #181818 on white 17.4:1 · #303030 body 12.6:1 · #666 5.7:1 · the
+   marker's rosso corsa 4.6:1. The retailer's yellow focus ring is invisible
+   on white, so paper takes Ferrari's own focus colour (§12.5). */
+.fc-paper {
+  --ink: #181818; --ink-80: #303030; --ink-55: #666; --rule: #d2d2d2;
+  background: #fff; color: #181818;
+}
+.fc-paper :focus-visible,
+.fc-paper .btn:focus-visible { outline: 2px solid var(--rosso-corsa); outline-offset: 4px; }
+.fc-paper .btn--ghost { color: #181818; border-color: #181818; }
+.fc-paper .btn--ghost:hover { color: #fff; background: #181818; }
+
+/* ── type — the retailer's scale ─────────────────────────────────────────
+   section h2 36/39.6 Medium · lead 18/27 (Ferrari subtitle-m) ·
+   card title 18/25.2 Medium caps · body 14/23.8 */
+.fc-h2 {
+  font-size: clamp(28px, 1.2vw + 1.2rem, 36px); line-height: 1.1;
+  font-weight: 500; letter-spacing: 0; text-wrap: balance;
+}
+.fc-lead { font-size: 18px; line-height: 1.5; color: var(--ink); max-width: 44ch; text-wrap: pretty; }
+.fc-card-title, .fc-subhead {
+  font-size: 18px; line-height: 25.2px; font-weight: 500;
+  text-transform: uppercase; color: var(--ink);
+}
+
+/* every photograph on the page: its own ratio, no crop beyond it */
+.fc-media { margin: 0; overflow: hidden; background: #181818; }
+.fc-media img { width: 100%; height: auto; }
+
+/* ── 0 · hero ──────────────────────────────────────────────────────────── */
+.fc-hero {
+  position: relative; isolation: isolate;
+  display: flex; align-items: flex-end;
+  min-height: max(100svh, 36rem);
+  padding-block: calc(var(--head-h) + var(--space-7)) 104px;
+  color: #fff;
+}
+.fc-hero__bg, .fc-hero__bg img {
+  position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%;
+}
+/* the 250 GT runs across x 0.38–0.88, y 0.27–0.72 of the frame: on a wide
+   screen the crop keeps it whole and right of the lockup */
+.fc-hero__bg img { object-fit: cover; object-position: 60% 45%; }
+/* The lockup sits on the blurred verge and road at the lower left. Dark
+   only there; gone before the car. */
+.fc-hero__scrim {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(to top, rgb(0 0 0 / .74) 0%, rgb(0 0 0 / .34) 36%, rgb(0 0 0 / 0) 60%),
+    linear-gradient(to right, rgb(0 0 0 / .55) 0%, rgb(0 0 0 / 0) 50%);
+}
+.fc-hero__body { display: grid; justify-items: start; }
+.fc-hero__pretitle {
+  font-size: 16px; line-height: 22.4px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .08px;
+}
+.fc-hero__title {
+  margin-block-start: 16px;
+  font-size: clamp(2rem, 1.5vw + 1.25rem, 2.5rem); line-height: 1.1; font-weight: 500;
+}
+.fc-hero__body .actions { margin-block-start: 48px; gap: 32px; }
+@media (max-width: 30rem) {
+  .fc-hero__body .actions { display: grid; width: 100%; gap: 16px; }
+  .fc-hero__body .btn { width: 100%; }
+}
+/* phone: the frame becomes a band with the whole car in it; the lockup
+   and the actions sit below it on the ground (the Approved page's rule) */
+@media (max-width: 48rem) {
+  .fc-hero { min-height: 0; padding-block: calc(var(--head-h) + 46vw) var(--space-8); }
+  .fc-hero__bg, .fc-hero__bg img { inset: 0 0 auto; height: calc(var(--head-h) + 62vw); }
+  .fc-hero__bg img { object-position: 64% 50%; }
+  .fc-hero__scrim {
+    inset: 0 0 auto; height: calc(var(--head-h) + 62vw + 1px);
+    background: linear-gradient(to top, var(--bg) 0%, var(--bg-0) 45%);
+  }
+}
+
+/* ── the sections' rhythm ─────────────────────────────────────────────── */
+.fc-cert, .fc-steps, .fc-officine, .fc-events { padding-block: clamp(4rem, 8vw, 128px); }
+
+/* a heading beside its text: the two share the top edge */
+.fc-split { display: grid; gap: var(--space-5); margin-block: var(--space-8) clamp(3rem, 5vw, 4rem); }
+.fc-split__head, .fc-split__copy { display: grid; gap: var(--space-5); align-content: start; justify-items: start; }
+.fc-split__copy .actions { margin-block-start: var(--space-4); }
+@media (min-width: 64rem) {
+  .fc-split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(3rem, 6vw, 8rem); }
+}
+
+/* ── 1 · history, forever ─────────────────────────────────────────────── */
+.fc-intro { padding-block: clamp(4rem, 9vw, 8rem); text-align: center; }
+.fc-intro__body { display: grid; justify-items: center; gap: var(--space-5); }
+.fc-intro__body .fc-h2 { margin-block-end: var(--space-2); }
+.fc-intro__lead { max-width: 52ch; font-size: 18px; line-height: 1.5; text-wrap: balance; }
+.fc-intro .copy { text-wrap: balance; }
+
+/* ── 2 · certification — two values on one base ──────────────────────── */
+.fc-cert .fc-subhead { margin-block-start: var(--space-4); }
+.fc-values { display: grid; gap: var(--space-8) 32px; }
+@media (min-width: 48rem) { .fc-values { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fc-value { display: grid; gap: var(--space-3); align-content: start; }
+.fc-value .fc-card-title { margin-block-start: var(--space-4); }
+
+/* ── 3 · certification steps — one row, one line through the numbers ───
+   The index is the retailer's spec figure (28/33.6 Medium, tabular) on a
+   1px rule. On the four-up row the rule runs on across the gap into the
+   next step, so the four read as one sequence; it stops at the last. */
+.fc-steplist {
+  display: grid; gap: var(--space-8) 32px;
+  counter-reset: step;
+}
+@media (min-width: 40rem) { .fc-steplist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 80rem) { .fc-steplist { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fc-step { display: grid; gap: var(--space-3); align-content: start; }
+.fc-step__index {
+  display: flex; align-items: center; gap: var(--space-4);
+  margin-block-end: var(--space-4);
+  font-size: 28px; line-height: 33.6px; font-weight: 500;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.fc-step__index::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+@media (min-width: 80rem) {
+  .fc-step:not(:last-child) .fc-step__index::after { margin-inline-end: -32px; }
+}
+/* index · photograph · title · text share rows across the four, so a title
+   that runs to two lines does not push one step's text below the others' */
+@media (min-width: 40rem) {
+  .fc-step { grid-row: span 4; grid-template-rows: subgrid; }
+}
+.fc-step .fc-card-title { margin-block-start: var(--space-4); }
+
+/* ── 4 · officine classiche — the photograph and its text, top-aligned ── */
+.fc-feature { display: grid; gap: var(--space-7); margin-block-start: var(--space-8); }
+.fc-feature__copy { display: grid; gap: var(--space-5); align-content: start; justify-items: start; }
+.fc-feature__copy .fc-roll { margin-block-start: var(--space-3); }
+@media (min-width: 64rem) {
+  .fc-feature { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(3rem, 6vw, 8rem); }
+}
+
+/* ── 5 · events — three on one base ───────────────────────────────────── */
+.fc-cards { display: grid; gap: var(--space-8) 32px; }
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .fc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 64rem) { .fc-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.fc-card { display: grid; gap: var(--space-3); align-content: start; justify-items: start; }
+.fc-card .fc-media { justify-self: stretch; }
+.fc-card .fc-card-title { margin-block-start: var(--space-4); }
+.fc-card .fc-roll { margin-block-start: var(--space-4); }
+@media (min-width: 48rem) {
+  .fc-card { grid-row: span 4; grid-template-rows: subgrid; }
+}
+
+/* ── the rollover ring link — the retailer's fr-rollover-btn ─────────────
+   12/15 caps at 0.6px, 8 px gap, a 40 px ring in #cdcbcb that a rosso-
+   corsa stroke runs round on hover in 1s; the chevron nudges 2 px. */
+.fc-roll {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; line-height: 15px; letter-spacing: .6px; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+}
+.fc-roll:focus-visible { outline: 2px solid rgb(246 229 0); outline-offset: 4px; }
+.fc-paper .fc-roll:focus-visible { outline-color: var(--rosso-corsa); }
+.fc-ring { position: relative; flex: none; width: 40px; height: 40px; }
+.fc-ring > svg:first-child { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.fc-ring circle { fill: none; stroke-width: 2; }
+.fc-ring__base { stroke: #cdcbcb; }
+.fc-ring__run {
+  stroke: var(--rosso-corsa); stroke-linecap: round;
+  stroke-dasharray: 100; stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s cubic-bezier(.4, 0, .2, 1);
+}
+.fc-roll:hover .fc-ring__run, .fc-roll:focus-visible .fc-ring__run { stroke-dashoffset: 0; }
+.fc-ring__chev { position: absolute; left: 12px; top: 12px; width: 16px; height: 16px; transition: transform .7s; }
+.fc-roll:hover .fc-ring__chev { transform: translateX(2px); }
+
+/* ── 6 · close ─────────────────────────────────────────────────────────── */
+.fc-close { padding-block: clamp(4rem, 8vw, 8rem); }
+.fc-close__grid { display: grid; gap: var(--space-8); align-items: center; }
+.fc-close__copy { display: grid; gap: var(--space-4); justify-items: start; }
+.fc-close__copy .copy { max-width: 44ch; }
+.fc-close__copy .actions { margin-block-start: var(--space-5); }
+@media (min-width: 64rem) {
+  .fc-close__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(3rem, 6vw, 8rem); }
+}
+@media (max-width: 30rem) {
+  .fc-close .actions, .fc-split__copy .actions { display: grid; width: 100%; }
+  .fc-close .btn, .fc-split__copy .btn { width: 100%; }
+}
+
+/* ── reduced motion: the ring is already drawn, nothing travels ──────── */
+@media (prefers-reduced-motion: reduce) {
+  .fc-ring__run { transition: none; }
+  .fc-ring__chev { transition: none; }
+}

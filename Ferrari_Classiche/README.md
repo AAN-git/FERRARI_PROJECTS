@@ -1,6 +1,15 @@
 # Ferrari Classiche — sub page
 
-Status: **first build, 9 Nov 2026.** `node build.mjs` → `index.html`.
+Status: **approved by the client — handed off to dev 11 Nov 2026**
+(`handoff/HANDOFF.md`, package `Ferrari_Classiche_handoff.zip`). Before that: sent to the client 9 Nov 2026 (preview link below, commit
+6d4894d). Approved as sent; the items under *Open* stay open and are listed
+in the handoff (§11) as non-blocking.
+`node build.mjs` → `index.html`.
+
+History: first build 9 Nov (6a330cd, steps as a four-up row with a numbered
+line — my own device). Same day, at Alex's call, the steps became Ferrari's
+split banners and Momentum fade/slide arrival was added (6d4894d) — that is
+the version the client has.
 Replaces the live cauleyferrari.com/ferrari-classiche/ (client request in
 `_intake/info/client-request.md`).
 

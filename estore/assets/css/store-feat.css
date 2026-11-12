@@ -1,0 +1,72 @@
+/* Genuine Store v2 — "2 Featured": the slider that replaces Shop by model.
+   Momentum Card Main (FERRARI_DESIGN.md §9, §12.12): full-bleed photo, bottom
+   gradient (--f-color-gradient-shadow-light, 50%), white text bottom-left at
+   24 px, max two text elements; hover = image drifts to 1.1 over 3s.
+   Cards are the width and ratio of the model cards they replace: four across
+   at the store's 24 px gap, 4:3. Manual only — arrows ≥961, swipe/scroll
+   everywhere, no auto-advance (Carousel Default, 3–5 slides). No car in any
+   frame: text never sits on a vehicle. */
+
+.feat {
+  display: grid; grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3 * var(--f-space-s)) / 4);
+  gap: var(--f-space-s);
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.feat::-webkit-scrollbar { display: none; }
+@media (max-width: 960px) {
+  .feat {
+    grid-auto-columns: minmax(260px, 72%);
+    margin-inline: calc(var(--lateral) * -1); padding-inline: var(--lateral);
+    scroll-padding-inline: var(--lateral);
+  }
+}
+
+.feat__card {
+  position: relative; isolation: isolate; display: block;
+  aspect-ratio: 4 / 3; overflow: clip; scroll-snap-align: start;
+  background: #181818; color: #fff; text-decoration: none;
+}
+.feat__card img {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 3s;
+}
+.feat__card::before {
+  content: ""; position: absolute; inset: 50% 0 0; z-index: -1;
+  background: var(--f-color-gradient-shadow-light);
+}
+.feat__text {
+  position: absolute; left: var(--f-space-s); right: 80px; bottom: var(--f-space-s);
+  display: grid; gap: 6px;
+}
+.feat__label { font-size: 12px; line-height: 1.25; letter-spacing: .05em; text-transform: uppercase; }
+.feat__title { font-size: 14px; line-height: 1.3; font-weight: 500; text-transform: uppercase; text-wrap: balance; }
+.feat__card .ring { position: absolute; right: var(--f-space-s); bottom: var(--f-space-s); color: #fff; }
+.feat__card:focus-visible { outline: 2px solid var(--f-color-focus, #da291c); outline-offset: 4px; }
+@media (hover: hover) {
+  .feat__card:hover img { transform: scale(1.1); }
+  .feat__card:hover .ring__hover { stroke-dashoffset: 0; }
+}
+.feat__card:focus-visible .ring__hover { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .feat__card img { transition: none; }
+  .feat__card:hover img { transform: none; }
+}
+
+/* v3 — the same Featured block as one wide banner per slide (8:3, full content
+   width). <=960px the frame is a separately cropped 4:3 (<picture>), not a squeeze. */
+.feat--banner { grid-auto-columns: 100%; }
+.feat--banner .feat__card { aspect-ratio: 8 / 3; }
+.feat--banner .feat__text { left: var(--f-space-m); bottom: var(--f-space-m); gap: 8px; }
+.feat--banner .feat__title { font-size: 24px; line-height: 1.2; }
+.feat--banner .feat__card .ring { right: var(--f-space-m); bottom: var(--f-space-m); }
+.feat--banner .feat__card img { object-position: 50% 50%; }
+@media (max-width: 960px) {
+  .feat--banner { grid-auto-columns: 86%; }  /* next frame peeks: swipe is the only control here */
+  .feat--banner .feat__card { aspect-ratio: 4 / 3; }
+  .feat--banner .feat__text { left: var(--f-space-s); bottom: var(--f-space-s); gap: 6px; }
+  .feat--banner .feat__title { font-size: 16px; }
+  .feat--banner .feat__card .ring { right: var(--f-space-s); bottom: var(--f-space-s); }
+}

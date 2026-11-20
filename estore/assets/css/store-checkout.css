@@ -1,0 +1,191 @@
+/* Genuine Store — bag and checkout (v3). Ferrari Store's flow (bag drawer → 1 Bag →
+   2 Delivery → 3 Payment → 4 Confirmation) on the store's own components: Momentum
+   tokens, square buttons, underlined fields (.fld), the Ferrari Stepper. One CSS file,
+   loaded only on v3 pages. Prices are the catalogue's placeholders. */
+
+/* ---------- bag drawer (Ferrari Store "Shopping bag": right panel) ---------- */
+.bagd{position:fixed;inset:0;z-index:9998;pointer-events:none;visibility:hidden;transition:visibility 0s linear .4s}
+.bagd.is-active{pointer-events:auto;visibility:visible;transition:none}
+.bagd__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .4s var(--motion-accelerate,ease)}
+.bagd.is-active .bagd__backdrop{opacity:1}
+.bagd__panel{position:absolute;top:0;right:0;display:flex;flex-direction:column;width:min(480px,100vw);height:100vh;height:100dvh;background:#fff;transform:translateX(100%);transition:transform .4s var(--motion-accelerate,ease)}
+.bagd.is-active .bagd__panel{transform:none}
+.bagd__head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 32px;border-bottom:1px solid var(--f-color-ui-20)}
+.bagd__title{font-weight:500;font-size:16px;letter-spacing:.05em;text-transform:uppercase}
+.bagd__close{position:static;transform:none;width:40px;height:40px}
+.bagd__close svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:1}
+.bagd__added{margin:0;padding:12px 32px;font-size:14px;background:var(--f-color-ui-10);border-bottom:1px solid var(--f-color-ui-20)}
+.bagd__added b{font-weight:500}
+.bagd__body{flex:1 1 auto;overflow-y:auto;padding:8px 32px}
+.bagd__foot{padding:24px 32px calc(24px + env(safe-area-inset-bottom));border-top:1px solid var(--f-color-ui-20);display:grid;gap:12px}
+.bagd__foot .btn{width:100%;min-width:0}
+.bagd__row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:14px}
+.bagd__row b{font-weight:500;font-size:16px}
+.bagd__note{margin:0;font-size:12px;color:var(--f-color-ui-80)}
+@media (prefers-reduced-motion:reduce){.bagd__panel,.bagd__backdrop{transition:none}}
+@media (max-width:600px){.bagd__head,.bagd__body,.bagd__foot,.bagd__added{padding-inline:20px}}
+
+/* ---------- a line in the bag (drawer, bag page, summaries) ---------- */
+.bline{display:grid;grid-template-columns:96px minmax(0,1fr);gap:20px;padding:24px 0;border-bottom:1px solid var(--f-color-ui-20)}
+.bline:last-child{border-bottom:0}
+.bline .shot{width:96px}
+.bline .shot--ph .ph__label{font-size:10px;text-align:center;line-height:1.3}
+.bline__info{display:grid;align-content:start;gap:6px;min-width:0}
+.bline__cat{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-50)}
+.bline__name{font-weight:500;font-size:14px;line-height:1.35;text-transform:uppercase}
+.bline__name a:hover{text-decoration:underline;text-underline-offset:4px}
+.bline__price{font-weight:500;font-size:14px}
+.bline__ctl{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;flex-wrap:wrap}
+.bline .qty{height:40px}
+.bline .qty button{width:36px;font-size:18px}
+.bline .qty input{width:32px;font-size:14px}
+.bline__rm{font-size:12px;letter-spacing:.6px;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;color:var(--f-color-ui-80)}
+.bline__rm:hover{color:var(--f-color-ui-100)}
+.bline__qtytxt{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-80)}
+/* the bag page: bigger photographs, the price on the right */
+.bag-page .bline{grid-template-columns:140px minmax(0,1fr);gap:32px;padding:32px 0}
+.bag-page .bline .shot{width:140px}
+@media (min-width:768px){.bag-page .bline__info{grid-template-columns:minmax(0,1fr) auto;column-gap:32px}.bag-page .bline__price{grid-column:2;grid-row:1 / span 3;font-size:16px}.bag-page .bline__ctl{grid-column:1}}
+@media (max-width:600px){.bag-page .bline{grid-template-columns:96px minmax(0,1fr);gap:20px;padding:24px 0}.bag-page .bline .shot{width:96px}}
+/* summaries: small lines */
+.bline--mini{grid-template-columns:64px minmax(0,1fr) auto;gap:16px;padding:16px 0;align-items:center}
+.bline--mini .shot{width:64px}
+.bline--mini .bline__name{font-size:12px}
+.bline--mini .bline__price{font-size:12px;white-space:nowrap}
+
+/* ---------- empty bag ---------- */
+.bag-empty{display:grid;justify-items:start;gap:16px;padding:48px 0}
+/* a block that carries [hidden] stays hidden, whatever display it has */
+[data-bag-empty][hidden],[data-bag-full][hidden],.bagd__added[hidden]{display:none}
+.bag-empty p{margin:0;color:var(--f-color-ui-80);font-size:14px}
+.bagd .bag-empty{justify-items:center;text-align:center;padding:64px 0}
+
+/* ---------- checkout pages: Ferrari Stepper + two columns ---------- */
+.ck{padding-top:var(--f-space-m);padding-bottom:var(--f-space-xl)}
+.stepper{list-style:none;margin:var(--f-space-m) 0 var(--f-space-l);padding:0;display:flex;align-items:center;gap:16px;counter-reset:st}
+.stepper li{display:flex;align-items:center;gap:12px;flex:0 0 auto;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--f-color-ui-50)}
+.stepper li:not(:last-child)::after{content:"";display:block;width:clamp(16px,4vw,64px);height:1px;background:var(--f-color-ui-20);margin-left:4px}
+.stepper__n{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--f-color-ui-20);border-radius:50%;font-size:12px;font-weight:500;letter-spacing:0}
+.stepper a,.stepper__w{display:flex;align-items:center;gap:12px}
+.stepper a:hover .stepper__t{text-decoration:underline;text-underline-offset:4px}
+.stepper .is-current{color:var(--f-color-ui-100)}
+.stepper .is-current .stepper__n{background:var(--f-color-accent-100);border-color:var(--f-color-accent-100);color:#fff}
+.stepper .is-done{color:var(--f-color-ui-100)}
+.stepper .is-done .stepper__n{border-color:var(--f-color-accent-100);color:var(--f-color-accent-100)}
+.stepper .is-done:not(:last-child)::after{background:var(--f-color-accent-100)}
+@media (max-width:767px){.stepper{gap:8px}.stepper li:not(.is-current) .stepper__t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.stepper li:not(:last-child){flex:1 1 auto;min-width:0}.stepper li:not(:last-child)::after{flex:1 1 8px;width:auto;min-width:8px}}
+
+.ck__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:var(--f-space-m)}
+.ck__title{font-weight:500;font-size:24px;line-height:1.2;text-transform:uppercase}
+@media (min-width:961px){.ck__title{font-size:36px;line-height:1.1}}
+.ck__note{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-50)}
+.ck__preview{margin:0 0 var(--f-space-m);padding:16px 20px;border-left:2px solid var(--f-color-accent-100);background:var(--f-color-ui-10);font-size:14px;line-height:1.5}
+.ck__grid{display:grid;gap:var(--f-space-l)}
+@media (min-width:1024px){.ck__grid{grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:var(--f-space-xl);align-items:start}}
+.ck__main{min-width:0}
+.ck__list{border-top:1px solid var(--f-color-ui-20);border-bottom:1px solid var(--f-color-ui-20)}
+.ck__back{margin-top:var(--f-space-m)}
+
+/* the order summary (Ferrari Store's grey panel) */
+.sum{background:var(--f-color-ui-10);padding:32px}
+@media (min-width:1024px){.sum{position:sticky;top:96px}}
+.sum__title{font-weight:500;font-size:16px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.sum__items{border-bottom:1px solid var(--f-color-ui-20);margin-bottom:16px}
+.sum dl{display:grid;gap:12px;margin:0}
+.sum dl div{display:flex;justify-content:space-between;gap:16px;font-size:14px}
+.sum dt{color:var(--f-color-ui-80)}
+.sum dd{margin:0;text-align:right}
+.sum__total{padding-top:16px;margin-top:4px;border-top:1px solid var(--f-color-ui-20)}
+.sum__total dt,.sum__total dd{color:var(--f-color-ui-100);font-weight:500;font-size:18px}
+.sum__ph{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-50);margin-top:4px}
+.sum .btn{width:100%;min-width:0;margin-top:24px}
+.sum__secure{display:grid;gap:6px;margin:24px 0 0;padding-top:24px;border-top:1px solid var(--f-color-ui-20);font-size:12px;color:var(--f-color-ui-80)}
+.sum__secure b{font-weight:500;color:var(--f-color-ui-100);text-transform:uppercase;letter-spacing:.05em}
+.sum__help{margin:16px 0 0;font-size:12px;color:var(--f-color-ui-80)}
+.sum__help a{color:var(--f-color-ui-100);text-decoration:underline;text-underline-offset:3px}
+/* phones: the summary collapses to one line above the form */
+.sum-m{display:none;margin-bottom:var(--f-space-m);background:var(--f-color-ui-10)}
+.sum-m summary{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 20px;cursor:pointer;font-size:12px;letter-spacing:.6px;text-transform:uppercase;list-style:none}
+.sum-m summary::-webkit-details-marker{display:none}
+.sum-m summary::after{content:"";width:12px;height:12px;background:linear-gradient(currentColor,currentColor) center/12px 1px no-repeat,linear-gradient(currentColor,currentColor) center/1px 12px no-repeat;transition:transform .3s}
+.sum-m[open] summary::after{transform:rotate(45deg)}
+.sum-m .sum{padding:0 20px 20px;position:static}
+@media (max-width:1023px){.ck--checkout .sum-m{display:block}.ck--checkout .ck__aside{display:none}}
+
+/* ---------- checkout sections (2 Delivery, 3 Payment) ---------- */
+.cks{border-top:1px solid var(--f-color-ui-100);padding:var(--f-space-m) 0 var(--f-space-l);scroll-margin-top:96px}
+.cks + .cks{margin-top:0}
+.cks__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:var(--f-space-m)}
+.cks__title{display:flex;align-items:baseline;gap:16px;font-weight:500;font-size:20px;text-transform:uppercase}
+.cks__title .stepper__n{align-self:center}
+.cks__edit{font-size:12px;letter-spacing:.6px;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px}
+.cks[data-state="locked"] .cks__title{color:var(--f-color-ui-50)}
+.cks[data-state="locked"] .cks__body,.cks[data-state="done"] .cks__body{display:none}
+.cks[data-state="open"] .cks__recap,.cks[data-state="locked"] .cks__recap{display:none}
+.cks:not([data-state="done"]) .cks__edit{display:none}
+.cks[data-state="done"] .stepper__n{border-color:var(--f-color-accent-100);color:var(--f-color-accent-100)}
+.cks[data-state="open"] .cks__title .stepper__n{background:var(--f-color-accent-100);border-color:var(--f-color-accent-100);color:#fff}
+.cks__recap{display:grid;gap:4px;font-size:14px;color:var(--f-color-ui-80)}
+.cks__recap b{font-weight:500;color:var(--f-color-ui-100)}
+.cks__sub{margin:var(--f-space-m) 0 16px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--f-color-ui-100);font-weight:500}
+.cks__sub:first-child{margin-top:0}
+.ckf{display:grid;gap:8px 32px}
+@media (min-width:768px){.ckf{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ckf .fld--wide{grid-column:1/-1}
+.fld__hint{display:block;margin-top:6px;font-size:12px;color:var(--f-color-ui-50)}
+/* select on the same underline as the text fields, label always up */
+.fld--select select{width:100%;border:0;border-bottom:1px solid #8f8f8f;background:#fff;padding:24px 28px 8px 2px;font:inherit;font-size:16px;color:var(--f-color-ui-100);appearance:none;-webkit-appearance:none;border-radius:0}
+.fld--select select:focus{outline:none;box-shadow:0 2px 0 0 var(--f-color-focus);border-bottom-color:transparent}
+.fld--select label{transform:translateY(-18px) scale(.86)}
+.fld--select::after{content:"";position:absolute;right:6px;top:30px;width:8px;height:8px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg);pointer-events:none}
+.fld--select.is-err select{border-bottom-color:var(--f-color-accent-100)}
+.fld--fixed input{color:var(--f-color-ui-80);background:transparent}
+.ck-err{margin:16px 0 0;font-size:14px;color:var(--f-color-accent-100)}
+
+/* delivery methods: one bordered row each, the chosen one in ink */
+.ship{display:grid;gap:12px;margin:0;padding:0;border:0}
+.ship legend{padding:0}
+.ship__opt{position:relative;display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:16px;align-items:center;padding:20px 24px;border:1px solid var(--f-color-ui-20);cursor:pointer}
+.ship__opt:hover{border-color:var(--f-color-ui-50)}
+.ship__opt:has(input:checked){border-color:var(--f-color-ui-100);box-shadow:inset 0 0 0 1px var(--f-color-ui-100)}
+.ship__opt input{width:20px;height:20px;margin:0;accent-color:var(--f-color-ui-100)}
+.ship__opt input:focus-visible{outline:2px solid var(--f-color-focus);outline-offset:2px}
+.ship__name{display:block;font-weight:500;font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.ship__eta{display:block;margin-top:4px;font-size:12px;color:var(--f-color-ui-80)}
+.ship__price{font-weight:500;font-size:14px;text-align:right}
+.ship__price small{display:block;font-weight:400;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-50)}
+.ship__live{margin:12px 0 0;font-size:12px;color:var(--f-color-ui-80)}
+
+/* payment: a card box in the manner of Stripe's Payment Element */
+.pay{border:1px solid var(--f-color-ui-20);padding:24px 24px 28px}
+.pay__head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:8px}
+.pay__label{font-weight:500;font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.pay__brands{display:flex;gap:6px}
+.pay__brands span{display:grid;place-items:center;min-width:40px;height:24px;padding:0 6px;border:1px solid var(--f-color-ui-20);font-size:9px;font-weight:500;letter-spacing:.05em;color:var(--f-color-ui-80)}
+.pay .ckf{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pay__stripe{margin:16px 0 0;font-size:12px;color:var(--f-color-ui-50)}
+.chk-line{display:flex;align-items:flex-start;gap:12px;margin-top:24px;font-size:14px;line-height:1.5;cursor:pointer}
+.chk-line input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--f-color-ui-100);flex:0 0 auto}
+.chk-line.is-err span{color:var(--f-color-accent-100)}
+.billing[hidden]{display:none}
+.cks__actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 32px;margin-top:var(--f-space-m)}
+.cks__actions .btn{min-width:280px}
+@media (max-width:600px){.cks__actions .btn{width:100%;min-width:0}}
+.cks__mock{font-size:12px;color:var(--f-color-ui-50)}
+
+/* ---------- order confirmation ---------- */
+.ok__head{display:grid;gap:16px;margin-bottom:var(--f-space-l);max-width:760px}
+.ok__head p{margin:0;font-size:16px;line-height:1.6;color:var(--f-color-ui-80)}
+.ok__head .chapter{font-size:12px;line-height:1.25;color:var(--f-color-accent-100)}
+.ok__head b{color:var(--f-color-ui-100);font-weight:500}
+.ok__facts{display:grid;gap:0;border-top:1px solid var(--f-color-ui-20);margin:0}
+@media (min-width:768px){.ok__facts{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ok__facts div{padding:24px 24px 24px 0;border-bottom:1px solid var(--f-color-ui-20)}
+.ok__facts dt{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--f-color-ui-50);margin-bottom:8px}
+.ok__facts dd{margin:0;font-size:14px;line-height:1.6}
+.ok__next{margin-top:var(--f-space-l)}
+.ok__steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--f-color-ui-20)}
+.ok__steps li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid var(--f-color-ui-20);font-size:14px;line-height:1.6}
+.ok__steps b{display:block;font-weight:500;text-transform:uppercase;letter-spacing:.05em;font-size:12px;margin-bottom:4px}
+.ok__ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:var(--f-space-l)}
+@media (max-width:600px){.ok__ctas .btn{width:100%;min-width:0}}

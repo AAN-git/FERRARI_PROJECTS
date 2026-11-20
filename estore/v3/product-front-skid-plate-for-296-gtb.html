@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../assets/css/store.css">
 <link rel="stylesheet" href="../assets/css/store-pages.css">
 <link rel="stylesheet" href="../assets/css/store-feat.css">
+<link rel="stylesheet" href="../assets/css/store-checkout.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -84,13 +85,13 @@
     <div class="tools">
       <a class="tool" href="#" aria-label="Search the store"><svg><use href="#i-search"/></svg></a>
       <a class="tool" href="#" aria-label="Account"><svg><use href="#i-user"/></svg></a>
-      <a class="tool" href="#" aria-label="Cart, 2 items"><svg><use href="#i-bag"/></svg><span class="tool__badge" aria-hidden="true">2</span></a>
+      <a class="tool" href="bag.html" data-bag-open aria-label="Bag, 2 items"><svg><use href="#i-bag"/></svg><span class="tool__badge" aria-hidden="true">2</span></a>
     </div>
   </div>
 </div>
 
 <main id="main">
-<section class="pdp" aria-labelledby="pdp-title">
+<section class="pdp" data-slug="front-skid-plate-for-296-gtb" aria-labelledby="pdp-title">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Genuine Store</a></li><li><a href="shop.html?dept=parts">Parts</a></li><li><a href="shop.html?dept=parts&sub=skid">Front skid plates</a></li><li aria-current="page">Front skid plate</li></ol></nav>
     <div class="pdp__grid">
@@ -102,7 +103,7 @@
         <p class="pdp__price">$0,000.00<span class="pdp__note">Placeholder price</span></p>
         <p class="pstatus pstatus--in"><span aria-hidden="true"></span>In stock</p>
         <div class="pbuy"><div class="qty" role="group" aria-label="Quantity"><button type="button" data-qty="-1" aria-label="Decrease quantity">−</button><input type="number" value="1" min="1" max="9" aria-label="Quantity" data-qty-input><button type="button" data-qty="1" aria-label="Increase quantity">+</button></div><button class="btn btn--primary pbuy__main" type="button" data-add>Add to bag<svg><use href="#i-chev-r"/></svg></button></div><a class="link pbuy__ask" href="#request" data-request="info" data-item-name="Front skid plate" data-item-spec="For 296 GTB" data-item-img=""><span class="ring" aria-hidden="true"><svg class="ring__c"><use href="#i-ring"/></svg><svg class="ring__icon"><use href="#i-chev-r"/></svg></span><span class="link__text">Request information</span></a>
-        <p class="pdp__added" role="status" hidden>Added to your bag. <a href="#">View bag</a></p>
+        <p class="pdp__added" role="status" hidden>Added to your bag. <a href="bag.html">View bag</a></p>
         <dl class="pfacts"><div class="pfact"><dt>Department</dt><dd>Parts</dd></div><div class="pfact"><dt>Category</dt><dd>Front skid plates</dd></div><div class="pfact"><dt>Part number</dt><dd>TBC — supplied by Cauley</dd></div><div class="pfact"><dt>Shipping</dt><dd>FedEx or UPS, live rates at checkout. Ships across the United States, including Alaska and Hawaii.</dd></div><div class="pfact"><dt>Payment</dt><dd>Card payments processed by Stripe.</dd></div></dl>
         <details class="acc" open><summary>Description</summary><p>Product description supplied by Cauley — copy TBC. Genuine Ferrari item sold by an official Ferrari dealer.</p></details>
         <details class="acc"><summary>Shipping &amp; returns</summary><p>FedEx or UPS, live rates at checkout. Ships across the United States, including Alaska and Hawaii. Returns policy TBC by Cauley.</p></details>
@@ -182,8 +183,27 @@
   </div>
 </div>
 <!-- /build:popup -->
+<aside class="bagd" id="bagd" aria-hidden="true">
+  <div class="bagd__backdrop" data-bag-close></div>
+  <div class="bagd__panel" role="dialog" aria-modal="true" aria-labelledby="bagd-title">
+    <div class="bagd__head"><h2 class="bagd__title" id="bagd-title">Your bag (<span data-bag-count>2</span>)</h2><button class="popup__close bagd__close" type="button" data-bag-close aria-label="Close bag"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19"/><path d="M14.5 14.5l11 11M25.5 14.5l-11 11"/></svg></button></div>
+    <p class="bagd__added" role="status" hidden>Added to your bag: <b></b></p>
+    <div class="bagd__body">
+      <div data-bag-full><div data-bag-list="drawer"></div></div>
+      <div class="bag-empty" data-bag-empty hidden><p>Your bag is empty.</p><a class="btn btn--tertiary" href="shop.html">Continue shopping</a></div>
+    </div>
+    <div class="bagd__foot" data-bag-full>
+      <div class="bagd__row"><span>Subtotal</span><b>$0,000.00</b></div>
+      <p class="bagd__note">Placeholder prices. Shipping and sales tax at checkout.</p>
+      <a class="btn btn--primary" href="checkout.html">Checkout<svg><use href="#i-chev-r"/></svg></a>
+      <a class="btn btn--tertiary" href="bag.html">View bag</a>
+    </div>
+  </div>
+</aside>
+<script type="application/json" id="bag-catalog">{"seed": ["baseball-cap-with-metal-prancing-horse", "smooth-leather-keyring"], "products": {"front-skid-plate-for-296-gtb": {"name": "Front skid plate", "cat": "Parts · Front skid plates", "img": "", "price": "$0,000.00", "url": "product-front-skid-plate-for-296-gtb.html"}, "front-skid-plate-for-sf90-stradale": {"name": "Front skid plate", "cat": "Parts · Front skid plates", "img": "", "price": "$0,000.00", "url": "product-front-skid-plate-for-sf90-stradale.html"}, "front-suspension-corner-take-off-for-purosangue": {"name": "Front suspension corner, take-off", "cat": "Parts · Parts", "img": "../assets/img/products/dept-parts-suspension.jpg", "price": "$0,000.00", "url": "product-front-suspension-corner-take-off-for-purosangue.html"}, "oil-filter-for-12cilindri": {"name": "Oil filter", "cat": "Parts · Parts", "img": "", "price": "$00.00", "url": "product-oil-filter-for-12cilindri.html"}, "auxiliary-drive-belt-for-purosangue": {"name": "Auxiliary drive belt", "cat": "Parts · Parts", "img": "", "price": "$000.00", "url": "product-auxiliary-drive-belt-for-purosangue.html"}, "floor-mats-set-of-4-for-296-gts": {"name": "Floor mats, set of 4", "cat": "Parts · Parts", "img": "../assets/img/products/part-floor-mats-296gts.jpg", "price": "$000.00", "url": "product-floor-mats-set-of-4-for-296-gts.html"}, "indoor-car-cover-for-purosangue": {"name": "Indoor car cover", "cat": "Parts · Parts", "img": "", "price": "$0,000.00", "url": "product-indoor-car-cover-for-purosangue.html"}, "battery-conditioner-all-current-models": {"name": "Battery conditioner", "cat": "Parts · Parts", "img": "", "price": "$000.00", "url": "product-battery-conditioner-all-current-models.html"}, "carbon-fibre-cavallino-badge-for-roma-amalfi": {"name": "Carbon fibre Cavallino badge", "cat": "Parts · Parts", "img": "", "price": "$000.00", "url": "product-carbon-fibre-cavallino-badge-for-roma-amalfi.html"}, "ferrari-pillow-bag-in-glossy-leather": {"name": "Ferrari Pillow Bag in Glossy Leather", "cat": "Accessories · Travel & bags", "img": "../assets/img/products/acc-pillow-bag-glossy-leather.jpg", "price": "$0,000.00", "url": "product-ferrari-pillow-bag-in-glossy-leather.html"}, "leather-trifold-wallet-with-diagonal-stitching": {"name": "Leather Trifold Wallet with Diagonal Stitching", "cat": "Accessories · Wallets & keychains", "img": "../assets/img/products/acc-wallet-trifold-tan.jpg", "price": "$000.00", "url": "product-leather-trifold-wallet-with-diagonal-stitching.html"}, "horizontal-leather-and-carbon-fiber-wallet": {"name": "Horizontal leather and carbon fiber wallet", "cat": "Accessories · Wallets & keychains", "img": "../assets/img/products/acc-wallet-leather-carbon.jpg", "price": "$000.00", "url": "product-horizontal-leather-and-carbon-fiber-wallet.html"}, "smooth-leather-keyring": {"name": "Smooth Leather Keyring", "cat": "Accessories · Wallets & keychains", "img": "../assets/img/products/acc-keyring-smooth-leather-white.jpg", "price": "$000.00", "url": "product-smooth-leather-keyring.html"}, "leather-cap-charm-with-prancing-horse": {"name": "Leather Cap Charm with Prancing Horse", "cat": "Accessories · Jewelry", "img": "../assets/img/products/acc-cap-charm-prancing-horse-red.jpg", "price": "$000.00", "url": "product-leather-cap-charm-with-prancing-horse.html"}, "baseball-cap-with-metal-prancing-horse": {"name": "Baseball cap with metal Prancing Horse", "cat": "Apparel · Men", "img": "../assets/img/products/app-cap-metal-prancing-horse-red.jpg", "price": "$000.00", "url": "product-baseball-cap-with-metal-prancing-horse.html"}, "cotton-piqu-polo-shirt-with-prancing-horse": {"name": "Cotton piqué polo shirt with Prancing Horse", "cat": "Apparel · Men", "img": "../assets/img/products/app-polo-prancing-horse-burgundy.jpg", "price": "$000.00", "url": "product-cotton-piqu-polo-shirt-with-prancing-horse.html"}, "quilted-hooded-down-jacket": {"name": "Quilted Hooded Down Jacket", "cat": "Apparel · Men", "img": "../assets/img/products/app-jacket-quilted-down.jpg", "price": "$0,000.00", "url": "product-quilted-hooded-down-jacket.html"}, "cotton-t-shirt-with-the-prancing-horse-of-maranello": {"name": "Cotton T-shirt with the Prancing Horse of Maranello", "cat": "Apparel · Women", "img": "../assets/img/products/app-tshirt-women-prancing-horse-white.jpg", "price": "$000.00", "url": "product-cotton-t-shirt-with-the-prancing-horse-of-maranello.html"}, "cashwool-beanie-with-prancing-horse-motif": {"name": "Cashwool beanie with Prancing Horse motif", "cat": "Apparel · Women", "img": "../assets/img/products/app-beanie-prancing-horse-red.jpg", "price": "$000.00", "url": "product-cashwool-beanie-with-prancing-horse-motif.html"}, "ferrari-taschen-xl-edition": {"name": "Ferrari TASCHEN XL Edition", "cat": "Collectibles · Books", "img": "../assets/img/products/col-book-taschen-xl.jpg", "price": "$000.00", "url": "product-ferrari-taschen-xl-edition.html"}, "ferrari-2001-yearbook": {"name": "Ferrari 2001 Yearbook", "cat": "Collectibles · Books", "img": "../assets/img/products/col-book-yearbook-2001.jpg", "price": "$000.00", "url": "product-ferrari-2001-yearbook.html"}, "mini-leclerc-replica-2026-helmet-1-2-scale": {"name": "Mini Leclerc Replica 2026 helmet, 1:2 scale", "cat": "Collectibles · Helmets", "img": "../assets/img/products/col-helmet-leclerc-mini-1-2.jpg", "price": "$000.00", "url": "product-mini-leclerc-replica-2026-helmet-1-2-scale.html"}, "ferrari-enzo-model-in-1-18-scale": {"name": "Ferrari Enzo model in 1:18 scale", "cat": "Collectibles · Scale models", "img": "../assets/img/products/col-model-enzo-1-18.jpg", "price": "$0,000.00", "url": "product-ferrari-enzo-model-in-1-18-scale.html"}}}</script>
 <script src="../assets/js/store.js"></script>
 <script src="../assets/js/store-pages.js"></script>
 <script src="../assets/js/store-feat.js"></script>
+<script src="../assets/js/store-checkout.js"></script>
 </body>
 </html>

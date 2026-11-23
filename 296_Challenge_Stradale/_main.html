@@ -1,0 +1,239 @@
+<!-- ═══ Ferrari 296 Challenge Stradale — model page ═══════════════════════
+     Built to the All Auto Network Model Page Build Sheet (AA-01 … AA-07),
+     laid out as the AAN model template already live on cauleyferrari.com
+     (849 Testarossa, 296 GTB). Copy is the build sheet's, word for word.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<main id="main">
+
+  <!-- ── AA-01 · Hero — pinned: Powertrain slides over it ──────────────── -->
+  <div class="stack">
+    <section class="hero pin" aria-label="Ferrari 296 Challenge Stradale">
+      <div class="hero__slides">
+        <figure class="hero__slide is-active">
+          <picture>
+            <source media="(max-width: 47.99rem)" srcset="img/hero-1-m.webp">
+            <img src="img/hero-main-1920.webp" srcset="img/hero-main-1280.webp 1280w, img/hero-main-1920.webp 1920w, img/hero-main-2447.webp 2447w" sizes="100vw"
+                 width="2447" height="1527" alt="Ferrari 296 Challenge Stradale, front view, on a desert circuit" fetchpriority="high">
+          </picture>
+        </figure>
+      </div>
+      <div class="pin__shade" aria-hidden="true"></div>
+
+      <div class="hero__bar wrap">
+        <div class="hero__lockup" data-reveal>
+          <!-- Official model lockup, from ferrari.com's own 296 Challenge Stradale page
+               (Logo_171-stradale_met, 186×50 — the largest Ferrari serves). Ask the client
+               for the vector lockup: at 2x screens this raster is soft. -->
+          <h1 class="hero__model"><img src="img/model-logo.png" width="186" height="50" alt="Ferrari 296 Challenge Stradale"></h1>
+        </div>
+        <div class="actions" data-reveal>
+          <a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a>
+          <!-- TODO: the Ferrari configurator has no 296 Challenge Stradale entry yet — this opens the configurator home -->
+          <a class="btn btn--outline" href="https://carconfigurator.ferrari.com/en-EN/en_US" target="_blank" rel="noopener">Configure
+            <svg class="btn__chev" width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M1 1l4.5 4.5L1 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AA-02 · Chapter 1 · Powertrain ─────────────────────────────────── -->
+    <section class="powertrain band band--black" aria-labelledby="power-h">
+      <div class="power__film" aria-hidden="true">
+        <!-- PREVIEW ONLY: engine film taken from ferrari.com. Replace with the FMP master before launch. -->
+        <video src="video/engine.mp4" poster="video/engine-poster.jpg" muted loop playsinline preload="metadata" data-film></video>
+      </div>
+      <div class="power__shade" aria-hidden="true"></div>
+
+      <button class="ctl ctl--film" type="button" data-film-toggle aria-label="Pause video">
+        <svg class="ctl__pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="2.5" height="10" fill="currentColor"/><rect x="7.5" y="1" width="2.5" height="10" fill="currentColor"/></svg>
+        <svg class="ctl__play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.2v9.6L10.5 6z" fill="currentColor"/></svg>
+      </button>
+
+      <div class="wrap power__inner powertrain__inner">
+        <p class="chapter chapter--light" data-reveal><span class="chapter__n">1</span><span class="chapter__rule"></span><span>Powertrain</span></p>
+
+        <div class="power__foot">
+          <h2 class="h2" id="power-h" data-reveal>Twin-Turbo V6</h2>
+          <div class="power__row">
+            <dl class="stats" data-reveal>
+              <div class="stat"><dt class="stat__label">Displacement</dt><dd class="stat__value"><span class="stat__num" data-count="2992">2,992</span><span class="stat__unit">cc</span></dd></div>
+              <div class="stat"><dt class="stat__label">0–100 km/h</dt><dd class="stat__value"><span class="stat__num" data-count="2.8">2.8</span><span class="stat__unit">s</span></dd></div>
+              <div class="stat"><dt class="stat__label">Maximum power</dt><dd class="stat__value"><span class="stat__num" data-count="670">670</span><span class="stat__unit">cv</span></dd></div>
+              <div class="stat"><dt class="stat__label">Top speed</dt><dd class="stat__value"><span class="stat__pre">&gt;</span><span class="stat__num" data-count="300">300</span><span class="stat__unit">km/h</span></dd></div>
+            </dl>
+            <div class="actions" data-reveal>
+              <a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── AA-03 · Chapter 2 · Design — pinned: Aerodynamics slides over it ── -->
+  <div class="stack">
+    <section class="design pin" aria-labelledby="design-h">
+      <div class="design__media" data-parallax>
+        <picture>
+          <source media="(max-width: 47.99rem)" srcset="img/design-m.webp">
+          <img src="img/design.webp" srcset="img/design-1280.webp 1280w, img/design.webp 1920w" sizes="100vw"
+               width="1920" height="1080" alt="Ferrari 296 Challenge Stradale in profile at speed" loading="lazy">
+        </picture>
+      </div>
+      <div class="design__shade" aria-hidden="true"></div>
+      <div class="pin__shade" aria-hidden="true"></div>
+
+      <div class="wrap design__inner">
+        <p class="chapter chapter--light" data-reveal><span class="chapter__n">2</span><span class="chapter__rule"></span><span>Design</span></p>
+        <div class="design__foot">
+          <div class="design__copy" data-reveal>
+            <p class="eyebrow">Ferrari 296 Challenge Stradale</p>
+            <h2 class="h2" id="design-h">Form Follows Performance</h2>
+            <button class="more" type="button" data-panel-open aria-haspopup="dialog" aria-controls="design-panel">
+              <span class="more__ring" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5"/></svg></span>
+              <span>Discover the design</span>
+            </button>
+          </div>
+          <div class="actions" data-reveal>
+            <a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AA-04 · Chapter 3 · Aerodynamics ─────────────────────────────── -->
+    <section class="split band band--light" aria-labelledby="aero-h">
+      <div class="split__text">
+        <p class="chapter" data-reveal><span class="chapter__n">3</span><span class="chapter__rule"></span><span>Aerodynamics</span></p>
+        <div class="split__body" data-reveal>
+          <p class="eyebrow">Engineered for Downforce</p>
+          <h2 class="h2" id="aero-h">Designed Without Compromise</h2>
+          <div class="prose">
+            <p>Aerodynamics on the 296 Challenge Stradale prioritize downforce, stability, braking and cornering speed. At the front, the splitter works together with vortex generators to create aerodynamic load, while motorsport-derived aerodamper ducts stabilize downforce and help manage the extraction of hot air.</p>
+            <p>Beneath the car, an extensively redesigned underbody and splitter-to-floor transition increase suction. Three pairs of vortex generators at the front and two at the rear further enhance downforce. At the back, the elevated fixed wing uses aeronautically inspired endplates to manage wingtip vortices and increase aerodynamic efficiency while preserving rear visibility.</p>
+          </div>
+          <div class="actions"><a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a></div>
+        </div>
+      </div>
+      <div class="split__media" data-parallax>
+        <picture>
+          <source media="(max-width: 47.99rem)" srcset="img/aero-m.webp">
+          <img src="img/aero.webp" width="864" height="1080" alt="296 Challenge Stradale from above and behind, fixed rear wing and endplates" loading="lazy">
+        </picture>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── AA-05 · Chapter 4 · Driving Dynamics ─────────────────────────────── -->
+  <section class="split split--reverse band band--dark" aria-labelledby="dyn-h">
+    <div class="split__media split__media--desktop" data-parallax>
+      <img src="img/dynamics.webp" width="864" height="1080" alt="296 Challenge Stradale from behind on the circuit" loading="lazy">
+    </div>
+    <div class="split__text">
+      <p class="chapter" data-reveal><span class="chapter__n">4</span><span class="chapter__rule"></span><span>Driving Dynamics</span></p>
+      <div class="split__body" data-reveal>
+        <p class="eyebrow">Precision and Control</p>
+        <h2 class="h2" id="dyn-h">Every Input Matters</h2>
+        <div class="prose">
+          <p>The 296 Challenge Stradale is engineered so that every input produces a direct response. Grip, balance and control are optimized to make the most of the available traction, while extensive weight reduction and precise calibration let the driver explore the car’s limits with confidence.</p>
+          <p>The braking system follows the same philosophy. Aero-design calipers, larger carbon-ceramic discs and advanced ventilation ducts deliver precise braking and control, while a redesigned brake pedal uses a shorter stroke to create the immediate feel expected of a racing car while retaining the modulation required on the road.</p>
+        </div>
+        <div class="actions"><a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AA-06 · Chapter 5 · Interior ─────────────────────────────────────── -->
+  <section class="interior band band--black" aria-labelledby="int-h">
+    <div class="interior__media" data-parallax>
+      <picture>
+        <source media="(max-width: 47.99rem), (max-width: 64rem) and (orientation: portrait)" srcset="img/interior-m.webp">
+        <!-- NOTE: the build sheet's desktop frame for Interior is an exterior shot (as in the client's PSD) — confirm with the client -->
+        <img src="img/interior.webp" srcset="img/interior-1280.webp 1280w, img/interior.webp 1920w" sizes="100vw"
+             width="1920" height="1080" alt="296 Challenge Stradale cornering hard over a red and white kerb" loading="lazy">
+      </picture>
+    </div>
+    <div class="interior__shade" aria-hidden="true"></div>
+    <div class="wrap interior__inner">
+      <p class="chapter chapter--light" data-reveal><span class="chapter__n">5</span><span class="chapter__rule"></span><span>Interior</span></p>
+      <div class="interior__foot">
+        <div class="interior__copy" data-reveal>
+          <p class="eyebrow">Driver Focused</p>
+          <h2 class="h2" id="int-h">Essential by Design</h2>
+          <p class="interior__p">The interior can be configured in a more minimalist way, stripping away non-essential elements to evoke the feel of a racing car. A single-piece carbon-fiber door panel dispenses with the conventional armrest and storage pocket, reinforcing the car’s focused character.</p>
+        </div>
+        <div class="actions" data-reveal>
+          <a class="btn btn--primary" href="#inquire" data-inquire>Inquire</a>
+          <a class="btn btn--outline" href="https://carconfigurator.ferrari.com/en-EN/en_US" target="_blank" rel="noopener">Configure
+            <svg class="btn__chev" width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M1 1l4.5 4.5L1 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AA-07 · Chapter 6 · Gallery ──────────────────────────────────────── -->
+  <!-- TODO: the build sheet asks for 12 images (16:9). None were supplied; these 8 are
+       16:9 crops of the module images and stand in until the gallery set arrives. -->
+  <section class="gallery band band--light" aria-labelledby="gal-h">
+    <div class="wrap">
+      <p class="chapter" data-reveal><span class="chapter__n">6</span><span class="chapter__rule"></span><span id="gal-h">Gallery</span></p>
+    </div>
+    <div class="gallery__frame" data-reveal>
+      <button class="arrow arrow--prev" type="button" data-gal-prev aria-label="Previous images">
+        <svg width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M6 1L1.5 5.5 6 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <ul class="gallery__track" data-gal-track data-lenis-prevent-wheel>
+        <li><button class="tile" type="button" data-gal-open="0"><img src="img/gallery/g01-sm.webp" width="640" height="360" alt="Front view on a desert circuit" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="1"><img src="img/gallery/g02-sm.webp" width="640" height="360" alt="Cornering over a red and white kerb" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="2"><img src="img/gallery/g03-sm.webp" width="640" height="360" alt="Two cars at speed in a dust cloud" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="3"><img src="img/gallery/g04-sm.webp" width="640" height="360" alt="Side profile at speed" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="4"><img src="img/gallery/g05-sm.webp" width="640" height="360" alt="Three-quarter front view through a corner" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="5"><img src="img/gallery/g06-sm.webp" width="640" height="360" alt="Cockpit with carbon-fiber steering wheel" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="6"><img src="img/gallery/g07-sm.webp" width="640" height="360" alt="Rear view with fixed wing through a corner" loading="lazy"></button></li>
+        <li><button class="tile" type="button" data-gal-open="7"><img src="img/gallery/g08-sm.webp" width="640" height="360" alt="Rear view on the straight" loading="lazy"></button></li>
+      </ul>
+      <button class="arrow arrow--next" type="button" data-gal-next aria-label="Next images">
+        <svg width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M1 1l4.5 4.5L1 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ Design panel — the build sheet's eyebrow, H3 and body (AA-03),
+     with the panel image (AA-03b) on the right half, as on the live template ═══ -->
+<div class="panel" id="design-panel" role="dialog" aria-modal="true" aria-labelledby="panel-h" hidden>
+  <button class="panel__close" type="button" data-panel-close aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <div class="panel__text" data-lenis-prevent>
+    <div class="panel__copy">
+      <p class="chapter"><span class="chapter__n">2</span><span class="chapter__rule"></span><span>Design</span></p>
+      <p class="eyebrow">Designed With Purpose</p>
+      <h2 class="h2" id="panel-h">Racing Purpose, Made Visible</h2>
+      <div class="prose">
+        <p>The 296 Challenge Stradale translates its racing-inspired character directly into its design. Front and rear surfaces are visually streamlined, making the car’s technical functions more clearly visible while integrating aerodynamic requirements with the constraints of a road car.</p>
+        <p>A large technical insert dominates the hood, incorporating the radiator air outlet, while two openings near the windshield extract air directly from the underbody to contribute to downforce. At the rear, the fixed wing is supported by hollow struts, with black metal mesh revealing technical components and exhaust outlets. The result is a form in which design and function are inseparable.</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel__media">
+    <img src="img/design-panel.webp" width="944" height="1080" alt="296 Challenge Stradale, three-quarter front, hood insert and air outlets" loading="lazy">
+  </div>
+</div>
+
+<!-- ═══ Gallery — full screen: close top-left, arrows and counter ═══════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Gallery" hidden>
+  <button class="ctl ctl--close lightbox__close" type="button" data-lb-close aria-label="Close gallery">
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <figure class="lightbox__stage"><img alt="" data-lb-img></figure>
+  <div class="lightbox__nav">
+    <button class="arrow arrow--light" type="button" data-lb-prev aria-label="Previous image">
+      <svg width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M6 1L1.5 5.5 6 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <p class="lightbox__count" aria-live="polite" data-lb-count>1 / 8</p>
+    <button class="arrow arrow--light" type="button" data-lb-next aria-label="Next image">
+      <svg width="7" height="11" viewBox="0 0 7 11" aria-hidden="true"><path d="M1 1l4.5 4.5L1 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+  </div>
+</div>

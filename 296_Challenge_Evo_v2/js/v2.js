@@ -1,4 +1,4 @@
-/* 296 Challenge Stradale v2 — the ferrari.com layer on top of model.js:
+/* 296 Challenge v2 (Stradale and Evo) — the ferrari.com layer on top of model.js:
    line-split plates and strips, their wipe-in, the rolling figures, the image
    wipes and the floating section navigator. With motion reduced, only the
    navigator runs; everything else is already in its final state. */
@@ -68,17 +68,42 @@
   });
 
   /* ── 2 · wipe-in of the text blocks and the split images ────────────── */
+  /* once a text block's wipe has played, its lines drop the clip-path
+     (is-done): a clipped layer left on a pinned, parallaxed module flickers
+     in Safari / retina Chrome while scrolling — the title vanished and came back */
+  function reveal(n) {
+    if (n.classList.contains('is-in')) return;
+    n.classList.add('is-in');
+    if (n.hasAttribute('data-tb')) setTimeout(function () { n.classList.add('is-done'); }, motion ? 1800 : 0);
+  }
   if (motion) {
     var io = new IntersectionObserver(function (en) {
-      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('is-in'); io.unobserve(x.target); } });
+      en.forEach(function (x) { if (x.isIntersecting) { reveal(x.target); io.unobserve(x.target); } });
     }, { rootMargin: '0px 0px -30% 0px', threshold: 0 });
     document.querySelectorAll('[data-tb], [data-wipe-media]').forEach(function (n) { io.observe(n); });
+    /* a block anchored to the foot of a full-screen module (Design is pinned)
+       can stay in the bottom 30% the observer above ignores — it would wait,
+       empty, until the module scrolls away. Once the module fills the screen
+       (its top within the top 10%, e.g. after a navigator jump), every block of
+       it already on screen comes in. */
+    var io3 = new IntersectionObserver(function (en) {
+      en.forEach(function (x) {
+        if (!x.isIntersecting) return;
+        var vh = window.innerHeight, left = 0;
+        x.target.querySelectorAll('[data-tb]').forEach(function (tb) {
+          if (tb.classList.contains('is-in')) return;
+          if (tb.getBoundingClientRect().top < vh) { reveal(tb); io.unobserve(tb); } else left++;
+        });
+        if (!left) io3.unobserve(x.target);
+      });
+    }, { rootMargin: '0px 0px -90% 0px', threshold: 0 });
+    [].forEach.call(document.querySelectorAll('section'), function (s) { if (s.querySelector('[data-tb]')) io3.observe(s); });
     /* the first screen's blocks arrive on load */
     requestAnimationFrame(function () {
-      document.querySelectorAll('.hero [data-tb]').forEach(function (n) { n.classList.add('is-in'); });
+      document.querySelectorAll('.hero [data-tb]').forEach(reveal);
     });
   } else {
-    document.querySelectorAll('[data-tb], [data-wipe-media]').forEach(function (n) { n.classList.add('is-in'); });
+    document.querySelectorAll('[data-tb], [data-wipe-media]').forEach(reveal);
   }
 
   /* ── 3 · rolling figures (ferrari.com's digit columns) ──────────────── */

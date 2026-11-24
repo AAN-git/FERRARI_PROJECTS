@@ -193,6 +193,9 @@
 }
 .js-motion .tb-ready.is-in .tb__label .ln > *,
 .js-motion .tb-ready.is-in .tb__title .ln > * { clip-path: inset(-2px 0 -2px 0); }
+/* wipe played: no clipped layer left behind (it flickers on the pinned modules) */
+.js-motion .tb-ready.is-done .tb__label .ln > *,
+.js-motion .tb-ready.is-done .tb__title .ln > * { clip-path: none; transition: none; }
 
 .js-motion .tb-ready .tb__desc .ln,
 .js-motion .tb-ready .tb__eyebrow,

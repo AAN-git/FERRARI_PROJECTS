@@ -329,3 +329,8 @@
 
 /* hero lockup at the live Cauley template's scale (328px there) */
 .v2 .hero__model img { inline-size: clamp(220px, 21vw, 300px); block-size: auto; }
+/* phones: the mobile hero sits where the client's PSD frames it — their
+   "Mobile 375 view" frame is the 860×2160 file's band 149–2011, which a centred
+   cover crop reproduces exactly at 375×812; the lockup and buttons then land in
+   their "Lockup + CTAs" zone */
+@media (max-width: 47.99rem) { .v2 .hero__slide img { object-position: 50% 50%; } }

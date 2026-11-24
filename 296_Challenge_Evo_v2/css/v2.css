@@ -341,3 +341,21 @@
    cover crop reproduces exactly at 375×812; the lockup and buttons then land in
    their "Lockup + CTAs" zone */
 @media (max-width: 47.99rem) { .v2 .hero__slide img { object-position: 50% 50%; } }
+
+/* ── phones: Interior / Cockpit as the client's PSD lays it out ──────────
+   Their AA-06 mobile frame is "anchored to the top": the cabin fills the top
+   ~48% of the 860×2160 file and the rest is black, reserved for the copy.
+   So the frame is shown whole from the top (no crop, no scrim, no parallax)
+   and the stack starts where the cabin fades into black. */
+@media (max-width: 47.99rem) {
+  .v2 .interior { block-size: auto; min-block-size: 0; }
+  .v2 .interior__media { position: absolute; inset: 0 0 auto 0; transform: none !important; }
+  .v2 .interior__media picture { block-size: auto; }
+  .v2 .interior__media img { inline-size: 100%; block-size: auto; object-fit: initial; }
+  .v2 .interior__shade { display: none; }
+  .v2 .interior__inner { block-size: auto; min-block-size: 0; justify-content: flex-start;
+    padding-block-start: 112vw; }   /* 860×2160 at 100vw: the cabin ends at ~120vw */
+}
+/* the client's Evo cockpit frame ends in #0c0f17 (sampled), not black: the
+   module's ground matches it so the frame's edge never shows as a seam */
+@media (max-width: 47.99rem) { .v2 .interior { background: #0c0f17; } }

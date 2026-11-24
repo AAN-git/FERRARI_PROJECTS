@@ -352,3 +352,74 @@
   .v2 .interior__inner { block-size: auto; min-block-size: 0; justify-content: flex-start;
     padding-block-start: 112vw; }   /* 860×2160 at 100vw: the cabin ends at ~120vw */
 }
+
+/* ═══ client round, 24 Nov 2026 ═══════════════════════════════════════════
+   1 · the unit stands on the figure's own baseline ("2,992 cc"), in the build
+       sheet's lower case; only the label sits underneath. */
+:root { --t-figure: clamp(48px, 5.4vw, 88px); }
+.odo__value { line-height: 1; }
+.odo__unit { line-height: 1; margin-inline-start: .12em; }
+.odo__unit > span { font-size: max(16px, .3em); font-weight: 500; letter-spacing: 0; line-height: 1; }
+.odo__label { display: block; }
+.odo-row { column-gap: var(--s-5); }
+@media (max-width: 47.99rem) {
+  /* phones: one figure per line, its label on the same baseline at the right */
+  :root { --t-figure: clamp(34px, 9vw, 44px); }
+  .odo-row { grid-template-columns: minmax(0, 1fr); }
+  .odo { flex-direction: row; align-items: center; justify-content: space-between; padding: var(--s-3) 0; }
+  .odo + .odo { border-block-start: 1px solid rgb(255 255 255 / .2); }
+  .odo__label { text-align: end; max-inline-size: 9.5rem; }
+}
+@media (max-width: 23rem) {
+  :root { --t-figure: 40px; }
+  .odo { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .odo__label { text-align: start; max-inline-size: none; }
+}
+
+/* 2 · Design: the car is never behind a caption. The module no longer pins, so
+   Aerodynamics follows it instead of sliding over it; and the frame is placed
+   by the car, not by a centred crop: the tyres stop --gap above the caption
+   (--cap = its measured height, v2.js), the wing clears the header, and the
+   module grows on very short screens. The frame ends in its own ground colour,
+   so lifting it never shows an edge. --ct / --cb: car top / bottom in the frame. */
+.v2 .design {
+  --ct: .276; --cb: .598; --ratio: 56.25vw; --clear: calc(var(--nav-h) + var(--s-4)); --gap: var(--s-5);
+  --img: max(var(--ratio), 100vh);
+  --img: max(var(--ratio), 100svh);
+  --need: calc(var(--clear) + (var(--cb) - var(--ct)) * var(--img) + var(--gap) + var(--cap, 300px));
+  --h: max(100vh, var(--need));
+  --h: max(100svh, var(--need));
+  position: relative; block-size: var(--h); min-block-size: 0; background: #000;
+}
+.v2 .design__media { inset: 0; transform: translate3d(0, min(var(--py, 0px), 0px), 0); }  /* parallax only ever lifts the car away from the caption */
+.v2 .design__media img {
+  position: absolute; inset-inline: 0; inline-size: 100%; block-size: var(--img); object-position: 50% 50%;
+  inset-block-start: min(0px, max(calc((var(--h) - var(--img)) / 2), calc(var(--clear) - var(--ct) * var(--img))), calc(var(--h) - var(--cap, 300px) - var(--gap) - var(--cb) * var(--img)));
+}
+.v2 .design__inner { block-size: 100%; min-block-size: 0; padding-block-start: 0; }
+/* the two links share the caption's last line, so the title gets the full width */
+.v2 .design__foot { display: grid; grid-template-columns: minmax(0, 1fr); }
+.v2 .design__foot > * { grid-area: 1 / 1; }
+.v2 .design__foot > .tb { pointer-events: none; }
+.v2 .design__foot > .tb .flink { pointer-events: auto; justify-self: start; }
+.v2 .design__foot > .actions { align-self: end; justify-self: end; margin: 0; }
+@media (max-width: 64rem) { .v2 .design { --clear: calc(var(--head-m) + var(--s-4)); } }
+@media (max-width: 47.99rem), (max-width: 64rem) and (orientation: portrait) {
+  .v2 .design { --ct: .462; --cb: .561; --ratio: 251.17vw; --gap: var(--s-4); }
+}
+@media (max-width: 22.4rem) {   /* 320: the links stack */
+  .v2 .design__foot { row-gap: 0; }
+  .v2 .design__foot > .actions { grid-area: 2 / 1; justify-self: start; }
+}
+/* each rolling slot is as wide as the digit it lands on (v2.js), so the figure
+   sets like type — no tabular holes in "670" / "700" */
+.odo__value { font-variant-numeric: normal; }
+.odo__col { align-items: center; }
+/* portrait tablets carry the phone frame, so they take the phone's darker foot */
+@media (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
+  .v2 .design__shade {
+    background:
+      linear-gradient(to top, rgb(0 0 0 / .88) 0%, rgb(0 0 0 / .7) 22%, rgb(0 0 0 / 0) 48%),
+      linear-gradient(to bottom, rgb(0 0 0 / .82) 0%, rgb(0 0 0 / .62) 20%, rgb(0 0 0 / 0) 38%);
+  }
+}

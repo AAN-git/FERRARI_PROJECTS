@@ -61,6 +61,20 @@
   }
   splitWhenReady();
   window.addEventListener('load', function () { split(); });
+
+  /* Design: the caption's height (its stack + the room under it) places the
+     frame, so the car's tyres always stop above the caption (v2.css) */
+  (function () {
+    var sec = document.querySelector('.design'), foot = sec && sec.querySelector('.design__foot');
+    if (!foot) return;
+    function cap() {
+      var h = foot.offsetHeight + parseFloat(getComputedStyle(foot.parentNode).paddingBottom);
+      sec.style.setProperty('--cap', Math.ceil(h) + 'px');
+    }
+    cap();
+    if ('ResizeObserver' in window) new ResizeObserver(cap).observe(foot);
+    window.addEventListener('resize', cap);
+  })();
   var rw = null, lastW = window.innerWidth;
   window.addEventListener('resize', function () {
     if (Math.abs(window.innerWidth - lastW) < 2) return;
@@ -69,7 +83,7 @@
 
   /* ── 2 · wipe-in of the text blocks and the split images ────────────── */
   /* once a text block's wipe has played, its lines drop the clip-path
-     (is-done): a clipped layer left on a pinned, parallaxed module flickers
+     (is-done): a clipped layer left on a parallaxed module flickers
      in Safari / retina Chrome while scrolling — the title vanished and came back */
   function reveal(n) {
     if (n.classList.contains('is-in')) return;
@@ -81,7 +95,7 @@
       en.forEach(function (x) { if (x.isIntersecting) { reveal(x.target); io.unobserve(x.target); } });
     }, { rootMargin: '0px 0px -30% 0px', threshold: 0 });
     document.querySelectorAll('[data-tb], [data-wipe-media]').forEach(function (n) { io.observe(n); });
-    /* a block anchored to the foot of a full-screen module (Design is pinned)
+    /* a block anchored to the foot of a full-screen module (Design)
        can stay in the bottom 30% the observer above ignores — it would wait,
        empty, until the module scrolls away. Once the module fills the screen
        (its top within the top 10%, e.g. after a navigator jump), every block of
@@ -127,6 +141,19 @@
       }
     });
   });
+  /* slot width = the landing digit's own width, in em so it scales with the figure */
+  function fitSlots() {
+    document.querySelectorAll('.odo__col').forEach(function (col) {
+      var cell = col.children[+col.getAttribute('data-to')], r = document.createRange();
+      r.selectNodeContents(cell);
+      var w = r.getBoundingClientRect().width, fs = parseFloat(getComputedStyle(col).fontSize);
+      if (w) col.parentNode.style.inlineSize = (w / fs).toFixed(4) + 'em';
+    });
+  }
+  if (motion && nums.length) {
+    if (document.fonts && document.fonts.load) document.fonts.load('500 60px "Ferrari Sans"').then(function () { return document.fonts.ready; }).then(fitSlots, fitSlots);
+    window.addEventListener('load', fitSlots);
+  }
   if (motion && nums.length) {
     var io2 = new IntersectionObserver(function (en) {
       en.forEach(function (x) {
